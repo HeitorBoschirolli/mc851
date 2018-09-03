@@ -48,9 +48,9 @@ def resposta_pagamento(request):
         pagamento = Pagamento.objects.get(pk=pk_pagamento)
         if tipo_pagamento == '1':
             cartao = Cartao(
-                nome_cartao = form_cartao['nome_cartao'], 
-                num_cartao=form_cartao['numero_cartao'], 
-                CVV=form_cartao['CVV'],
+                nome_cartao = form_cartao['nome_cartao'].value(), 
+                num_cartao=form_cartao['numero_cartao'].value(), 
+                CVV=form_cartao['CVV'].value(),
             )
             pagamento.cartao = cartao
             context = {

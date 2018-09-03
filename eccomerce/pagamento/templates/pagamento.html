@@ -91,13 +91,15 @@
                             <br/> {{form_cartao.numero_cartao}}
                         </div>
                         <div style="margin: 5px; display:inline-block;">
+                                {{form_cartao.CVV.label}}
+                                <br/> {{form_cartao.CVV}}
+                        </div>
+
+                        <div style="margin: 5px; display:inline-block;">
                             {{form_cartao.data_vencimento_cartao.label}}
                             <br/> {{form_cartao.data_vencimento_cartao}}
                         </div>
-                        <div style="margin: 5px; display:inline-block;">
-                            {{form_cartao.CVV.label}}
-                            <br/> {{form_cartao.CVV}}
-                        </div>
+
                 
                         <input hidden name="pk_pagamento" value="{{pagamento.pk}}" />
                         <input hidden name="tipo_pagamento" value="1" />
