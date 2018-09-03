@@ -1,0 +1,20 @@
+1-Pago
+2-Aguardando Pagamento
+3-Pagamento Não Realizado (Data de Vencimento Expirada)
+4-Aguardando Pagamento
+5-Aguardando Pagamento
+6-Pago
+7-Pagamento Não Realizado (Data de Vencimento Expirada)
+8-Pago
+9-Pago
+10-Pagamento Não Realizado (Data de Vencimento Expirada)
+11-Aguardando Pagamento
+12-Aguardando Pagamento
+13-Aguardando Pagamento
+14-Aguardando Pagamento
+15-Pagamento Não Realizado (Data de Vencimento Expirada)
+16-Pagamento Não Realizado (Data de Vencimento Expirada)
+17-Pago
+18-Pago
+19-Aguardando Pagamento
+20-Pagamento Não Realizado (Data de Vencimento Expirada)

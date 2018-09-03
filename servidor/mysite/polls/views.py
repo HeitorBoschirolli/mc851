@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from .models import Question
+from .BancoDeDados import *
+from .models import *
 from django.template import loader
-from django.http import Http404
 
 # Create your views here.
 
@@ -24,4 +25,20 @@ def vote(request, question_id):
 
 def soma(resquest, n1, n2):
     return HttpResponse("Soma = {}".format(n1 + n2))
+
+def buscapagamentos(request, id):
+
+    try:
+        pedido = Pedido.objects.get(id=id).status_pagamento
+
+        if(pedido == True):
+            resposta = 'Pago'
+        else:
+            resposta = 'Não Pago'
+
+    except Pedido.DoesNotExist:
+        resposta = 'Pedido Não Existe'
+
+
+    return HttpResponse("Status do Pagamento: {}".format(resposta))
 
