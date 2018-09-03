@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css"
+        rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+
+
+    <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+</head>
+
+<style>
+    .bandeira {
+        height: 35px;
+    }
+
+    .box_op_pagamento {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Selecione uma forma de pagamento</h1>
+            </div>
+            <div class="col-12">
+                <p>Seja bem-vindo {{pagamento.cliente.nome}}</p>
+                <p>O valor total da sua compra é R${{pagamento.pedido.valor|floatformat:2}}</p>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-12">
+                <h3>Opções de Pagamento</h3>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row box_op_pagamento">
+            <div class="col-md-6">
+                <h4>Cartão de Crédito</h4>
+            </div>
+            <div class="col-md-6">
+                <div style="float: right; display: inline; height: 100%;">
+                    {% load static %}
+                    <img src="{% static '/media/img/icon_cyndello.jpeg' %}" class="bandeira" />
+                    <img src="{% static '/media/img/icon_master_card.png' %}" class="bandeira" />
+                    <img src="{% static '/media/img/icon_visa.png' %}" class="bandeira" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p style="color:DarkTurquoise">Adicione um Cartão</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Insira as informações do seu cartão:</p>
+            </div>
+        </div>
+        <form action="/pagamento/resposta_pagamento/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <div style="margin: 5px; display:inline-block;">
+                            {{form_cartao.nome_cartao.label}}
+                            <br/> {{form_cartao.nome_cartao}}
+                        </div>
+                        <div style="margin: 5px; display:inline-block;">
+                            {{form_cartao.numero_cartao.label}}
+                            <br/> {{form_cartao.numero_cartao}}
+                        </div>
+                        <div style="margin: 5px; display:inline-block;">
+                            {{form_cartao.data_vencimento_cartao.label}}
+                            <br/> {{form_cartao.data_vencimento_cartao}}
+                        </div>
+                        <div style="margin: 5px; display:inline-block;">
+                            {{form_cartao.CVV.label}}
+                            <br/> {{form_cartao.CVV}}
+                        </div>
+                
+                        <input hidden name="pk_pagamento" value="{{pagamento.pk}}" />
+                        <input hidden name="tipo_pagamento" value="1" />
+                
+                        <button type="submit" class="active icon-bar" href="#">
+                            <i class="fa fa-credit-card"></i> Pagar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    
+
+</body>
+<script type="text/javascript">
+    $('#datetimepicker1').datetimepicker({
+        viewMode: 'months',
+        format: 'MM/YYYY'
+    });
+</script>

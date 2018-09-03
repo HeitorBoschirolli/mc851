@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class Cliente(models.Model):
@@ -16,12 +18,18 @@ class Cliente(models.Model):
 
 class Pedido(models.Model):
     valor = models.FloatField()
-    cartao = models.ForeignKey('Cartao', null=True, on_delete=models.CASCADE)
-    boleto = models.ForeignKey('Boleto', null=True, on_delete=models.CASCADE)
-    pedido = models.ForeignKey('Cliente', null=True, on_delete=models.CASCADE)
+    infos_produto = models.TextField(max_length=200)
 
     def __str__(self):
-        return self.valor
+        return (self.infos_produto + " | Valor: R$" + str(self.valor))
+
+
+class Pagamento(models.Model):
+    cliente = models.ForeignKey('Cliente', null=True, on_delete=models.CASCADE)
+    pedido = models.ForeignKey('Pedido', null=True, on_delete=models.CASCADE)
+
+    cartao = models.ForeignKey('Cartao', blank=True, null=True, on_delete=models.CASCADE)
+    boleto = models.ForeignKey('Boleto', blank=True, null=True, on_delete=models.CASCADE)
 
 
 class Cartao(models.Model):
@@ -35,13 +43,20 @@ class Cartao(models.Model):
     credito = models.BooleanField()
     debito = models.BooleanField()
 
+    #pagamento = GenericRelation(Pagamento)
+
     def __str__(self):
         return self.bandeira_cartao
-
+    
 
 class Boleto(models.Model):
     data_vencimento = models.DateField()
     banco = models.CharField(max_length=50)
+    numero_boleto = models.CharField(max_length=50, default="0")
+    status = models.BooleanField()
+    #pagamento = GenericRelation(Pagamento)
 
+    def __str__(self):
+        return self.numero_boleto
 
 

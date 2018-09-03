@@ -25,7 +25,9 @@ SECRET_KEY = '8ks#=5&x!m^cqh#(77^%=39smt)i-d---59n*+cp^8^(*vb(dc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
 
 # Application definition
@@ -65,7 +67,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
-    },
+     },
 ]
 
 WSGI_APPLICATION = 'eccomerce.wsgi.application'
@@ -77,10 +79,9 @@ WSGI_APPLICATION = 'eccomerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'mydatabase',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
