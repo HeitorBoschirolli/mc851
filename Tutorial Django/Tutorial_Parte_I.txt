@@ -1,0 +1,44 @@
+PARTE I
+
+Funciona como Pyhton database Programming;
+
+Django consistem em um projeto com vários apps (ex: blog, ecommerce). um app pode estar em varios projetos e um projeto pode conter vários apps;
+
+migrations cria um controle de versão do seu database;
+
+view: ir ate uma URL e retorna uma resposta. Se você entrar numa URL do seu site o que deverá ser mostrado para o usuário (arquivo html a ser mostrado);
+
+urls: Precisamos mapear o path URL para alguma funcao da view para que mostre alguma coisa;
+
+CODING (entre nos arquivos criados para ver comentarios sobre o que esta ocorrendo):
+
+1-
+Entre no diretorio desejado e execute para criar um projeto:
+    django-admin startproject mysite
+
+2-
+Para ver se ele esta funcionando execute na pasta mysite/
+    python manage.py runserver
+Seu server deve ter sido criado em
+    http://127.0.0.1:8000/
+
+3-
+Vamos criar um app dentro do nosso site, para isso execute:
+    python manage.py startapp polls
+Isso irá criar o diretório polls com os arquivos necessários para esse app
+
+4-
+Abrimos o arquivo /polls/views.py e criamos uma funcao index, isso quer dizer que se alguem entrar na URL e index for a resposta a ser mostrada entao o resultado da funcao sera mostrado (um simples texto)
+
+5-
+Agora que criamos a view, precisamos criar o arquivo /polls/urls.py, para mapear uma URL para a função index criada em /polls/views.py.
+Dentro do de todas URLS entradas que ocorrem após mysite.com/polls/ qual função da view deve ser executada caso entre naquele path.
+
+6-
+Agora, devemos criar uma referencia no urls.py do MYSITE para os urls do modulo polls, isso quer dizer que sempre que a url entrada no nosso site conter "/polls/" o resolvedor de tudo que esta a direita da ultima / será transferido para o urls.py do app POLLS
+
+7-
+Agora para ver que nosso tudo esta funcionando execute:
+    python manage.py runserver
+E entre em:
+    http://localhost:8000/polls/exit

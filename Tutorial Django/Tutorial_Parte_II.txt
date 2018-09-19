@@ -1,0 +1,124 @@
+PARTE II
+
+Models -> layout do seu banco de dados
+
+Cria uma classe que depois vira um modelo (banco de dados)
+
+Cada classe é uma tabela do banco de dados, onde cada atributo desta classe é um campo da sua tabela
+
+Depois de Criar seu modelo, você deve ativa-lo (instalar o app) (como se fosse linkar com o site, pois o modelo esta criado, mas precisa ser referenciado ao site)
+
+makemigration -> cria as mudanças feitas nos models em migrations
+
+migrate -> aplica de fato as mudanças feitas
+
+Você pode usar a shell do python para popular este banco de dados e fazer queries
+
+As migrations so são necessárias se você modifica ATRIBUTOS dos modelos (quando você apenas cria metódos então não precisa executar os migrations)
+
+get -> pega 1 (se tiver mais de um gera uma excessão)
+filter -> pega todos
+
+----------------------------------------------------------------------------------------
+
+Na seção de admin voce pode cadastrar usuarios, deletar usuarios, dar ou remover permissoes para cada usuario (criar uma lista, modificar tal atributo de uma lista, etc)
+
+Você pode popular o banco de dados (modelos) por la, para isso voce precisa importar o banco como admin
+
+Todo o modelo de acesso ao BD foi feito pelo proprio site, você não precisa fazer nada
+
+CODING:
+
+1-
+Primeiro de tudo precisamos criar nossas tabelas do banco de dados, para isso executamos:
+    python manage.py migrate
+O comando migrate verifica a configuração em INSTALLED_APPS e cria qualquer tabela do banco de dados necessária de acordo com as configurações do banco de dados no seu arquivo mysite/settings.py e as migrações que venham com a app
+
+2-
+Agora vamos criar um modelo, um layout de banco de dados, para isso, vamos em polls/models.py e criamos classes que serão nossas tabelas e seus atributos, que serão os campos do nosso banco de dados
+
+3-
+Devemos dizer ao nosso site que a aplicação polls esta instalada, para isso devemos ir em mysite/settings.py e em apps instalados devemos dizer que queremos instalar nosso app criado, o polls (passamos o arquivo de configuração para la)
+
+4-
+Execute o comando:
+    python manage.py makemigrations polls
+Ao executar makemigrations, você está dizendo Django que você fez algumas mudanças em seus modelos (neste caso, você fez novas modificações) e que você gostaria que as alterações sejam armazenadas como uma migração. *cria migrações*
+
+5-
+Agora, execute:
+    python manage.py sqlmigrate polls 0001
+Este comando converte nosso models.py de polls para um esquema de SQL
+
+6-
+Por fim, execute:
+    python manage.py migrate
+O comando migrate pega todas as migrações que ainda não foram *aplicadas* e aplica elas contra seu banco de dados. *aplica migrações*
+
+7-
+Agora vamos mexer com a API e popular nosso banco de dados e explicar alguns comandos:
+    python manage.py shell
+
+    from polls.models import Choice, Question (importar o que acabamos de criar)
+
+    Question.objects.all() (retorna todos objetos da classe Question)
+
+    q = Question(question_text="What's new?", pub_date=timezone.now()) (cria uma pergunta, seta seus atributos e a armazena em q)
+
+    q.save() (salva o objeto criado no BD) (so salva se alterou o objeto)
+
+    q.id (retorna o id da pergunta)
+
+    q.question_text (retorna o campo question_text da pergunta)
+
+    q.pub_date (retorna o campo pub_date da pergunta)
+
+    q.question_text = "What's up?" (podemos mudar o campo de uma Question ja criada com o operador =. Lembre-se que você deve salvar as alterações com q.save())
+
+    Question.objects.filter() (dentro do parentesis voce pode colocar qualquer pergunta que ele retorna todos os campos que satisfazem aquela querry, como por exemplo:
+        id=1
+        question_text__startswith='What'
+        pub_date__year=current_year
+        pk=1 (busca por primary key)
+    )
+
+    q = Question.objects.get() (A diferença de get para filter é que get retorna um unico objeto, enquanto filter pode retornar varios)
+
+    q.choice_set.all() (retorna todas as choices criadas para aquela question)
+
+    q.choice_set.create(choice_text='Not much', votes=0) (cria uma choice associada a aquela pergunta) (ele ja cria, nao precisa fazer um save depois)
+
+    c = q.choice_set.create(choice_text='Just hacking again', votes=0) (cria uma choice para a question q e armazena tal choice em c)
+
+    c.question (retorna a pergunta ao qual aquela choice esta associada)
+
+    c.delete() (deleta aquela escolha daquela pergunta)
+
+
+8-
+Quando pegamos a lista com todos objetos de Question o retorno é algo estranho, então vamos criar metodos nessas classes para que o retorono da função nos diga algo util.
+Para isso nos vamos em /polls/models/ e la criaremos nossos metodos dentro de cada classe.
+Note que não é necessário migrar o modelo pois apenas criamos metodos, nos não modificamos seus atributos.
+É importante adicionar métodos __str__() aos seus models porque representações de objetos são usadas por todo projeto gerado automaticamente pelo Django (nos podemos criar qualquer tipo de metodo, não precisa ser apenas os metodos padroes de python)
+
+--------------------------------------------------------------------------------------
+
+1-
+Para acessar a area de admin nos precisamos criar um super usuario com o coamndo:
+    python manage.py createsuperuser
+Este comando vai pedir um usuario, senha e email, e com isso ele esta criado
+
+2-
+Agora vamos ao nosso site:
+    python manage.py runserver
+    http://127.0.0.1:8000/admin/
+Apos usar o usuario e senha criados na seção acima, voce pode gerenciar os usuarios e as permissoes de cada usuario por esta interface GUI
+
+3-
+Vamos agora permitir edições no modelo polls criado nessa interface. vá em polls/admin.py e registre o modelo criado como administrador
+
+4-
+Agora voltamos ao nosso site:
+    python manage.py runserver
+    http://127.0.0.1:8000/admin/
+E la estara a tabela Question para ser modificada!
