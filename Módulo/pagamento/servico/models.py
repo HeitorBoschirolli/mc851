@@ -33,6 +33,7 @@ class Boleto(models.Model):
     data_vencimento = models.DateField()
     nome_empresa = models.CharField(max_length = constant.NOME_EMPRESA_LENGHT)
     endereco_empresa = models.CharField (max_length = constant.ENDERECO_EMPRESA_LENGHT)
+    status = models.IntegerField()
     pedido = models.ForeignKey('Pedido', null = True, on_delete = models.CASCADE)
 
     def __str__(self):
