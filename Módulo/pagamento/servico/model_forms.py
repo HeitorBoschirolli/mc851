@@ -3,20 +3,11 @@
 from django import forms
 from .models import *
 
-
 class PagamentoForm(forms.Form):
     cpf_comprador = forms.CharField(label="CPF Comprador", max_length=50)
     valor_compra = forms.CharField(label="Valor", max_length=50)
     data_emissao = forms.DateField(label="Data de Emissão")
     cnpj_site = forms.CharField(label="CNPJ", max_length=50)
-    
-    # # BOLETO
-    # banco_gerador_boleto = forms.CharField(label="Banco", max_length=50)
-    # data_vencimento_boleto = forms.CharField(label="Data de Vencimento",
-    #                                          max_length=50)
-    # endereco_fisico_site = forms.CharField(label="Endereco Empresa",
-    #                                         max_length=100)
-
 
 class PagamentoCartaoForm(PagamentoForm):
     # CARTAO
@@ -28,6 +19,9 @@ class PagamentoCartaoForm(PagamentoForm):
     num_parcelas = forms.IntegerField(label="Num. Parcelas")
     pedido = forms.IntegerField(label="Pedido")
 
-    
-
-
+class PagamentoBoletoForm(PagamentoForm):
+    banco_gerador_boleto = forms.CharField(label="Banco", max_length=50)
+    data_vencimento_boleto = forms.CharField(label="Data de Vencimento",
+                                             max_length=50)
+    endereco_fisico_site = forms.CharField(label="Endereco Empresa",
+                                            max_length=100)
