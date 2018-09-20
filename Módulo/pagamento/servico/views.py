@@ -130,6 +130,12 @@ def feedback_pagamento_boleto(request):
                                                             )
 
     context = {
+        'cpf_comprador' : cpf_comprador,
+        'valor_compra' : valor_compra,
+        'cnpj_site' : cnpj_site,
+        'banco_gerador_boleto' : banco_gerador_boleto,
+        'data_vencimento_boleto' : data_vencimento_boleto,
+        'endereco_fisico_site' : endereco_fisico_site,
         'status_cpf_comprador': status_cpf_comprador,
         'status_valor_compra': status_valor_compra,
         'status_cnpj_site': status_cnpj_site,
