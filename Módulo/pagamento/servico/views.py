@@ -1,67 +1,43 @@
-# -*- coding: utf-8 -*-
-
+# encoding: utf-8
 from django.shortcuts import render
-from datetime import *
-from .model_forms import *
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from servico.models import *
+from model_form import *
 
 
 def index(request):
     return HttpResponse("Hello, world. You're at the payment index.")
 
+def input(request, pk):
 
-def CompraComCartao(request):
-    if request.method == 'POST':
-        form_cartao = PagamentoCartaoForm(data=request.POST)
-        context = {
-            'form_cartao': form_cartao,
-            'status': 1,
-            'mensagem': 'Pagamento Aprovado',
-            'pk_pagamento': 1,
-        }
-        return render(request, 'pagamento_cartao.html', context)
+    aux = Aux(pk1=pk)
 
+    context = {
+        'pk': aux,
+    }
+    return render(request, 'input.html', context)
+
+def status_boleto(request):
+
+    '''Recupera do metodo POST a primary key do pedido'''
+    pk_pagamento = int(request.POST.get('pk_pagamento', 0))
+
+    '''Tenta encontrar o pedido no banco de dados. Caso o pedido nao seja encontrado, retorna uma mensagem de erro'''
+    try:
+        pedido = Pedido.objects.get(pk=pk_pagamento)                #Recupera o pedido desejado a partir de sua primary key
+        status = Boleto.objects.get(pedido=pedido).status #Recupera o status de pagamento do boleto a partir do pedido encontrado
+    except ObjectDoesNotExist:
+        return HttpResponse("Pedido não encontrado")
+
+    '''Emite resposta para teste'''
+    if(status == 1):
+        resposta = 'Pago'
+    elif(status == 2):
+        resposta = 'Aguardando Pagamento'
+    elif(status == 3):
+        resposta = 'Boleto Vencido'
     else:
-        form_cartao = PagamentoCartaoForm()
-        return render(request, 'pagamento_cartao.html', {'form_cartao': form_cartao})
+        resposta = 'Valor desconhecido'
 
-
-    #return render(request, 'pagamento_cartao_interface.html', context)
-    # mensagem = ''
-
-    # # Cartão
-    # num_cartao = request.POST('num_cartao', '123')
-    # cvv = request.POST('cvv', '123')
-    # nome_cartao = request.POST('nome_cartao', 'Paulo')
-    # data_vencimento_cartao_str = request.POST('data_vencimento_cartao', '11-2018')
-    # credito = request.POST('credito', '1')
-    # num_parcelas = int(request.POST('num_parcelas', '2'))
-    # pedido = request.POST('pedido', '1')
-
-    # # Pedido
-    # cpf_cliente = request.POST('cpf_cliente', '123')
-    # cnpj_empresa = request.POST('cnpj_empresa', '123')
-    # valor = int(request.POST('valor', '123'))
-    # data_emissao = request.POST('data_emissao', '10-12-2018')
-
-
-    # ### Início Tratamento de erros ###
-
-    # # Se cartão estiver vencido retorna erro
-    # hoje = datetime.now()
-    # data_vencimento_cartao = datetime.strptime('data_vencimento_cartao_str', '%m-%Y')
-    # if not hoje < data_vencimento_cartao:
-    #     mensagem = 'Cartão Vencido'
-
-    # # Se for débito com parcelas retorna erro
-    # if num_parcelas > 1 and credito == 0:
-    #     mensagem = 'Numero de parcelas não condiz com o tipo de cartão'
-
-    # if valor <= 0:
-    #     mensagem = 'Valor incorreto'
-
-    # ### Fim Tratamento de erros ###
-
-
-
-
+    return HttpResponse("Status do Pagamento: {}".format(resposta))
