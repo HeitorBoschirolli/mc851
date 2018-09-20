@@ -4,13 +4,32 @@ import datetime
 
 
 def corretude_cpf (cpf):
+    """
+    Verifica se um cpf está formatado corretamente, isto é, possui 11 caracteres
+    numéricos.
+
+    Parâmetros
+    ----------
+    cpf : str ou unicode
+        CPF cuja formatação será verificada.
+
+    Retornos
+    ----------
+    status_cpf : int
+        Código indicando se o cpf está formatado corretamente (0) ou 
+        não (-2 ou -3).
+        -2 indica que o CPF passado possui um ou mais caracteres que não são
+        numéricos.
+        -3 indica que o tamanho do CPF passado está incorreto, ou seja, que ele
+        não possui 11 dígitos como deveria.
+    """
     cpf = str(cpf)
     
     if not cpf.isdigit():
-        return -2 # o cpf nao contem somente digitos
+        return -2
     
     if len(cpf) != 11:
-        return -3 # o cpf tem tamanho invalido
+        return -3
     
     return 0
 

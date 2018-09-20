@@ -109,7 +109,7 @@ def pagamento_boleto(request):
     }
     return render(request, 'servico/get_infos_boleto.html', context)
 
-def status_boleto(request):
+def feedback_pagamento_boleto(request):
     form_boleto = PagamentoBoletoForm(data=request.POST)
 
     cpf_comprador = form_boleto['cpf_comprador'].value()
@@ -137,4 +137,4 @@ def status_boleto(request):
         'status_data_vencimento_boleto': status_data_vencimento_boleto,
         'status_endereco_fisico_site': status_endereco_fisico_site,
     }
-    return render(request, 'servico/status_boleto.html', context)
+    return render(request, 'servico/feedback_pagamento_boleto.html', context)
