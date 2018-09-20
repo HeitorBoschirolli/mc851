@@ -3,7 +3,7 @@
 
 <body>
     
-    <form action="/servico/status_boleto/" method="POST" autocomplete="off">{% csrf_token %}
+    <form action="/servico/feedback_pagamento_boleto/" method="POST" autocomplete="off">{% csrf_token %}
         <div>
                 {{form_cartao.cpf_comprador.label}}
                 <br/> {{form_cartao.cpf_comprador}}
