@@ -16,13 +16,7 @@
                 {% if status_cnpj_site == 0 %}
                     {% if status_data_vencimento_boleto == 0 %}
                         {% if status_endereco_fisico_site == 0 %}
-                            <h3> BOLETO: <br> </h3>
-                            CPF: {{cpf_comprador}} <br>
-                            Valor: {{valor_compra}} <br>
-                            CNPJ da Empresa: {{cnpj_site}} <br>
-                            Banco: {{banco_gerador_boleto}} <br>
-                            Data de Vencimento: {{data_vencimento_boleto}} <br>
-                            Endereço da Empresa: {{endereco_fisico_site}} <br>
+                            Numero do Boleto: {{num_boleto}} <br>
                         {% endif %}
                     {% endif %}
                 {% endif %}

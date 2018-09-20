@@ -129,6 +129,17 @@ def feedback_pagamento_boleto(request):
                                                             endereco_fisico_site
                                                             )
 
+    is_valid = status_cpf_comprador == 0 and status_valor_compra == 0
+    is_valid = is_valid and status_cnpj_site == 0 and status_banco_gerador_boleto == 0
+    is_valid = is_valid and status_data_vencimento_boleto == 0
+    is_valid = is_valid and status_endereco_fisico_site == 0
+    num_boleto = -1 # valor default
+    if is_valid:
+        num_boleto = gera_boleto(cpf_comprador, valor_compra, cnpj_site, 
+                                 banco_gerador_boleto, data_vencimento_boleto, 
+                                 endereco_fisico_site)
+
+
     context = {
         'cpf_comprador' : cpf_comprador,
         'valor_compra' : valor_compra,
@@ -142,5 +153,6 @@ def feedback_pagamento_boleto(request):
         'status_banco_gerador_boleto': status_banco_gerador_boleto,
         'status_data_vencimento_boleto': status_data_vencimento_boleto,
         'status_endereco_fisico_site': status_endereco_fisico_site,
+        'num_boleto' : num_boleto,
     }
     return render(request, 'servico/feedback_pagamento_boleto.html', context)
