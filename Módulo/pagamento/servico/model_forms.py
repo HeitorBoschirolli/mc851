@@ -3,6 +3,9 @@
 from django import forms
 from .models import *
 
+class PrimaryKey(forms.Form):
+    pk1 = models.CharField(max_length= 1)
+
 class PagamentoForm(forms.Form):
     cpf_comprador = forms.CharField(label="CPF Comprador", max_length=50)
     valor_compra = forms.CharField(label="Valor", max_length=50)
