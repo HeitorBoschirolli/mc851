@@ -22,7 +22,7 @@ def input(request, pk):
     context = {
         'pk': primary_key,
     }
-    return render(request, 'input.html', context)
+    return render(request, 'servico/input.html', context)
 
 def status_boleto(request):
 
