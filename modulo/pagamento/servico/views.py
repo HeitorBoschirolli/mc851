@@ -166,22 +166,91 @@ def busca_pedido_resultado (request):
     pedido_form = PedidoForm(data=request.POST)
     try:
         pedido = Pedido.objects.get(pk = pedido_form['pedido_id'].value())
+        status_pedido = 1
     except:
-        pedido = None
+        status_pedido = 0
 
     try:
         cartao = Cartao.objects.get(pedido = pedido)
+        cartao_boleto = True
     except:
-        cartao = None
+        pass
 
     try:
         boleto = Boleto.objects.get(pedido = pedido)
+        cartao_boleto = False
     except:
-        boleto = None
+        pass
 
-    context = {
-        'pedido': pedido,
-        'cartao': cartao,
-        'boleto': boleto
+    if (status_pedido == 1):
+        cpf_cliente = pedido.cpf_cliente
+        cnpj_empresa = pedido.cnpj_empresa
+        valor = pedido.valor
+        data_emissao = pedido.data_emissao
+        if cartao_boleto:
+            num_cartao = cartao.num_cartao
+            cvv = cartao.cvv
+            nome_cartao = cartao.nome_cartao
+            data_vencimento_cartao = cartao.data_vencimento_cartao
+            credito = cartao.credito
+            num_parcelas = cartao.num_parcelas
+            banco = None
+            num_boleto = None
+            data_vencimento = None
+            nome_empresa = None
+            endereco_empresa = None
+            status = None
+        else:
+            num_cartao = None
+            cvv = None
+            nome_cartao = None
+            data_vencimento_cartao = None
+            credito = None
+            num_parcelas = None
+            banco = boleto.banco
+            num_boleto = boleto.num_boleto
+            data_vencimento = boleto.data_vencimento
+            nome_empresa = boleto.nome_empresa
+            endereco_empresa = boleto.endereco_empresa
+            status = boleto.status
+    else:
+        cpf_cliente = None
+        cnpj_empresa = None
+        valor = None
+        data_emissao = None
+        cartao_boleto = None
+        num_cartao = None
+        cvv = None
+        nome_cartao = None
+        data_vencimento_cartao = None
+        credito = None
+        num_parcelas = None
+        banco = None
+        num_boleto = None
+        data_vencimento = None
+        nome_empresa = None
+        endereco_empresa = None
+        status = None
+
+    data = {
+        'status_pedido': status_pedido,
+        'cpf_cliente': cpf_cliente,
+        'cnpj_empresa': cnpj_empresa,
+        'valor': valor,
+        'data_emissao': data_emissao,
+        'cartao_boleto': cartao_boleto,
+        'num_cartao': num_cartao,
+        'cvv': cvv,
+        'nome_cartao': nome_cartao,
+        'data_vencimento_cartao': data_vencimento_cartao,
+        'credito': credito,
+        'num_parcelas': num_parcelas,
+        'banco': banco,
+        'num_boleto': num_boleto,
+        'data_vencimento': data_vencimento,
+        'nome_empresa': nome_empresa,
+        'endereco_empresa': endereco_empresa,
+        'status': status
     }
-    return render (request, "servico/busca_pedido_resultado.html", context)
+
+    return JsonResponse(data)
