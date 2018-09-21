@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from datetime import *
 from .model_forms import *
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import *
 from .model_forms import *
@@ -26,27 +26,26 @@ def input(request, pk):
 
 def status_boleto(request):
 
-    '''Recupera do metodo POST a primary key do pedido'''
-    pk_pagamento = int(request.POST.get('pk_pagamento', 0))
-
-    '''Tenta encontrar o pedido no banco de dados. Caso o pedido nao seja encontrado, retorna uma mensagem de erro'''
     try:
-        pedido = Pedido.objects.get(pk=pk_pagamento)                #Recupera o pedido desejado a partir de sua primary key
-        status = Boleto.objects.get(pedido=pedido).status #Recupera o status de pagamento do boleto a partir do pedido encontrado
-    except ObjectDoesNotExist:
-        return HttpResponse("Pedido não encontrado")
+        '''Recupera do metodo POST a primary key do pedido'''
+        pk_pagamento = int(request.POST.get('pk_pagamento', 0))
 
-    '''Emite resposta para teste'''
-    if(status == 1):
-        resposta = 'Pago'
-    elif(status == 2):
-        resposta = 'Aguardando Pagamento'
-    elif(status == 3):
-        resposta = 'Boleto Vencido'
-    else:
-        resposta = 'Valor desconhecido'
+        '''Tenta encontrar o pedido no banco de dados. Caso o pedido nao seja encontrado, retorna uma mensagem de erro'''
+        try:
+            pedido = Pedido.objects.get(pk=pk_pagamento)  # Recupera o pedido desejado a partir de sua primary key
+            status = Boleto.objects.get(
+                pedido=pedido).status  # Recupera o status de pagamento do boleto a partir do pedido encontrado
+        except ObjectDoesNotExist:
+            status = 4
 
-    return HttpResponse("Status do Pagamento: {}".format(resposta))
+    except ValueError:
+        status = 5
+
+    data = {
+        'status': status
+    }
+
+    return JsonResponse(data)
 
 def CompraComCartao(request):
     if request.method == 'POST':
