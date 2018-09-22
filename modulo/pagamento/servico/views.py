@@ -154,9 +154,10 @@ def feedback_pagamento_boleto(request):
         'status_endereco_fisico_site': status_endereco_fisico_site,
         'num_boleto' : num_boleto,
     }
-    return render(request, 'servico/feedback_pagamento_boleto.html', context)
+    return JsonResponse(context)
+
 def busca_pedido (request):
-    pedido_form = PedidoForm();
+    pedido_form = PedidoForm()
     context = {
         'pedido_form': pedido_form
     }
