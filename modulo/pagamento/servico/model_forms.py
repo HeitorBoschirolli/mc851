@@ -17,13 +17,19 @@ class PagamentoForm(forms.Form):
 
 class PagamentoCartaoForm(PagamentoForm):
     # CARTAO
-    num_cartao = forms.CharField(label="Numero do Cartão", max_length=50)
+    num_cartao = forms.CharField(label="Numero do Cartão", max_length=50, required=True)
     cvv = forms.CharField(label="CVV", max_length=5)
     nome_cartao = forms.CharField(label="Nome no Cartão", max_length=50)
     data_vencimento_cartao_str = forms.DateField(label="Data de Vencimento")
     credito = forms.BooleanField(label="Crédito")
-    num_parcelas = forms.IntegerField(label="Num. Parcelas")
-    pedido = forms.IntegerField(label="Pedido")
+    num_parcelas = forms.IntegerField(label="Numa. Parcelas")
+
+    def __init__(self, *args, **kwargs):
+        super(PagamentoCartaoForm, self).__init__(*args, **kwargs)
+
+        for key in self.fields:
+            self.fields[key].required = False 
+
 
 class PagamentoBoletoForm(PagamentoForm):
     banco_gerador_boleto = forms.CharField(label="Banco", max_length=50)

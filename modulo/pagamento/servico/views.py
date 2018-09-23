@@ -50,13 +50,14 @@ def status_boleto(request):
 def CompraComCartao(request):
     if request.method == 'POST':
         form_cartao = PagamentoCartaoForm(data=request.POST)
+        
         context = {
-            'form_cartao': form_cartao,
+            'input': request.POST,
             'status': 1,
             'mensagem': 'Pagamento Aprovado',
             'pk_pagamento': 1,
         }
-        return render(request, 'pagamento_cartao.html', context)
+        return JsonResponse(context, json_dumps_params={'indent': 2})
 
     else:
         form_cartao = PagamentoCartaoForm()
