@@ -83,6 +83,7 @@ def corretude_cnpj (cnpj):
 
     return 0
 
+
 def corretude_data (data):
     # if type(data) != str:
     #     return -1 # o tipo passado esta incorreto
@@ -96,8 +97,31 @@ def corretude_data (data):
     return 0
 
 
+# Verifica se a data do cartão está no formato correto e se o cartão não está vencido
+# INPUT: 
+#   data
+# OUTPUT:
+#    0 --> Data correta e válida
+#   -1 --> Data no formato correto porém cartão já vencido
+#   -2 --> Data no formato incorreto
+def corretude_data_vencimento_cartao (data_vencimento_str):
+    status = corretude_data(data_vencimento_str)
+    if status != -2: # data está no formato correto
+        data_vencimento = datetime.datetime.strptime(data_vencimento_str, '%d/%m/%Y')
+        if datetime.datetime.now() < data_vencimento:
+            return 0 # Data no formato correto e não está vencido
+        else:
+            return -1 # Data no formato correto porém vencido
+    else:
+        return status # Data no formato incorreto
+
+
+
+
+
 def corretude_endereco_fisico (endereco):
     return 0
+
 
 def gera_boleto(cpf_comprador, valor_compra, cnpj_site, banco,
                 data_vencimento, endereco_empresa, 
@@ -131,3 +155,55 @@ def gera_boleto(cpf_comprador, valor_compra, cnpj_site, banco,
     return num_boleto
 
 
+def corretude_numero_cartao (numero_cartao):
+    numero_cartao = str(numero_cartao)
+    
+    if not numero_cartao.isdigit():
+        return -2 # o numero_cartao nao contem somente digitos
+    
+    if len(numero_cartao) != 16:
+        return -3 # o numero_cartao tem tamanho invalido
+
+    return 0
+
+
+def corretude_cvv (cvv):
+    cvv = str(cvv)
+    
+    if not cvv.isdigit():
+        return -2 # o cvv nao contem somente digitos
+    
+    if len(cvv) != 3:
+        return -3 # o cvv tem tamanho invalido
+
+    return 0
+
+
+def corretude_nome_impresso_cartao (nome_impresso_cartao):
+    nome_impresso_cartao = str(nome_impresso_cartao)
+
+    if not nome_impresso_cartao.isalpha():
+        return -2 # contem caracteres que nao sao letras
+
+    return 0
+
+
+def corretude_tipo_cartao (credito):
+    if credito:
+        credito = int(credito)
+    else:
+        return -1 # Forma de pagamento não escolhida
+
+    if credito not in [0,1]:
+        return -2 # Opcao de pagamento inválida
+    return 0
+
+def corretude_num_parcelas (num_parcelas):
+    try:
+        num_parcelas = int(num_parcelas)
+    except:
+        return -1 # o num_parcelas nao contem somente digitos
+
+    if num_parcelas <= 0:
+        return -2 # número de parcelas inválido
+    return 0

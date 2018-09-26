@@ -17,11 +17,11 @@ class PagamentoForm(forms.Form):
 
 class PagamentoCartaoForm(PagamentoForm):
     # CARTAO
-    num_cartao = forms.CharField(label="Numero do Cartão", max_length=50, required=True)
-    cvv = forms.CharField(label="CVV", max_length=5)
+    numero_cartao = forms.CharField(label="Numero do Cartão", max_length=50, required=True)
+    cvv_cartao = forms.CharField(label="CVV", max_length=5)
     nome_cartao = forms.CharField(label="Nome no Cartão", max_length=50)
-    data_vencimento_cartao_str = forms.DateField(label="Data de Vencimento")
-    credito = forms.BooleanField(label="Crédito")
+    data_vencimento_cartao = forms.DateField(label="Data de Vencimento")
+    credito = forms.IntegerField(label="Crédito")
     num_parcelas = forms.IntegerField(label="Numa. Parcelas")
 
     def __init__(self, *args, **kwargs):

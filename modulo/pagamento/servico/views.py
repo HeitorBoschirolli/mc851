@@ -9,6 +9,7 @@ from .models import *
 from .model_forms import *
 from .utils import *
 from django.core.exceptions import ObjectDoesNotExist
+from .simulacao_banco import *
 
 
 def index(request):
@@ -49,13 +50,49 @@ def status_boleto(request):
 
 def CompraComCartao(request):
     if request.method == 'POST':
+        # Cria o formulário e com os dados recebidos
         form_cartao = PagamentoCartaoForm(data=request.POST)
         
+        # Validação das informações recebidas
+        erro = False
+        status = {}
+        status['cpf_comprador'] = corretude_cpf(form_cartao['cpf_comprador'].value())
+        status['valor_compra'] = corretude_valor(form_cartao['valor_compra'].value())
+        status['cnpj_site'] = corretude_cnpj(form_cartao['cnpj_site'].value())
+        status['data_emissao'] = corretude_data(form_cartao['data_emissao'].value())
+        status['numero_cartao'] = corretude_numero_cartao(form_cartao['numero_cartao'].value())
+        status['nome_cartao'] = corretude_nome_impresso_cartao(form_cartao['nome_cartao'].value())
+        status['cvv_cartao'] = corretude_cvv(form_cartao['cvv_cartao'].value())
+        status['data_vencimento_cartao'] = corretude_data_vencimento_cartao(form_cartao['data_vencimento_cartao'].value())
+        status['credito'] = corretude_tipo_cartao(form_cartao['credito'].value())
+        status['num_parcelas'] = corretude_num_parcelas(form_cartao['num_parcelas'].value())
+
+        for validacao in status:
+            if status[validacao] != 0:
+                erro = True # caso ocorra algum erro na validação dos dados
+                break
+
+        # Realiza o pagamento junto ao banco
+        pagamento = 0
+        if erro == False: # Se não ocorreu nenhum erro, então tenta fazer o pagamento
+            pagamento = simula_pagamento_cartao(form_cartao['numero_cartao'].value())
+        else:
+            pagamento = -2
+
+
+
         context = {
-            'input': request.POST,
-            'status': 1,
-            'mensagem': 'Pagamento Aprovado',
-            'pk_pagamento': 1,
+            'status_cpf_comprador': status['cpf_comprador'],
+            'status_valor_compra': status['valor_compra'],
+            'status_cnpj_site': status['cnpj_site'],
+            'status_data_emissao': status['data_emissao'],
+            'status_numero_cartao': status['numero_cartao'],
+            'status_nome_cartao': status['nome_cartao'],
+            'status_cvv_cartao': status['cvv_cartao'],
+            'status_data_vencimento_cartao': status['data_vencimento_cartao'],
+            'status_credito': status['credito'],
+            'status_num_parcelas': status['num_parcelas'],
+            'pagamento': pagamento,
         }
         return JsonResponse(context, json_dumps_params={'indent': 2})
 
@@ -63,43 +100,6 @@ def CompraComCartao(request):
         form_cartao = PagamentoCartaoForm()
         return render(request, 'pagamento_cartao.html', {'form_cartao': form_cartao})
 
-
-    #return render(request, 'pagamento_cartao_interface.html', context)
-    # mensagem = ''
-
-    # # Cartão
-    # # Cartao
-    # num_cartao = request.POST('num_cartao', '123')
-    # cvv = request.POST('cvv', '123')
-    # nome_cartao = request.POST('nome_cartao', 'Paulo')
-    # data_vencimento_cartao_str = request.POST('data_vencimento_cartao', '11-2018')
-    # credito = request.POST('credito', '1')
-    # num_parcelas = int(request.POST('num_parcelas', '2'))
-    # pedido = request.POST('pedido', '1')
-
-    # # Pedido
-    # cpf_cliente = request.POST('cpf_cliente', '123')
-    # cnpj_empresa = request.POST('cnpj_empresa', '123')
-    # valor = int(request.POST('valor', '123'))
-    # data_emissao = request.POST('data_emissao', '10-12-2018')
-
-
-    # ### Início Tratamento de erros ###
-
-    # # Se cartão estiver vencido retorna erro
-    # hoje = datetime.now()
-    # data_vencimento_cartao = datetime.strptime('data_vencimento_cartao_str', '%m-%Y')
-    # if not hoje < data_vencimento_cartao:
-    #     mensagem = 'Cartão Vencido'
-
-    # # Se for débito com parcelas retorna erro
-    # if num_parcelas > 1 and credito == 0:
-    #     mensagem = 'Numero de parcelas não condiz com o tipo de cartão'
-
-    # if valor <= 0:
-    #     mensagem = 'Valor incorreto'
-
-    # ### Fim Tratamento de erros ###
 
 
 def pagamento_boleto(request):
