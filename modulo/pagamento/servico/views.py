@@ -11,25 +11,21 @@ from .utils import *
 from django.core.exceptions import ObjectDoesNotExist
 from .simulacao_banco import *
 
+import urllib2
+import json
 
 def index(request):
     return HttpResponse("Hello, world. You're at the payment index.")
 
-def input(request, pk):
-
-    primary_key = PrimaryKey()
-    primary_key.pk1 = pk
-
-    context = {
-        'pk': primary_key,
-    }
-    return render(request, 'servico/input.html', context)
 
 def status_boleto(request):
 
     try:
         '''Recupera do metodo POST a primary key do pedido'''
-        pk_pagamento = int(request.POST.get('pk_pagamento', 0))
+
+        pk_pagamento = json.loads(request.body)
+        pk_pagamento = int(pk_pagamento['pk_pagamento'])
+
 
         '''Tenta encontrar o pedido no banco de dados. Caso o pedido nao seja encontrado, retorna uma mensagem de erro'''
         try:
@@ -256,3 +252,26 @@ def busca_pedido_resultado (request):
     }
 
     return JsonResponse(data)
+
+def teste(request):
+
+    url = 'http://127.0.0.1:8000/servico/status_boleto'
+
+    status = {
+        'pk_pagamento': '5'
+    }
+
+    data = json.dumps(status)
+
+    request2 = urllib2.Request(url, data)
+
+    try:
+        # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
+        serializade_data = urllib2.urlopen(request2).read()
+    except Exception, e:
+        print e.code
+        print e.read()
+
+    resposta = json.loads(serializade_data)
+
+    return HttpResponse('Retorno: {}'.format(resposta['status']))
