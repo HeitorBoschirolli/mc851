@@ -40,26 +40,29 @@ def status_boleto(request):
         'status': status
     }
 
-    return JsonResponse(data)
+    return JsonResponse(data) 
 
 def CompraComCartao(request):
+    # import pdb; pdb.set_trace()
     if request.method == 'POST':
         # Cria o formulário e com os dados recebidos
-        form_cartao = PagamentoCartaoForm(data=request.POST)
+        form_cartao = json.loads(request.body)
+        # form_cartao = PagamentoCartaoForm(data=request.POST)
         
         # Validação das informações recebidas
         erro = False
         status = {}
-        status['cpf_comprador'] = corretude_cpf(form_cartao['cpf_comprador'].value())
-        status['valor_compra'] = corretude_valor(form_cartao['valor_compra'].value())
-        status['cnpj_site'] = corretude_cnpj(form_cartao['cnpj_site'].value())
-        status['data_emissao'] = corretude_data(form_cartao['data_emissao'].value())
-        status['numero_cartao'] = corretude_numero_cartao(form_cartao['numero_cartao'].value())
-        status['nome_cartao'] = corretude_nome_impresso_cartao(form_cartao['nome_cartao'].value())
-        status['cvv_cartao'] = corretude_cvv(form_cartao['cvv_cartao'].value())
-        status['data_vencimento_cartao'] = corretude_data_vencimento_cartao(form_cartao['data_vencimento_cartao'].value())
-        status['credito'] = corretude_tipo_cartao(form_cartao['credito'].value())
-        status['num_parcelas'] = corretude_num_parcelas(form_cartao['num_parcelas'].value())
+
+        status['cpf_comprador'] = corretude_cpf(form_cartao['cpf_comprador'])
+        status['valor_compra'] = corretude_valor(form_cartao['valor_compra'])
+        status['cnpj_site'] = corretude_cnpj(form_cartao['cnpj_site'])
+        status['data_emissao'] = corretude_data(form_cartao['data_emissao'])
+        status['numero_cartao'] = corretude_numero_cartao(form_cartao['numero_cartao'])
+        status['nome_cartao'] = corretude_nome_impresso_cartao(form_cartao['nome_cartao'])
+        status['cvv_cartao'] = corretude_cvv(form_cartao['cvv_cartao'])
+        status['data_vencimento_cartao'] = corretude_data_vencimento_cartao(form_cartao['data_vencimento_cartao'])
+        status['credito'] = corretude_tipo_cartao(form_cartao['credito'])
+        status['num_parcelas'] = corretude_num_parcelas(form_cartao['num_parcelas'])
 
         for validacao in status:
             if status[validacao] != 0:
@@ -190,16 +193,14 @@ def feedback_pagamento_boleto(request):
     return JsonResponse(context)
 
 def busca_pedido (request):
-    pedido_form = PedidoForm
-    context = {
-        'pedido_form': pedido_form
-    }
-    return render (request, 'servico/busca_pedido.html', context)
 
-def busca_pedido_resultado (request):
-    pedido_form = PedidoForm(data=request.POST)
     try:
-        pedido = Pedido.objects.get(pk = pedido_form['pedido_id'].value())
+
+        pk_pagamento = json.loads(request.body)
+        pk_pagamento = int(pk_pagamento['pedido_id'])
+
+        pedido = Pedido.objects.get(pk = pk_pagamento)
+
         status_pedido = 1
     except:
         status_pedido = 0
@@ -289,12 +290,24 @@ def busca_pedido_resultado (request):
 
     return JsonResponse(data)
 
+
 def teste(request):
 
-    url = 'http://127.0.0.1:8000/servico/status_boleto'
+    url = 'http://127.0.0.1:8000/servico/compra_com_cartao/'
+
 
     status = {
-        'pk_pagamento': '5'
+        'cpf_comprador':11123456789,
+        'valor_compra':230.25,
+        'cnpj_site':32654785463214,
+        'data_emissao':1/2/2018,
+        'numero_cartao':3621456987458965,
+        'nome_cartao':"Heitor Boschirolli Comel",
+        'cvv_cartao':000,
+        'data_vencimento_cartao':12/19,
+        'credito':1,
+        'num_parcelas':10
+
     }
 
     data = json.dumps(status)
@@ -310,4 +323,5 @@ def teste(request):
 
     resposta = json.loads(serializade_data)
 
-    return JsonResponse(resposta)# HttpResponse('Retorno: {}'.format(resposta['status']))
+    return JsonResponse(resposta)
+    # return HttpResponse('Retorno: {}'.format(resposta['status']))

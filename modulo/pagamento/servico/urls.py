@@ -13,6 +13,6 @@ urlpatterns = [
     url(r'^feedback_pagamento_boleto',
         views.feedback_pagamento_boleto,
         name='feedback_pagamento_boleto'),
-    url(r'^busca_pedido/', views.busca_pedido, name='busca_pedido'),
-    url(r'^busca_pedido_resultado/', views.busca_pedido_resultado, name='busca_pedido_resultado'),
+    url(r'^busca_pedido', views.busca_pedido, name='busca_pedido'),
+    # url(r'^busca_pedido_resultado/', views.busca_pedido_resultado, name='busca_pedido_resultado'),
 ]
