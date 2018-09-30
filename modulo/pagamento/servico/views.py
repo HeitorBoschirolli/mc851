@@ -10,7 +10,6 @@ from .model_forms import *
 from .utils import *
 from django.core.exceptions import ObjectDoesNotExist
 from .simulacao_banco import *
-
 import urllib2
 import json
 
@@ -22,7 +21,6 @@ def status_boleto(request):
 
     try:
         '''Recupera do metodo POST a primary key do pedido'''
-
         pk_pagamento = json.loads(request.body)
         pk_pagamento = int(pk_pagamento['pk_pagamento'])
 
@@ -96,14 +94,52 @@ def CompraComCartao(request):
         form_cartao = PagamentoCartaoForm()
         return render(request, 'pagamento_cartao.html', {'form_cartao': form_cartao})
 
-
-
 def pagamento_boleto(request):
-    form_cartao = PagamentoBoletoForm()
+    form_boleto = json.loads(request.body)
+    cpf_comprador = form_boleto['cpf_comprador']
+    valor_compra = form_boleto['valor_compra']
+    cnpj_site = form_boleto['cnpj_site']
+    banco_gerador_boleto = form_boleto['banco_gerador_boleto']
+    banco_gerador_boleto = formata_banco(banco_gerador_boleto)
+    data_vencimento_boleto = form_boleto['data_vencimento_boleto']
+    endereco_fisico_site = form_boleto['endereco_fisico_site']
+
+    status_cpf_comprador = corretude_cpf(cpf_comprador)
+    status_valor_compra = corretude_valor(valor_compra)
+    status_cnpj_site = corretude_cnpj(cnpj_site)
+    status_banco_gerador_boleto = corretude_banco(banco_gerador_boleto)
+    status_data_vencimento_boleto = corretude_data(data_vencimento_boleto)
+    status_endereco_fisico_site = corretude_endereco_fisico(
+                                                            endereco_fisico_site
+                                                            )
+
+    is_valid = status_cpf_comprador == 0 and status_valor_compra == 0
+    is_valid = is_valid and status_cnpj_site == 0 and status_banco_gerador_boleto == 0
+    is_valid = is_valid and status_data_vencimento_boleto == 0
+    is_valid = is_valid and status_endereco_fisico_site == 0
+    num_boleto = -1 # valor default
+    if is_valid:
+        num_boleto = gera_boleto(cpf_comprador, valor_compra, cnpj_site,
+                                banco_gerador_boleto, data_vencimento_boleto,
+                                endereco_fisico_site)
+
+
     context = {
-        'form_cartao': form_cartao,
+        'cpf_comprador' : cpf_comprador,
+        'valor_compra' : valor_compra,
+        'cnpj_site' : cnpj_site,
+        'banco_gerador_boleto' : banco_gerador_boleto,
+        'data_vencimento_boleto' : data_vencimento_boleto,
+        'endereco_fisico_site' : endereco_fisico_site,
+        'status_cpf_comprador': status_cpf_comprador,
+        'status_valor_compra': status_valor_compra,
+        'status_cnpj_site': status_cnpj_site,
+        'status_banco_gerador_boleto': status_banco_gerador_boleto,
+        'status_data_vencimento_boleto': status_data_vencimento_boleto,
+        'status_endereco_fisico_site': status_endereco_fisico_site,
+        'num_boleto' : num_boleto,
     }
-    return render(request, 'servico/get_infos_boleto.html', context)
+    return JsonResponse(context)
 
 def feedback_pagamento_boleto(request):
     form_boleto = PagamentoBoletoForm(data=request.POST)
@@ -154,7 +190,7 @@ def feedback_pagamento_boleto(request):
     return JsonResponse(context)
 
 def busca_pedido (request):
-    pedido_form = PedidoForm()
+    pedido_form = PedidoForm
     context = {
         'pedido_form': pedido_form
     }
@@ -274,4 +310,4 @@ def teste(request):
 
     resposta = json.loads(serializade_data)
 
-    return HttpResponse('Retorno: {}'.format(resposta['status']))
+    return JsonResponse(resposta)# HttpResponse('Retorno: {}'.format(resposta['status']))
