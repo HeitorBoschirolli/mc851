@@ -18,7 +18,7 @@ def corretude_cpf (cpf):
     Retornos
     ----------
     status_cpf : int
-        Código indicando se o cpf está formatado corretamente (0) ou 
+        Código indicando se o cpf está formatado corretamente (0) ou
         não (-2 ou -3).
         -2 indica que o CPF passado possui um ou mais caracteres que não são
         numéricos.
@@ -26,13 +26,13 @@ def corretude_cpf (cpf):
         não possui 11 dígitos como deveria.
     """
     cpf = str(cpf)
-    
+
     if not cpf.isdigit():
         return -2
-    
+
     if len(cpf) != 11:
         return -3
-    
+
     return 0
 
 def corretude_valor (valor):
@@ -53,7 +53,7 @@ def corretude_valor (valor):
         return -3 # mais de duas casas decimais
 
     return 0
-    
+
 def corretude_banco (banco):
     banco = str(banco)
 
@@ -69,15 +69,15 @@ def formata_banco (banco):
     banco = str(banco)
     return banco.lower()
 
-    
+
 def corretude_cnpj (cnpj):
     # if type(cnpj) != str:
     #     return -1 # o tipo passado esta incorreto
     cnpj = str(cnpj)
-    
+
     if not cnpj.isdigit():
         return -2 # o cnpj nao contem somente digitos
-    
+
     if len(cnpj) != 14:
         return -3 # o cnpj tem tamanho invalido
 
@@ -93,12 +93,12 @@ def corretude_data (data):
         datetime.datetime.strptime(data, '%d/%m/%Y')
     except ValueError:
         return -2 # data no formato errado
-    
+
     return 0
 
 
 # Verifica se a data do cartão está no formato correto e se o cartão não está vencido
-# INPUT: 
+# INPUT:
 #   data
 # OUTPUT:
 #    0 --> Data correta e válida
@@ -124,11 +124,11 @@ def corretude_endereco_fisico (endereco):
 
 
 def gera_boleto(cpf_comprador, valor_compra, cnpj_site, banco,
-                data_vencimento, endereco_empresa, 
+                data_vencimento, endereco_empresa,
                 nome_empresa="nao precisa ter isso"):
-    status = 2 # esperando pagamento ser efetuado
-    
-    data_emissao = datetime.datetime.now()
+    status_boleto = 2 # esperando pagamento ser efetuado
+
+    data_emissao_pedido = datetime.datetime.now()
 
     num_boleto = str(random.randint(1000000000, 9999999999))
     num_boleto += str(random.randint(10000000000, 99999999999))
@@ -138,17 +138,17 @@ def gera_boleto(cpf_comprador, valor_compra, cnpj_site, banco,
     pedido = Pedido(cpf_cliente=cpf_comprador,
                     cnpj_empresa=cnpj_site,
                     valor=valor_compra,
-                    data_emissao=data_emissao)
+                    data_emissao_pedido=data_emissao_pedido)
     pedido.save()
 
     data_vencimento = datetime.datetime.strptime(data_vencimento, "%d/%m/%Y")
 
     boleto = Boleto(banco=banco,
                     num_boleto=num_boleto,
-                    data_vencimento=data_vencimento,
+                    data_vencimento_boleto=data_vencimento,
                     nome_empresa=nome_empresa,
                     endereco_empresa=endereco_empresa,
-                    status=status,
+                    status_boleto=status_boleto,
                     pedido=pedido)
     boleto.save()
 
@@ -157,10 +157,10 @@ def gera_boleto(cpf_comprador, valor_compra, cnpj_site, banco,
 
 def corretude_numero_cartao (numero_cartao):
     numero_cartao = str(numero_cartao)
-    
+
     if not numero_cartao.isdigit():
         return -2 # o numero_cartao nao contem somente digitos
-    
+
     if len(numero_cartao) != 16:
         return -3 # o numero_cartao tem tamanho invalido
 
@@ -169,10 +169,10 @@ def corretude_numero_cartao (numero_cartao):
 
 def corretude_cvv (cvv):
     cvv = str(cvv)
-    
+
     if not cvv.isdigit():
         return -2 # o cvv nao contem somente digitos
-    
+
     if len(cvv) != 3:
         return -3 # o cvv tem tamanho invalido
 

@@ -12,7 +12,7 @@ class PrimaryKey(forms.Form):
 class PagamentoForm(forms.Form):
     cpf_comprador = forms.CharField(label="CPF Comprador", max_length=50)
     valor_compra = forms.CharField(label="Valor", max_length=50)
-    data_emissao = forms.DateField(label="Data de Emissão")
+    data_emissao_pedido = forms.DateField(label="Data de Emissão")
     cnpj_site = forms.CharField(label="CNPJ", max_length=50)
 
 class PagamentoCartaoForm(PagamentoForm):
@@ -28,7 +28,7 @@ class PagamentoCartaoForm(PagamentoForm):
         super(PagamentoCartaoForm, self).__init__(*args, **kwargs)
 
         for key in self.fields:
-            self.fields[key].required = False 
+            self.fields[key].required = False
 
 
 class PagamentoBoletoForm(PagamentoForm):
