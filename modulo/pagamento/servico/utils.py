@@ -123,17 +123,17 @@ def corretude_endereco_fisico (endereco):
     return 0
 
 
-def gera_boleto(cpf_comprador, valor_compra, cnpj_site, banco,
-                data_vencimento, endereco_empresa,
-                nome_empresa="nao precisa ter isso"):
+def gera_boleto(cpf_comprador, valor_compra, cnpj_site, data_emissao_pedido, banco,
+                data_vencimento, endereco_empresa):
     status_boleto = 2 # esperando pagamento ser efetuado
-
-    data_emissao_pedido = datetime.datetime.now()
 
     num_boleto = str(random.randint(1000000000, 9999999999))
     num_boleto += str(random.randint(10000000000, 99999999999))
     num_boleto += str(random.randint(10000000000, 99999999999))
     num_boleto += str(random.randint(10000000000000, 99999999999999))
+
+    data_vencimento = datetime.datetime.strptime(data_vencimento, "%d/%m/%Y")
+    data_emissao_pedido = datetime.datetime.strptime(data_emissao_pedido, "%d/%m/%Y")
 
     pedido = Pedido(cpf_cliente=cpf_comprador,
                     cnpj_empresa=cnpj_site,
@@ -141,18 +141,15 @@ def gera_boleto(cpf_comprador, valor_compra, cnpj_site, banco,
                     data_emissao_pedido=data_emissao_pedido)
     pedido.save()
 
-    data_vencimento = datetime.datetime.strptime(data_vencimento, "%d/%m/%Y")
-
     boleto = Boleto(banco=banco,
                     num_boleto=num_boleto,
                     data_vencimento_boleto=data_vencimento,
-                    nome_empresa=nome_empresa,
                     endereco_empresa=endereco_empresa,
                     status_boleto=status_boleto,
                     pedido=pedido)
     boleto.save()
 
-    return num_boleto
+    return boleto
 
 
 def corretude_numero_cartao (numero_cartao):
@@ -207,3 +204,25 @@ def corretude_num_parcelas (num_parcelas):
     if num_parcelas <= 0:
         return -2 # número de parcelas inválido
     return 0
+
+def gera_cartao (cpf_comprador, valor_compra, cnpj_site, data_emissao_pedido, num_cartao, cvv, nome_cartao, data_vencimento_cartao, credito, num_parcelas):
+
+    data_emissao_pedido = datetime.datetime.strptime(data_emissao_pedido, "%d/%m/%Y")
+    data_vencimento_cartao = datetime.datetime.strptime(data_vencimento_cartao, "%d/%m/%Y")
+
+    pedido = Pedido(cpf_cliente = cpf_comprador,
+                    cnpj_empresa = cnpj_site,
+                    valor = valor_compra,
+                    data_emissao_pedido = data_emissao_pedido)
+    pedido.save()
+
+    cartao = Cartao(num_cartao = num_cartao,
+                    cvv = cvv,
+                    nome_cartao = nome_cartao,
+                    data_vencimento_cartao = data_vencimento_cartao,
+                    credito = credito,
+                    num_parcelas = num_parcelas,
+                    pedido = pedido)
+    cartao.save()
+
+    return cartao

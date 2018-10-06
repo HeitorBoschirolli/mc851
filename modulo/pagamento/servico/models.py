@@ -31,7 +31,6 @@ class Boleto(models.Model):
     banco = models.CharField (max_length = constant.BANCO_LENGTH)
     num_boleto = models.CharField (max_length = constant.NUM_BOLETO_LENGTH)
     data_vencimento_boleto = models.DateField ()
-    nome_empresa = models.CharField (max_length = constant.NOME_EMPRESA_LENGTH)
     endereco_empresa = models.CharField (max_length = constant.ENDERECO_EMPRESA_LENGTH)
     status_boleto = models.IntegerField ()
     pedido = models.ForeignKey ('Pedido', null = True, on_delete = models.CASCADE)

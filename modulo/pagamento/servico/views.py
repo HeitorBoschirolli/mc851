@@ -44,8 +44,11 @@ def pagamento_cartao (request):
         pagamento = 0
         if erro == False: # Se não ocorreu nenhum erro, então tenta fazer o pagamento
             pagamento = simula_pagamento_cartao(form_cartao['numero_cartao'])
+            cartao = gera_cartao(form_cartao['cpf_comprador'], form_cartao['valor_compra'], form_cartao['cnpj_site'], form_cartao['data_emissao_pedido'], form_cartao['numero_cartao'], form_cartao['cvv_cartao'], form_cartao['nome_cartao'], form_cartao['data_vencimento_cartao'], form_cartao['credito'], form_cartao['num_parcelas'])
+            pk_pedido = cartao.pedido.pk
         else:
             pagamento = -2
+            pk_pedido = None
 
 
 
@@ -61,6 +64,7 @@ def pagamento_cartao (request):
             'status_credito': status['credito'],
             'status_num_parcelas': status['num_parcelas'],
             'pagamento': pagamento,
+            'pk_pedido' : pk_pedido,
         }
         return JsonResponse(context, json_dumps_params={'indent': 2})
 
@@ -69,10 +73,12 @@ def pagamento_cartao (request):
         return render(request, 'pagamento_cartao.html', {'form_cartao': form_cartao})
 
 def pagamento_boleto(request):
+
     form_boleto = json.loads(request.body)
     cpf_comprador = form_boleto['cpf_comprador']
     valor_compra = form_boleto['valor_compra']
     cnpj_site = form_boleto['cnpj_site']
+    data_emissao_pedido = form_boleto['data_emissao_pedido']
     banco_gerador_boleto = form_boleto['banco_gerador_boleto']
     banco_gerador_boleto = formata_banco(banco_gerador_boleto)
     data_vencimento_boleto = form_boleto['data_vencimento_boleto']
@@ -81,6 +87,7 @@ def pagamento_boleto(request):
     status_cpf_comprador = corretude_cpf(cpf_comprador)
     status_valor_compra = corretude_valor(valor_compra)
     status_cnpj_site = corretude_cnpj(cnpj_site)
+    status_data_emissao_pedido = corretude_data(data_emissao_pedido)
     status_banco_gerador_boleto = corretude_banco(banco_gerador_boleto)
     status_data_vencimento_boleto = corretude_data(data_vencimento_boleto)
     status_endereco_fisico_site = corretude_endereco_fisico(
@@ -91,20 +98,23 @@ def pagamento_boleto(request):
     is_valid = is_valid and status_cnpj_site == 0 and status_banco_gerador_boleto == 0
     is_valid = is_valid and status_data_vencimento_boleto == 0
     is_valid = is_valid and status_endereco_fisico_site == 0
+    is_valid = is_valid and status_data_emissao_pedido == 0
     num_boleto = -1 # valor default
     if is_valid:
-        num_boleto = gera_boleto(cpf_comprador, valor_compra, cnpj_site,
+        boleto = gera_boleto(cpf_comprador, valor_compra, cnpj_site, data_emissao_pedido,
                                 banco_gerador_boleto, data_vencimento_boleto,
                                 endereco_fisico_site)
+        num_boleto = boleto.num_boleto
+        pk_pedido = boleto.pedido.pk
+    else:
+        num_boleto = None
+        pk_pedido = None
+
+
 
 
     context = {
-        'cpf_comprador' : cpf_comprador,
-        'valor_compra' : valor_compra,
-        'cnpj_site' : cnpj_site,
-        'banco_gerador_boleto' : banco_gerador_boleto,
-        'data_vencimento_boleto' : data_vencimento_boleto,
-        'endereco_fisico_site' : endereco_fisico_site,
+        'status' : is_valid,
         'status_cpf_comprador': status_cpf_comprador,
         'status_valor_compra': status_valor_compra,
         'status_cnpj_site': status_cnpj_site,
@@ -112,6 +122,7 @@ def pagamento_boleto(request):
         'status_data_vencimento_boleto': status_data_vencimento_boleto,
         'status_endereco_fisico_site': status_endereco_fisico_site,
         'num_boleto' : num_boleto,
+        'pk_pedido' : pk_pedido,
     }
     return JsonResponse(context)
 
@@ -181,7 +192,6 @@ def busca_pedido (request):
             banco = None
             num_boleto = None
             data_vencimento_boleto = None
-            nome_empresa = None
             endereco_empresa = None
             status_boleto = None
         else:
@@ -194,7 +204,6 @@ def busca_pedido (request):
             banco = boleto.banco
             num_boleto = boleto.num_boleto
             data_vencimento_boleto = boleto.data_vencimento_boleto
-            nome_empresa = boleto.nome_empresa
             endereco_empresa = boleto.endereco_empresa
             status_boleto = boleto.status_boleto
     else:
@@ -212,7 +221,6 @@ def busca_pedido (request):
         banco = None
         num_boleto = None
         data_vencimento_boleto = None
-        nome_empresa = None
         endereco_empresa = None
         status_boleto = None
 
@@ -232,61 +240,12 @@ def busca_pedido (request):
         'banco': banco,
         'num_boleto': num_boleto,
         'data_vencimento_boleto': data_vencimento_boleto,
-        'nome_empresa': nome_empresa,
         'endereco_empresa': endereco_empresa,
         'status_boleto': status_boleto
     }
 
     return JsonResponse(data)
 
-
-def feedback_pagamento_boleto(request):
-    form_boleto = PagamentoBoletoForm(data=request.POST)
-
-    cpf_comprador = form_boleto['cpf_comprador'].value()
-    valor_compra = form_boleto['valor_compra'].value()
-    cnpj_site = form_boleto['cnpj_site'].value()
-    banco_gerador_boleto = form_boleto['banco_gerador_boleto'].value()
-    banco_gerador_boleto = formata_banco(banco_gerador_boleto)
-    data_vencimento_boleto = form_boleto['data_vencimento_boleto'].value()
-    endereco_fisico_site = form_boleto['endereco_fisico_site'].value()
-
-    status_cpf_comprador = corretude_cpf(cpf_comprador)
-    status_valor_compra = corretude_valor(valor_compra)
-    status_cnpj_site = corretude_cnpj(cnpj_site)
-    status_banco_gerador_boleto = corretude_banco(banco_gerador_boleto)
-    status_data_vencimento_boleto = corretude_data(data_vencimento_boleto)
-    status_endereco_fisico_site = corretude_endereco_fisico(
-                                                            endereco_fisico_site
-                                                            )
-
-    is_valid = status_cpf_comprador == 0 and status_valor_compra == 0
-    is_valid = is_valid and status_cnpj_site == 0 and status_banco_gerador_boleto == 0
-    is_valid = is_valid and status_data_vencimento_boleto == 0
-    is_valid = is_valid and status_endereco_fisico_site == 0
-    num_boleto = -1 # valor default
-    if is_valid:
-        num_boleto = gera_boleto(cpf_comprador, valor_compra, cnpj_site,
-                                 banco_gerador_boleto, data_vencimento_boleto,
-                                 endereco_fisico_site)
-
-
-    context = {
-        'cpf_comprador' : cpf_comprador,
-        'valor_compra' : valor_compra,
-        'cnpj_site' : cnpj_site,
-        'banco_gerador_boleto' : banco_gerador_boleto,
-        'data_vencimento_boleto' : data_vencimento_boleto,
-        'endereco_fisico_site' : endereco_fisico_site,
-        'status_cpf_comprador': status_cpf_comprador,
-        'status_valor_compra': status_valor_compra,
-        'status_cnpj_site': status_cnpj_site,
-        'status_banco_gerador_boleto': status_banco_gerador_boleto,
-        'status_data_vencimento_boleto': status_data_vencimento_boleto,
-        'status_endereco_fisico_site': status_endereco_fisico_site,
-        'num_boleto' : num_boleto,
-    }
-    return JsonResponse(context)
 
 def teste(request):
 
