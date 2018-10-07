@@ -110,6 +110,8 @@ import './index.css';
     }
   
     handleSubmit(event) {
+      event.preventDefault()
+      // serve para fazer testes, nao remover ainda plx
       // alert('Things were submitted!\n'
       //       + 'id: ' +  this.state.id + '\n'
       //       + 'name: ' +  this.state.name + '\n'
@@ -149,16 +151,46 @@ import './index.css';
       }
       axios.post(
         'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api',
-        {product}
-      ).then(res => {
+        {
+          "id": 1234567890,
+          "name": "BRM58AK",
+          "type": "Geladeira",
+          "category": "ELETRODOMESTICO",
+          "quantityInStock": 10,
+          "value": 3499.99,
+          "promotionalValue": 2999.99,
+          "availableToSell": true,
+          "inPromotion": false,
+          "insertionDate": {},
+          "updateDate": {},
+          "promotionEndDate": {},
+          "manufacturer": "Brastemp",
+          "clientId": "CRED",
+          "weight": 82,
+          "description": "Geladeira Brastemp Frost Free Duplex 500 litros cor Inox com Turbo Control"
+        })
+        .then(res => {
+          if (res.data.status === 400) {
+            console.log("algo deu errado, parca\n");
+          }
+          else if (res.data.status === 200) {
+            console.log("parece ter dado certo");
+          }
+          else {
+            console.log("eu nao sei, brother");
+          }
         console.log(res);
         console.log(res.data);
+      })
+      .catch(error =>  {
+        alert(error);
+        console.log("whyyyyyyyyyyyyy");
       });
     }
   
     render() {
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} href="#0">
           <label>
             id: <br />
             <input 
