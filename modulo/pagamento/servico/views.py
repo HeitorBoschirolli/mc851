@@ -118,6 +118,7 @@ def pagamento_boleto(request):
         'status_cpf_comprador': status_cpf_comprador,
         'status_valor_compra': status_valor_compra,
         'status_cnpj_site': status_cnpj_site,
+        'status_data_emissao_pedido': status_data_emissao_pedido,
         'status_banco_gerador_boleto': status_banco_gerador_boleto,
         'status_data_vencimento_boleto': status_data_vencimento_boleto,
         'status_endereco_fisico_site': status_endereco_fisico_site,
