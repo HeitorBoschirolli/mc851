@@ -1,0 +1,72 @@
+PARTE III
+
+Tudo em django é considerado uma view
+
+No path se voce faz algo do tipo /'<int:id>'/aqui qualquer inteiro que voce entre ira executar a view daquele url, enviando como parametro para a view este id
+
+O return de uma view precisa necessariamente ser do tipo HttpResponse
+
+Ideia é o view processar todos dados em python e separadamente ter os aqruivos Html
+
+O arquivo html que a funcao do view vai procurar para fazer o fetch deve estar dentro de polls/templates/polls/
+
+Uma url referencia a uma view, que processa os dados em python e disponibiliza para o front end como um arquivo html
+
+No Django, páginas web e outros conteúdos são entregues por views. O django irá escolher uma view examinando a URL que foi requisitada (para ser preciso, a parte da URL depois do nome de dominio).
+
+CODING:
+
+1-
+Views podem receber argumentos, os declaramos em sua chamada de função, sempre recebendo um request e mais um numero arbitrario de argumentos.
+Esses argumentos são passados pela URL da seguinte forma:
+    path('<int:question_id>/', views.detail, name='detail')
+Isto diz que caso o path /algum_numero/ for executado, devemos chamar a funcao da view chamada detail, onde o algum numero que vier sera o parametro question_id da funcao da view
+
+2-
+Você pode importar do models da sua aplicação e então acessar os dados que estão no banco de dados da API
+
+3-
+O design fica a parte do desenvolvimento em python, ou seja, precisamos programa-lo em outro local, crie o diretorio:
+    /mysite/polls/templates/polls
+É nele que iremos criar nossos arquivos .html
+Agora, em views, precisamos dizer para carregar nosso teamplate naquela view:
+    template = loader.get_template('polls/index.html')
+Para passar as variaveis para o hmtl precisamos fazer um dicionario onte a chave é uma string com o mesmo nome da variavel no hmtl e a chave é o valor que queremos passar, assim:
+    context = {
+        'latest_question_list': latest_question_list,
+    }
+E para o response nos fazemos o render deste template:
+    return HttpResponse(template.render(context, request))
+Esta é a maneira que deve ser feito, entretando, django implementa um atalho para essas 3 operações! O chamado render, com ele todas as operações acima viram:
+    context = {'latest_question_list': latest_question_list}
+    return render(request, 'polls/index.html', context)
+    render (objeto html, pagina hmtl, varivaies para a pagina html em um dicionario)
+
+3-
+Cada view é responsável por fazer uma das duas coisas: retornar um objeto HttpResponse contendo o conteúdo para a página requisitada, ou levantar uma exceção como Http404. O resto é com você.
+Para levantar um erro 404 nos podemos utilizar um bloco try catch:
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    return render(request, 'polls/detail.html', {'question': question})
+Ou podemos usar mais um atalho de Django! O get_object_or_404, com ele nos fazemos a operação get, e caso uma exeção ocorra (objeto nao existir) um erro 404 é gerado:
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/detail.html', {'question': question})
+Também temos o metodo  get_list_or_404(), que em vez de get executa um filter e levanta uma exeção caso a lista retorne vazia
+
+4-
+Para fazer um link se referenciar a outro link nos usamos:
+    <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+Porem isso torna dificil mudar URLS em API's com muitas URL's. Porem, como nos demos um nome na função path () de views.py, nós podemos remover a referencia a url e usar o nome:
+    <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
+
+5-
+Em um projeto com varias API's, como o django sabe se uma index.html é da API 1 ou 2?
+A solução é adcionar namespace em urls.py.
+Para isso adcionamos um app name em urls.py:
+    app_name = 'polls'
+E agora mude o datil.html de:
+    <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
+Para:
+    <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
