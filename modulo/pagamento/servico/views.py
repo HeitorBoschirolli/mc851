@@ -111,8 +111,6 @@ def pagamento_boleto(request):
         pk_pedido = None
 
 
-
-
     context = {
         'status' : is_valid,
         'status_cpf_comprador': status_cpf_comprador,
@@ -126,7 +124,6 @@ def pagamento_boleto(request):
         'pk_pedido' : pk_pedido,
     }
     return JsonResponse(context)
-
 
 def status_boleto (request):
 

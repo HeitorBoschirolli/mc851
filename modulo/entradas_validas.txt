@@ -23,6 +23,7 @@ HEITOR:
   "valor_compra":"10.20",
   "cnpj_site":"12345678992735",
   "banco_gerador_boleto":"sindobanco",
+  "data_emissao_pedido": "25/05/2018",
   "data_vencimento_boleto":"04/10/2018",
   "endereco_fisico_site":"RuaSindo"
 }

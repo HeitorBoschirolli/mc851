@@ -60,15 +60,15 @@ def corretude_banco (banco):
     # if type(banco) != str:
     #     return -1 # o tipo passado esta incorreto
 
-    if not banco.isalpha():
-        return -2 # contem caracteres que nao sao letras
+    for banco_object in Banco.objects.all():
+        if banco_object.nome.lower() == banco:
+            return 0
 
-    return 0
+    return -2
 
 def formata_banco (banco):
     banco = str(banco)
     return banco.lower()
-
 
 def corretude_cnpj (cnpj):
     # if type(cnpj) != str:
@@ -83,7 +83,6 @@ def corretude_cnpj (cnpj):
 
     return 0
 
-
 def corretude_data (data):
     # if type(data) != str:
     #     return -1 # o tipo passado esta incorreto
@@ -95,7 +94,6 @@ def corretude_data (data):
         return -2 # data no formato errado
 
     return 0
-
 
 # Verifica se a data do cartão está no formato correto e se o cartão não está vencido
 # INPUT:
@@ -115,13 +113,8 @@ def corretude_data_vencimento_cartao (data_vencimento_str):
     else:
         return status # Data no formato incorreto
 
-
-
-
-
 def corretude_endereco_fisico (endereco):
     return 0
-
 
 def gera_boleto(cpf_comprador, valor_compra, cnpj_site, data_emissao_pedido, banco,
                 data_vencimento, endereco_empresa):
@@ -151,7 +144,6 @@ def gera_boleto(cpf_comprador, valor_compra, cnpj_site, data_emissao_pedido, ban
 
     return boleto
 
-
 def corretude_numero_cartao (numero_cartao):
     numero_cartao = str(numero_cartao)
 
@@ -162,7 +154,6 @@ def corretude_numero_cartao (numero_cartao):
         return -3 # o numero_cartao tem tamanho invalido
 
     return 0
-
 
 def corretude_cvv (cvv):
     cvv = str(cvv)
@@ -175,15 +166,13 @@ def corretude_cvv (cvv):
 
     return 0
 
-
 def corretude_nome_impresso_cartao (nome_impresso_cartao):
     nome_impresso_cartao = str(nome_impresso_cartao)
 
-    if not nome_impresso_cartao.isalpha():
-        return -2 # contem caracteres que nao sao letras
+    if all (x.isalpha() or x.isspace() for x in nome_impresso_cartao):
+        return 0
 
-    return 0
-
+    return -2
 
 def corretude_tipo_cartao (credito):
     if credito:
