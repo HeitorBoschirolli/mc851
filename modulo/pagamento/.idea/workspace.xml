@@ -2,8 +2,45 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="06fff4de-6225-4928-9286-d24d0142d70d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/servico/templates/input.html" beforeDir="false" afterPath="$PROJECT_DIR$/servico/templates/servico/input.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servico/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/servico/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pagamento/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/pagamento/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pagamento/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/pagamento/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../my-app/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../my-app/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../my-app/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../my-app/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../my-app/public/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../my-app/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../my-app/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../my-app/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/.idea/site.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/.idea/ecommerce.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/migrations/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/model_forms.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/templates/backend/cadastro_cliente.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/backend/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/ecommerce/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/ecommerce/settings.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/ecommerce/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/ecommerce/wsgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/ecommerce/manage.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/frontend/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../site/frontend/index.js" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -48,29 +85,32 @@
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.closed" value="2" />
+          <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="140" />
+          <entry key="py" value="212" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="140" />
+          <entry key="Python" value="212" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="3" />
+          <entry key="html" value="3" />
+          <entry key="py" value="19" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="3" />
+          <entry key="HTML" value="3" />
+          <entry key="Python" value="19" />
         </counts>
       </usages-collector>
     </session>
@@ -78,44 +118,26 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/servico/views.py">
+        <entry file="file://$PROJECT_DIR$/backend/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="24" column="32" lean-forward="true" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
+            <state relative-caret-position="355">
+              <caret line="47" column="96" selection-start-line="47" selection-start-column="96" selection-end-line="47" selection-end-column="96" />
               <folding>
-                <element signature="e#25#60#0" expanded="true" />
+                <element signature="e#0#35#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/servico/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-              <folding>
-                <element signature="e#25#57#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pagamento/urls.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/servico/model_forms.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="6" column="41" selection-start-line="6" selection-start-column="41" selection-end-line="6" selection-end-column="41" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -126,10 +148,16 @@
         <option value="$PROJECT_DIR$/servico/model_forms.py" />
         <option value="$PROJECT_DIR$/servico/urls.py" />
         <option value="$PROJECT_DIR$/servico/views.py" />
+        <option value="$PROJECT_DIR$/backend/model_forms.py" />
+        <option value="$PROJECT_DIR$/pagamento/urls.py" />
+        <option value="$PROJECT_DIR$/backend/urls.py" />
+        <option value="$PROJECT_DIR$/backend/templates/backend/cadastra_cliente.html" />
+        <option value="$PROJECT_DIR$/pagamento/settings.py" />
+        <option value="$PROJECT_DIR$/backend/views.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="65" />
     <option name="y" value="24" />
     <option name="width" value="926" />
@@ -149,29 +177,6 @@
               <item name="pagamento" type="b2602c69:ProjectViewProjectNode" />
               <item name="pagamento" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="pagamento" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pagamento" type="462c0819:PsiDirectoryNode" />
-              <item name="pagamento" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pagamento" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pagamento" type="462c0819:PsiDirectoryNode" />
-              <item name="servico" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pagamento" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pagamento" type="462c0819:PsiDirectoryNode" />
-              <item name="servico" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="pagamento" type="b2602c69:ProjectViewProjectNode" />
-              <item name="pagamento" type="462c0819:PsiDirectoryNode" />
-              <item name="servico" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="servico" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -179,7 +184,8 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../site/ecommerce/backend/templates/backend/cadastro_cliente.html" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
   </component>
   <component name="RecentsManager">
@@ -217,9 +223,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19321291" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3825944" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -230,7 +235,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3197861" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.8010695" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -250,6 +255,16 @@
         <state relative-caret-position="-196" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/servico/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
+          <folding>
+            <element signature="e#25#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/servico/model_forms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
@@ -257,8 +272,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pagamento/urls.py">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/../../site/ecommerce/backend/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="26" lean-forward="true" selection-end-line="100" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../site/ecommerce/backend/model_forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="37" lean-forward="true" selection-end-line="9" selection-end-column="67" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/servico/urls.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -270,12 +299,67 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/servico/views.py">
+    <entry file="file://$PROJECT_DIR$/../../site/ecommerce/backend/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="24" column="32" lean-forward="true" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
+        <state>
+          <caret selection-end-line="7" selection-end-column="1" />
           <folding>
-            <element signature="e#25#60#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../site/ecommerce/backend/templates/backend/cadastro_cliente.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="59" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pagamento/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="20" column="15" lean-forward="true" selection-start-line="20" selection-start-column="15" selection-end-line="20" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/model_forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="14" lean-forward="true" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/templates/backend/cadastro_cliente.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="869">
+          <caret line="59" column="7" selection-start-line="59" selection-start-column="7" selection-end-line="59" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pagamento/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="33" column="33" selection-start-line="33" selection-start-column="33" selection-end-line="33" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="1" lean-forward="true" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="355">
+          <caret line="47" column="96" selection-start-line="47" selection-start-column="96" selection-end-line="47" selection-end-column="96" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
