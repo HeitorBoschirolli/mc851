@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PÁGINA TESTE</title>
+</head>
+<body>
+
+
+
+    <form action="/backend/cadastra_cliente" method="POST" autocomplete="off">{% csrf_token %}
+
+        <div class="input-group">
+
+            <div style="margin: 5px; display:inline-block;">
+                {{cliente.nome_cliente.label}}
+                <br/> {{cliente.nome_cliente}}
+            </div>
+
+            <div style="margin: 5px; display:inline-block;">
+                 {{cliente.email.label}}
+                <br/> {{cliente.email}}
+            </div>
+
+            <div style="margin: 5px; display:inline-block;">
+                 {{cliente.senha.label}}
+                <br/> {{cliente.senha}}
+            </div>
+
+            <div style="margin: 5px; display:inline-block;">
+                 {{cliente.cpf.label}}
+                <br/> {{cliente.cpf}}
+            </div>
+
+            <div style="margin: 5px; display:inline-block;">
+                 {{cliente.data_nascimento.label}}
+                <br/> {{cliente.data_nascimento}}
+            </div>
+
+             <div style="margin: 5px; display:inline-block;">
+                 {{cliente.telefone.label}}
+                <br/> {{cliente.telefone}}
+            </div>
+
+            <div style="margin: 5px; display:inline-block;">
+                 {{cliente.id_grupo.label}}
+                <br/> {{cliente.id_grupo}}
+            </div>
+
+            <button type="submit" class="active icon-bar" href="#">
+                <i class="fa fa-credit-card"></i> Enviar </button>
+        </div>
+
+    </form>
+</body>
+</html>
