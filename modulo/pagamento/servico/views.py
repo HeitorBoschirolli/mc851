@@ -274,7 +274,7 @@ def teste(request):
     try:
         # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
         serializade_data = urllib2.urlopen(request2).read()
-    except Exception, e:
+    except Exception as e:
         print e.code
         print e.read()
 
