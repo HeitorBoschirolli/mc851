@@ -9,7 +9,7 @@ import json
 import base64
 from model_forms import *
 
-# Create your views here.
+url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina que ira enviar o cep do endereco a ser pesquisado na api de enderecos
 def get_cep(request):
@@ -52,7 +52,6 @@ def endereco_cep(request):
         return JsonResponse({'error': e.code})
 
 
-
 #Renderiza pagina que ira receber os dados do cliente para cadastrar na api de clientes
 def dados_cliente(request):
 
@@ -64,8 +63,11 @@ def dados_cliente(request):
         'cliente': cliente
     }
 
-    return render(request=request, template_name='backend/cadastro_cliente.html', context=context)
-
+    return render(
+        request=request, 
+        template_name='backend/cadastro_cliente.html', 
+        context=context
+    )
 
 
 #Cadastra um cliente no modulo de clientes
@@ -135,4 +137,53 @@ def confirma_cadastro(request):
         return JsonResponse({'error': e})
 
 
+def dados_login(request):
 
+    # Instancia um forms para os dados do cliente
+    cliente = DadosCliente()
+
+    context = {
+        "cliente": cliente
+    }
+
+    return render(
+        request=request, 
+        template_name="backend/login.html",
+        context=context
+    )
+
+
+def resultado_login(request):
+    # import pdb; pdb.set_trace()
+    #Recupera do forms enviado pelo html, os dados do cliente
+    form_cliente = DadosCliente(data=request.POST)
+
+    url ='http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/login'
+
+    data = {
+        "email": form_cliente['email'].value(),
+        "senha": form_cliente['senha'].value(),
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(
+        url=url, 
+        data=data, 
+        headers={'Content-Type': 'application/json'}
+    )
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        context = {
+            'registerToken': resposta['sessionToken']
+        }
+
+        # return JsonResponse(resposta)
+        return JsonResponse(context)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
