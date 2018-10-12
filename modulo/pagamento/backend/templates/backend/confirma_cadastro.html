@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css"
+        rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <title>PÁGINA TESTE</title>
+</head>
+<body>
+
+    <form action="/backend/confirma_cadastro" method="POST" autocomplete="off">{% csrf_token %}
+
+        <div class="input-group">
+
+             <input hidden name="registerToken" value="{{registerToken}}" />
+
+            <button type="submit" class="active icon-bar" href="#">
+                <i class="fa fa-credit-card"></i> Confirmar Cadastro </button>
+        </div>
+
+    </form>
+</body>
+</html>
