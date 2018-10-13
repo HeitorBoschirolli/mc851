@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
 
-    #API de Clientes
+    url(r'^home', views.home, name='home'),
 
     #Pega os dados do cliente para realizar um cadastro
     url(r'^dados_cliente', views.dados_cliente, name='dados_cliente'),
