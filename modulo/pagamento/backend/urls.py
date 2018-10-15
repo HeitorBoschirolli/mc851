@@ -12,13 +12,16 @@ urlpatterns = [
     #Faz uma requisicao para a api de clientes, para realizar o cadastro do cliente
     url(r'^cadastra_cliente', views.cadastra_cliente, name='cadastra_cliente'),
 
-    #Confirma o registro de um cliente
+    #Confirma o registro de um clienste
     url(r'^confirma_cadastro', views.confirma_cadastro, name='confirma_cadastro'),
 
     # efetua login de um cliente
     url(r'^login', views.dados_login, name='login'),
+    url(r'^simple-login', views.simple_login, name='simple-login'),
     url(r'^resultado_login', views.resultado_login, name='resultado_login'),
 
+    # recuperar senha
+    url(r'^recuperar', views.recuperar, name='recuperar'),
 
     #API de Endereco
 

@@ -17,6 +17,12 @@ def home(request):
 def cadastro(request):
     return render(request, 'backend/cadastro.html')
 
+def simple_login(request):
+    return render(request, 'backend/simple-login.html')
+
+def recuperar(request):
+    return render(request, 'backend/recuperar.html')
+
 #Renderiza a pagina que ira enviar o cep do endereco a ser pesquisado na api de enderecos
 def get_cep(request):
 
