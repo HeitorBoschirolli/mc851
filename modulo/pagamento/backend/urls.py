@@ -4,25 +4,31 @@ from . import views
 
 urlpatterns = [
 
+    #Home do site
     url(r'^home', views.home, name='home'),
+
+    #---------------------------------------------------------------------------------------------------------#
+    #---------------------------------------------API DE CLIENTES---------------------------------------------#
+    #---------------------------------------------------------------------------------------------------------#
 
     #Pega os dados do cliente para realizar um cadastro
     url(r'^dados_cliente', views.dados_cliente, name='dados_cliente'),
     #Faz uma requisicao para a api de clientes, para realizar o cadastro do cliente
     url(r'^cadastra_cliente', views.cadastra_cliente, name='cadastra_cliente'),
-
     #Confirma o registro de um clienste
     url(r'^confirma_cadastro', views.confirma_cadastro, name='confirma_cadastro'),
 
-    # efetua login de um cliente
-    url(r'^login', views.dados_login, name='login'),
-    url(r'^simple-login', views.simple_login, name='simple-login'),
+    # Efetua login de um cliente
+    url(r'^login', views.login, name='login'),
     url(r'^resultado_login', views.resultado_login, name='resultado_login'),
 
-    # recuperar senha
+    # Recuperar senha
     url(r'^recuperar', views.recuperar, name='recuperar'),
 
-    #API de Endereco
+
+    #---------------------------------------------------------------------------------------------------------#
+    #---------------------------------------------API DE ENDERECO---------------------------------------------#
+    #---------------------------------------------------------------------------------------------------------#
 
     #Pega do html, o cep para pesquisa do endereco
     url(r'^get_cep', views.get_cep, name='endereco_por_cep'),

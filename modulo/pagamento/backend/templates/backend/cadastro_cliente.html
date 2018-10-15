@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Cadastro</title>
+  <title>Cyndello</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -12,87 +12,97 @@
 
 <body>
 
-    {% load staticfiles %}
+  {% load staticfiles %}
 
-     <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
-        <a class="navbar-brand" href="#">Cyndello</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/backend/home">Home <span class="sr-only">span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Produtos <span class="sr-only"></span></a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="/backend/dados_cliente">Cadastro</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./simple-login.html">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">SAC</a>
-            </li>
-          </ul>
-          <form class="form-inline">
-            <input class="form-control mr-sm-2" type="text" placeholder="Email" aria-label="Email">
-            <input class="form-control mr-sm-2" type="password" placeholder="Senha" aria-label="Senha">
-            <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Entrar</button>
-          </form>
-        </div>
-     </nav>
+  <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+    <a class="navbar-brand" href="./home">Cyndello</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="./home">Home <span class="sr-only">span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Produtos <span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="./dados_cliente">Cadastro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="./login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">SAC</a>
+        </li>
+      </ul>
+      <form class="form-inline">
+        <!--<input class="form-control mr-sm-2" type="text" placeholder="Email" aria-label="Email">-->
+        <!--<input class="form-control mr-sm-2" type="password" placeholder="Senha" aria-label="Senha">-->
+        <!--<button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Entrar</button>-->
+
+          <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar">
+          <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
+      </form>
+    </div>
+  </nav>
 
     <div class="container col-md-4">
         <h1 class="display-4 text-center">Cadastre-se</h1>
         <p class="text-center">Para criar uma conta no nosso site, basta preencher o formulário abaixo</p>
     </div>
 
-    <form action="/backend/cadastra_cliente" method="POST" autocomplete="off">{% csrf_token %}
+    <div class="container-fluid col-md-4">
 
-        <div class="form-group row justify-content-md-center">
-            <div class="form-group col-md-3">
-                {{cliente.nome_cliente.label}}
+        <form action="/backend/cadastra_cliente" method="POST" autocomplete="off">
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                 {{cliente.nome_cliente.label}}
                 <br/> {{cliente.nome_cliente}}
-            </div>
-
-            <div class="form-group col-md-3">
-                 {{cliente.email.label}}
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  {{cliente.email.label}}
                 <br/> {{cliente.email}}
-            </div>
-        </div>
-
-        <div class="form-group row justify-content-md-center">
-            <div class="form-group col-md-3">
-                 {{cliente.senha.label}}
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-6">
+                  {{cliente.senha.label}}
                 <br/> {{cliente.senha}}
-            </div>
-
-            <div class="form-group col-md-3">
-                 {{cliente.cpf.label}}
+              </div>
+              <div class="form-group col-md-6">
+                  {{cliente.cpf.label}}
                 <br/> {{cliente.cpf}}
-            </div>
-        </div>
-
-        <div class="form-group row justify-content-md-center">
-            <div class="form-group col-md-3">
-                 {{cliente.data_nascimento.label}}
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-6">
+                  {{cliente.data_nascimento.label}}
                 <br/> {{cliente.data_nascimento}}
+              </div>
+                  <div class="form-group col-md-6">
+                        {{cliente.telefone.label}}
+                    <br/> {{cliente.telefone}}
+                  </div>
+          </div>
+            <div class="form-group row justify-content-md-center">
+                <button type="submit" class="btn btn-primary">Criar seu cadastro</button>
             </div>
+        </form>
+    </div>
+  <footer class="container">
+    <p>&copy; Company 2017-2018</p>
+  </footer>
 
-            <div class="form-group col-md-3">
-                 {{cliente.telefone.label}}
-                <br/> {{cliente.telefone}}
-            </div>
-        </div>
-
-
-        <div class="form-group row justify-content-md-center">
-            <button type="submit" class="btn btn-primary">Enviar </button>
-        </div>
-
-    </form>
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
+
 </html>

@@ -11,23 +11,19 @@ from model_forms import *
 
 url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
+#Renderiza a pagina inicial do site
 def home(request):
     return render(request, 'backend/home.html')
 
-def simple_login(request):
-
-    # Instancia um forms para os dados do cliente
-    cliente = DadosCliente()
-
-    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
-    context = {
-        'cliente': cliente
-    }
-
-    return render(request=request, template_name='backend/simple-login.html', context=context)
 
 def recuperar(request):
     return render(request, 'backend/recuperar.html')
+
+
+'''---------------------------------------------------------------------------------------------------------'''
+'''---------------------------------------------API DE ENDERECO---------------------------------------------'''
+'''---------------------------------------------------------------------------------------------------------'''
+
 
 #Renderiza a pagina que ira enviar o cep do endereco a ser pesquisado na api de enderecos
 def get_cep(request):
@@ -67,6 +63,11 @@ def endereco_cep(request):
         return JsonResponse({'error': e.code})
 
 
+'''---------------------------------------------------------------------------------------------------------'''
+'''---------------------------------------------API DE CLIENTES---------------------------------------------'''
+'''---------------------------------------------------------------------------------------------------------'''
+
+
 #Renderiza pagina que ira receber os dados do cliente para cadastrar na api de clientes
 def dados_cliente(request):
 
@@ -80,7 +81,7 @@ def dados_cliente(request):
 
     return render(
         request=request,
-        template_name='backend/cadastro.html',
+        template_name='backend/cadastro_cliente.html',
         context=context)
 
 
@@ -151,22 +152,20 @@ def confirma_cadastro(request):
         return JsonResponse({'error': e})
 
 
-def dados_login(request):
+#Renderiza a pagina de login
+def login(request):
 
     # Instancia um forms para os dados do cliente
     cliente = DadosCliente()
 
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
-        "cliente": cliente
+        'cliente': cliente
     }
 
-    return render(
-        request=request, 
-        template_name="backend/login.html",
-        context=context
-    )
+    return render(request=request, template_name='backend/login.html', context=context)
 
-
+#Realiza o login na api de clientes
 def resultado_login(request):
 
     #Recupera do forms enviado pelo html, os dados do cliente
