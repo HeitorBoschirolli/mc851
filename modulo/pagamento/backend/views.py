@@ -14,8 +14,6 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 def home(request):
     return render(request, 'backend/home.html')
 
-def cadastro(request):
-    return render(request, 'backend/cadastro.html')
 
 def simple_login(request):
     return render(request, 'backend/simple-login.html')
@@ -67,19 +65,18 @@ def endereco_cep(request):
 #Renderiza pagina que ira receber os dados do cliente para cadastrar na api de clientes
 def dados_cliente(request):
 
-    #Instancia um forms para os dados do cliente
+    # Instancia um forms para os dados do cliente
     cliente = DadosCliente()
 
-    #Passa o forms como contexto para ser utilizado para obtencao de dados no html
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'cliente': cliente
     }
 
     return render(
-        request=request, 
-        template_name='backend/cadastro_cliente.html', 
-        context=context
-    )
+        request=request,
+        template_name='backend/cadastro.html',
+        context=context)
 
 
 #Cadastra um cliente no modulo de clientes
@@ -97,7 +94,7 @@ def cadastra_cliente(request):
         "nome": form_cliente['nome_cliente'].value(),
         "dataDeNascimento": form_cliente['data_nascimento'].value(),
         "telefone": form_cliente['telefone'].value(),
-        "idGrupo": form_cliente['id_grupo'].value()
+        "idGrupo": 5
     }
 
     data = json.dumps(data)

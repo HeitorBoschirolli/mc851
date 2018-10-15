@@ -1,56 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-
-    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css"
-        rel="stylesheet">
-
-    <meta charset="UTF-8">
-    <title>PÁGINA TESTE</title>
+  <title>Cadastro</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+
+    {% load staticfiles %}
+
+     <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+        <a class="navbar-brand" href="#">Cyndello</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/backend/home">Home <span class="sr-only">span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Produtos <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/backend/dados_cliente">Cadastro</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./simple-login.html">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">SAC</a>
+            </li>
+          </ul>
+          <form class="form-inline">
+            <input class="form-control mr-sm-2" type="text" placeholder="Email" aria-label="Email">
+            <input class="form-control mr-sm-2" type="password" placeholder="Senha" aria-label="Senha">
+            <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Entrar</button>
+          </form>
+        </div>
+     </nav>
+
+    <div class="container col-md-4">
+        <h1 class="display-4 text-center">Cadastre-se</h1>
+        <p class="text-center">Para criar uma conta no nosso site, basta preencher o formulário abaixo</p>
+    </div>
 
     <form action="/backend/cadastra_cliente" method="POST" autocomplete="off">{% csrf_token %}
 
-        <div class="input-group">
-
-            <div style="margin: 5px; display:inline-block;">
+        <div class="form-group row justify-content-md-center">
+            <div class="form-group col-md-3">
                 {{cliente.nome_cliente.label}}
                 <br/> {{cliente.nome_cliente}}
             </div>
 
-            <div style="margin: 5px; display:inline-block;">
+            <div class="form-group col-md-3">
                  {{cliente.email.label}}
                 <br/> {{cliente.email}}
             </div>
+        </div>
 
-            <div style="margin: 5px; display:inline-block;">
+        <div class="form-group row justify-content-md-center">
+            <div class="form-group col-md-3">
                  {{cliente.senha.label}}
                 <br/> {{cliente.senha}}
             </div>
 
-            <div style="margin: 5px; display:inline-block;">
+            <div class="form-group col-md-3">
                  {{cliente.cpf.label}}
                 <br/> {{cliente.cpf}}
             </div>
+        </div>
 
-            <div style="margin: 5px; display:inline-block;">
+        <div class="form-group row justify-content-md-center">
+            <div class="form-group col-md-3">
                  {{cliente.data_nascimento.label}}
                 <br/> {{cliente.data_nascimento}}
             </div>
 
-             <div style="margin: 5px; display:inline-block;">
+            <div class="form-group col-md-3">
                  {{cliente.telefone.label}}
                 <br/> {{cliente.telefone}}
             </div>
+        </div>
 
-            <div style="margin: 5px; display:inline-block;">
-                 {{cliente.id_grupo.label}}
-                <br/> {{cliente.id_grupo}}
-            </div>
 
-            <button type="submit" class="active icon-bar" href="#">
-                <i class="fa fa-credit-card"></i> Enviar </button>
+        <div class="form-group row justify-content-md-center">
+            <button type="submit" class="btn btn-primary">Enviar </button>
         </div>
 
     </form>

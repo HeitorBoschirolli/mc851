@@ -22,16 +22,16 @@
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="./home.html">Home <span class="sr-only">span></a>
+          <a class="nav-link" href="./home">Home <span class="sr-only">span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Produtos <span class="sr-only"></span></a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" href="#">Cadastro</a>
+          <a class="nav-link" href="./dados_cliente">Cadastro</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="./simple-login.html">Login</a>
+          <a class="nav-link" href="./simple-login">Login</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">SAC</a>
@@ -51,40 +51,43 @@
     </div>
 
     <div class="container-fluid col-md-4">
-        <form>
+
+        <form action="/backend/cadastra_cliente" method="POST" autocomplete="off">
           <div class="form-row">
               <div class="form-group col-md-12">
-                  <label for="inputName">Nome Completo</label>
-                  <input type="text" class="form-control" placeholder="Nome">
+                 {{cliente.nome_cliente.label}}
+                <br/> {{cliente.nome_cliente}}
               </div>
           </div>
           <div class="form-row">
               <div class="form-group col-md-12">
-                  <label for="inputEmail">Email</label>
-                  <input type="email" class="form-control" placeholder="Nome@exemplo.com">
+                  {{cliente.email.label}}
+                <br/> {{cliente.email}}
               </div>
           </div>
           <div class="form-row">
               <div class="form-group col-md-6">
-                  <label for="inputPassword">Senha</label>
-                  <input type="password" class="form-control" id="inputPassword" placeholder="Senha">
+                  {{cliente.senha.label}}
+                <br/> {{cliente.senha}}
               </div>
               <div class="form-group col-md-6">
-                  <label for="inputCPF">CPF</label>
-                  <input type="number" class="form-control" id="inputCPF" placeholder="11122233311">
+                  {{cliente.cpf.label}}
+                <br/> {{cliente.cpf}}
               </div>
           </div>
           <div class="form-row">
               <div class="form-group col-md-6">
-                  <label for="inputBirthdate">Data de Nascimento</label>
-                  <input type="number" class="form-control" id="inputBirthdate" placeholder="dd/mm/aaaa">
+                  {{cliente.data_nascimento.label}}
+                <br/> {{cliente.data_nascimento}}
               </div>
                   <div class="form-group col-md-6">
-                      <label for="inputPhoneNumber">Telefone</label>
-                      <input type="number" class="form-control" id="inputPhoneNumber" placeholder="19999999999">
+                        {{cliente.telefone.label}}
+                    <br/> {{cliente.telefone}}
                   </div>
           </div>
-          <button type="submit" class="btn btn-primary">Criar seu cadastro</button>
+            <div class="form-group row justify-content-md-center">
+                <button type="submit" class="btn btn-primary">Criar seu cadastro</button>
+            </div>
         </form>
     </div>
   <footer class="container">
