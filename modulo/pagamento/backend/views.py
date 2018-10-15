@@ -14,6 +14,9 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 def home(request):
     return render(request, 'backend/home.html')
 
+def cadastro(request):
+    return render(request, 'backend/cadastro.html')
+
 #Renderiza a pagina que ira enviar o cep do endereco a ser pesquisado na api de enderecos
 def get_cep(request):
 
