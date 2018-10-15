@@ -43,20 +43,9 @@
     </nav>
 
     <div class="container col-md-4">
-        <h1 class="display-4 text-center">Confirmacao</h1>
-        <p class="text-center">Para terminar seu cadastramento, clique abaixo em confirmar</p>
+        <h1 class="display-4 text-center">Login realizado com sucesso!</h1>
+        <p class="text-center">Aproveite suas compras</p>
     </div>
 
-    <form action="/backend/confirma_cadastro" method="POST" autocomplete="off">{% csrf_token %}
-
-        <div class="input-group">
-             <input hidden name="registerToken" value="{{registerToken}}" />
-        </div>
-
-        <div class="form-group row justify-content-md-center">
-            <button type="submit" class="btn btn-primary">Confirmar</button>
-        </div>
-
-    </form>
 </body>
 </html>

@@ -14,9 +14,17 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 def home(request):
     return render(request, 'backend/home.html')
 
-
 def simple_login(request):
-    return render(request, 'backend/simple-login.html')
+
+    # Instancia um forms para os dados do cliente
+    cliente = DadosCliente()
+
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
+    context = {
+        'cliente': cliente
+    }
+
+    return render(request=request, template_name='backend/simple-login.html', context=context)
 
 def recuperar(request):
     return render(request, 'backend/recuperar.html')
@@ -44,9 +52,6 @@ def endereco_cep(request):
     endereco = DadosEndereco(data=request.POST)
 
     url = url + endereco['cep'].value()
-
-    import pdb
-    pdb.set_trace()
 
     request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
 
@@ -139,7 +144,7 @@ def confirma_cadastro(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return JsonResponse(resposta)
+        return render(request=request, template_name='backend/cadastro_cliente_confirmado.html')
 
     except Exception as e:
 
@@ -163,7 +168,7 @@ def dados_login(request):
 
 
 def resultado_login(request):
-    # import pdb; pdb.set_trace()
+
     #Recupera do forms enviado pelo html, os dados do cliente
     form_cliente = DadosCliente(data=request.POST)
 
@@ -190,8 +195,7 @@ def resultado_login(request):
             'registerToken': resposta['sessionToken']
         }
 
-        # return JsonResponse(resposta)
-        return JsonResponse(context)
+        return render(request=request, template_name='backend/login_confirmado.html')
 
     except Exception as e:
 
