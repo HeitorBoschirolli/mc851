@@ -25,6 +25,19 @@ def recuperar(request):
 '''---------------------------------------------------------------------------------------------------------'''
 
 
+def endereco_cliente(request):
+
+    endereco = DadosEndereco()
+    context = {
+        'endereco': endereco,
+    }
+
+    return render(
+        request=request, 
+        template_name="backend/dados_endereco.html",
+        context=context
+    )
+
 #Renderiza a pagina que ira enviar o cep do endereco a ser pesquisado na api de enderecos
 def get_cep(request):
 
@@ -82,7 +95,8 @@ def dados_cliente(request):
     return render(
         request=request,
         template_name='backend/cadastro_cliente.html',
-        context=context)
+        context=context
+    )
 
 
 #Cadastra um cliente no modulo de clientes

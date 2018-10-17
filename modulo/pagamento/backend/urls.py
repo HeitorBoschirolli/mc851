@@ -11,8 +11,10 @@ urlpatterns = [
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
     #---------------------------------------------------------------------------------------------------------#
 
-    #Pega os dados do cliente para realizar um cadastro
-    url(r'^dados_cliente', views.dados_cliente, name='dados_cliente'),
+    #Pega os dados referentes ao endereco cliente para realizar um cadastro
+    url(r'^dados_cliente', views.endereco_cliente, name='endereco_cliente'),
+    # pega os dados do cliente para concluir o cadastro
+    url(r'^mais_dados_cliente', views.dados_cliente, name='dados_cliente'),
     #Faz uma requisicao para a api de clientes, para realizar o cadastro do cliente
     url(r'^cadastra_cliente', views.cadastra_cliente, name='cadastra_cliente'),
     #Confirma o registro de um clienste

@@ -53,7 +53,13 @@ class DadosCliente(forms.Form):
 
 class DadosEndereco(forms.Form):
     id = forms.IntegerField(label="Id do Endereco")
-    cep = forms.CharField(label="CEP", max_length=8)
+    cep = forms.CharField(label="CEP", max_length=8, widget=forms.TextInput(
+        attrs={
+            'type': 'text',
+            'class': 'form-control',
+            'placeholder': 'Exemplo: 00000001'
+        }
+    ))
     logradouro = forms.CharField(label="Logradouro", max_length=100)
     inicio = forms.CharField(label="Inicio", max_length=50)
     fim = forms.CharField(label="Fim", max_length=50)
@@ -62,3 +68,17 @@ class DadosEndereco(forms.Form):
     bairro = forms.CharField(label="Bairro", max_length=100)
     cidade = forms.CharField(label="Cidade", max_length=100)
     estado = forms.CharField(label="Estado", max_length=2)
+    numero_casa = forms.IntegerField(label="Numero da Casa", widget=forms.TextInput(
+        attrs={
+            'type': 'text',
+            'class': 'form-control',
+            'placeholder': 'Exemplo: 175'
+        }
+    ))
+    complemento = forms.CharField(label="Complemento", max_length=200, widget=forms.TextInput(
+        attrs={
+            'type': 'text',
+            'class': 'form-control',
+            'placeholder': 'Exemplo: ap. 101'
+        }
+    ))
