@@ -24,22 +24,8 @@ def recuperar(request):
 '''---------------------------------------------API DE ENDERECO---------------------------------------------'''
 '''---------------------------------------------------------------------------------------------------------'''
 
-
-def endereco_cliente(request):
-
-    endereco = DadosEndereco()
-    context = {
-        'endereco': endereco,
-    }
-
-    return render(
-        request=request, 
-        template_name="backend/dados_endereco.html",
-        context=context
-    )
-
 #Renderiza a pagina que ira enviar o cep do endereco a ser pesquisado na api de enderecos
-def get_cep(request):
+def endereco_cliente(request):
 
     # Recupera do forms enviado pelo html o cep
     endereco = DadosEndereco()
@@ -68,8 +54,24 @@ def endereco_cep(request):
         # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
-
-        return JsonResponse(resposta)
+        
+        context = {
+            'bairro': resposta['Endereco'][0]['bairro'],
+            'cidade': resposta['Endereco'][0]['cidade'],
+            'inicio': resposta['Endereco'][0]['inicio'],
+            'logradouro': resposta['Endereco'][0]['logradouro'],
+            'longitude': resposta['Endereco'][0]['longitude'],
+            'cep': resposta['Endereco'][0]['cep'],
+            'latitude': resposta['Endereco'][0]['latitude'],
+            'estado': resposta['Endereco'][0]['estado'],
+            'fim': resposta['Endereco'][0]['fim']
+        }
+        # return JsonResponse(resposta)
+        return render(
+            request=request,
+            template_name="backend/confirma_endereco.html",
+            context=context
+        )            
 
     except Exception as e:
 
@@ -84,7 +86,6 @@ def endereco_cep(request):
 #Renderiza pagina que ira receber os dados do cliente para cadastrar na api de clientes
 def dados_cliente(request):
 
-    # Instancia um forms para os dados do cliente
     cliente = DadosCliente()
 
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html

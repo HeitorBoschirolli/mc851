@@ -50,48 +50,18 @@
 
     <div class="container col-md-4">
         <h1 class="display-4 text-center">Cadastre-se</h1>
-        <p class="text-center">Para criar uma conta no nosso site, basta preencher o formulário abaixo</p>
+        <p class="text-center">Verifique se os dados abaixo referentes ao seu endereço estão corretos</p>
     </div>
 
     <div class="container-fluid col-md-4">
-
-        <form action="/backend/cadastra_cliente" method="POST" autocomplete="off">
-          <div class="form-row">
-              <div class="form-group col-md-12">
-                 {{cliente.nome_cliente.label}}
-                <br/> {{cliente.nome_cliente}}
-              </div>
-          </div>
-          <div class="form-row">
-              <div class="form-group col-md-12">
-                  {{cliente.email.label}}
-                <br/> {{cliente.email}}
-              </div>
-          </div>
-          <div class="form-row">
-              <div class="form-group col-md-6">
-                  {{cliente.senha.label}}
-                <br/> {{cliente.senha}}
-              </div>
-              <div class="form-group col-md-6">
-                  {{cliente.cpf.label}}
-                <br/> {{cliente.cpf}}
-              </div>
-          </div>
-          <div class="form-row">
-              <div class="form-group col-md-6">
-                  {{cliente.data_nascimento.label}}
-                <br/> {{cliente.data_nascimento}}
-              </div>
-                  <div class="form-group col-md-6">
-                        {{cliente.telefone.label}}
-                    <br/> {{cliente.telefone}}
-                  </div>
-          </div>
-            <div class="form-group row justify-content-md-center">
-                <button type="submit" class="btn btn-primary">Criar seu cadastro</button>
-            </div>
-        </form>
+        estado: {{'estado'}} <br/>
+        cidade: {{'cidade'}} <br/>
+        bairro: {{'bairro'}} <br/>
+        logradouro: {{'logradouro'}} <br/>
+        inicio: {{'inicio'}} <br/>
+        fim: {{'fim'}} <br/>
+        <a href="endereco_cliente" class="btn btn-primary"> Voltar </a>
+        <a href="dados_cliente" class="btn btn-primary"> Avançar </a>
     </div>
   <footer class="container">
     <p>&copy; Company 2017-2018</p>
