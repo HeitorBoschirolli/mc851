@@ -221,8 +221,8 @@ def resultado_login(request):
 '''---------------------------------------------------------------------------------------------------------'''
 
 def produtos_eletrodomesticos(request, pagina):
-    #produtos (request, pagina, "eletromestico")
-    return HttpResponse("eletro" + str(pagina))
+    return produtos (request, pagina, "eletromestico")
+    # return HttpResponse("eletro" + str(pagina))
 
 def produtos_computadores(request, pagina):
     #produtos (request, pagina, "computador")
@@ -234,21 +234,44 @@ def produtos_celulares(request, pagina):
 
 def produtos (request, pagina, categoria):
 
-    url = 'ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products'
+    # url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=0&itemsPerPage=10'
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/f47eaf47-0669-40d2-8b13-d983c871e0ba'
 
+    data = {
+            "id": "f47eaf47-0669-40d2-8b13-d983c871e0ba",
+            "name": "TESTE2",
+            "description": "Geladeira Brastemp Frost Free Duplex 500 litros cor Inox com Turbo Control",
+            "weight": 82,
+            "category": "ELETRODOMESTICO",
+            "type": "Geladeira",
+            "manufacturer": "Brastemp",
+            "quantityInStock": 10,
+            "value": 3499.99,
+            "promotionalValue": 10,
+            "availableToSell": True,
+            "onSale": False,
+            "ownerGroup": "pagamento",
+            "images": [],
+            "creationDate": "2018-10-10",
+            "updateDate": "2018-10-10",
+            "lastModifiedBy": "pagamento"
+            }
+
+    data = json.dumps(data)
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2.get_method = lambda: 'PATCH'
+
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
 
     try:
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        context = {
-            'registerToken': resposta['registerToken']
-        }
 
-        # return JsonResponse(resposta)
-        return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+        return JsonResponse(resposta)
+        # return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
 
     except Exception as e:
 
-        return JsonResponse({'error': e.code})
+        return JsonResponse({'error': e})
