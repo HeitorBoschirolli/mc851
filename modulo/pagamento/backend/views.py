@@ -222,7 +222,7 @@ def resultado_login(request):
 
 def produtos_eletrodomesticos(request, pagina):
     #produtos (request, pagina, "eletromestico")
-    return HttpResponse("eletro" + str(pagina))
+    return render(request=request, template_name='backend/produtos.html')
 
 def produtos_computadores(request, pagina):
     #produtos (request, pagina, "computador")
