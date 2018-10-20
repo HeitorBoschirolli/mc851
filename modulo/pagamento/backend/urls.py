@@ -53,6 +53,9 @@ urlpatterns = [
     url(r'^produtos_computadores/(?P<pagina>[0-9]+)', views.produtos_computadores, name='produtos_computadores'),
     #busca por celulares
     url(r'^produtos_celulares/(?P<pagina>[0-9]+)', views.produtos_celulares, name='produtos_celulares'),
-
+    #Renderiza pagina onde o admin colocara os dados para atualizar um produto
+    url(r'^dados_produto', views.render_att_produtos, name='dados_produto'),
+    #Link para atualizacao de dados do produto
+    url(r'^att_dados_produto', views.att_produto, name='att_dados_produto'),
 
 ]

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <form action="/backend/att_dados_produto" method="POST" autocomplete="off">{% csrf_token %}
+
+        {{produto}}
+
+        <button type="submit" class="active icon-bar" href="#">
+            <i class="fa fa-credit-card"></i> Atualizar Dados </button>
+    </form>
+
+</body>
+</html>

@@ -148,6 +148,12 @@ def cadastra_cliente(request):
             'usuario': usuario
         }
 
+        usuario = Usuario()
+        usuario.email = str(form_cliente['email'].value())
+        usuario.cpf = str(form_cliente['cpf'].value())
+        usuario.sessionToken = ''
+        usuario.save()
+
         # return JsonResponse(resposta)
         return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
 
@@ -196,6 +202,7 @@ def login(request):
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'cliente': cliente,
+        'sucesso': None,
         'usuario': usuario
     }
 
@@ -233,25 +240,53 @@ def resultado_login(request):
             'sessionToken': resposta['sessionToken']
         }
 
+        usuario = Usuario.objects.get(email=str(form_cliente['email'].value()))
+        usuario.sessionToken = resposta['sessionToken']
+        usuario.save()
+
         return render(request=request, template_name='backend/login_confirmado.html')
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        cliente = DadosCliente()
 
+        context = {
+            'cliente': cliente,
+            'sucesso': True,
+        }
+
+        return render(request=request, template_name='backend/login.html', context=context)
+
+def logout(request):
+    request.session['usuario'] = ''
+
+    return render(request=request, template_name='backend/home.html')
+
+
+def minha_conta(request):
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
+
+    context = {
+            'usuario': usuario
+        }
+
+    return render(request=request, template_name='backend/minha_conta.html', context=context)
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
 '''---------------------------------------------------------------------------------------------------------'''
 
 def produtos_eletrodomesticos(request, pagina):
+
+    return att_produto(request, pagina, "eletrodomestico")
     #return get_produtos (request, pagina, "eletromestico")
     # return HttpResponse("eletro" + str(pagina))
     #produtos (request, pagina, "eletromestico")
     # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
-
-    return render(request=request, template_name='backend/produtos.html', context={'usuario': usuario})
+    # usuario = request.session.get('usuario', False)
+    #
+    # return render(request=request, template_name='backend/produtos.html', context={'usuario': usuario})
 
 def produtos_computadores(request, pagina):
     #produtos (request, pagina, "computador")
@@ -273,11 +308,11 @@ def get_produtos(request, categoria, pagina):
     request2.add_header("Authorization", "Basic %s" % basic_auth)
 
     try:
-        #Realiza o request e obtem os dados retornados
 
         # Pega o usuário caso exista
         usuario = request.session.get('usuario', False)
 
+        # Realiza o request e obtem os dados retornados
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -311,27 +346,76 @@ def get_produtos(request, categoria, pagina):
 
         return JsonResponse({'error': e})
 
+#Funcao que renderiza a pagina para o admin que ira atualizar os dados de um produto
+def render_att_produtos(request):
+
+    # Instancia um forms para os dados do Produto
+    produto = DadosProduto()
+
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
+    context = {
+        'produto': produto,
+    }
+
+    return render(request=request, template_name='backend/admin_dados_produto.html', context=context)
+
+
 #Funcao que atualiza as informacoes de um produto
-def att_produto(request, pagina, categoria):
+def att_produto(request):
 
     #Recebe o id do produto por post
-    id_produto = request.POST.get('id_produto')
+    form_Produto = DadosProduto(data=request.POST)
+    id_produto = form_Produto['id_produto'].value()
+
+    #PROCURA O PRODUTO NA API DE PRODUTOS, PARA QUE SEUS DADOS SEJAM ATUALIZADOS
 
     #Url da requisicao
     url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + id_produto
 
-    #Realiza uma requisicao ao
+    request2 = urllib2.Request(url=url)
+
+    # Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
     try:
         serializade_data = urllib2.urlopen(request2).read()
-        resposta = json.loads(serializade_data)
-
-        return JsonResponse(resposta)
-        # return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+        dados_produto = json.loads(serializade_data)
 
     except Exception as e:
 
         return JsonResponse({'error': e})
 
+    #Atualiza os dados que o admin quer que sejam atualizados
+    for key in form_Produto.fields:
+
+        if(form_Produto[key].data):
+            dados_produto[key] = form_Produto[key].data
+
+
+    #ATUALIZA OS DADOS DO PRODUTO
+
+    # Url da requisicao
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + id_produto
+
+    data = json.dumps(dados_produto)
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2.get_method = lambda: 'PATCH'
+
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    #Envia a requsicao ao modulo
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        return JsonResponse(resposta)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
 
 
 def produtos (request, pagina, categoria):
@@ -379,22 +463,6 @@ def produtos (request, pagina, categoria):
         return JsonResponse({'error': e})
 
 
-def logout(request):
-    request.session['usuario'] = ''
-
-    return render(request=request, template_name='backend/home.html')
-
-
-def minha_conta(request):
-    # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
-
-    context = {
-            'usuario': usuario
-        }
-
-    return render(request=request, template_name='backend/minha_conta.html', context=context)
-
 def meu_carrinho(request):
     # Pega o usuário caso exista
     usuario = request.session.get('usuario', False)
@@ -403,4 +471,3 @@ def meu_carrinho(request):
             'usuario': usuario
         }
     return render(request=request, template_name='backend/meu_carrinho.html', context=context)
-
