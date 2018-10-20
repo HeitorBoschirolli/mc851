@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.conf.urls import url
 
 from . import views
@@ -6,6 +8,12 @@ urlpatterns = [
 
     #Home do site
     url(r'^home', views.home, name='home'),
+    #desloga o usuario
+    url(r'^logout', views.logout, name='desloga_usuario'),
+    # Página da conta do usuário
+    url(r'^minha_conta', views.minha_conta, name='minha_conta'),
+    # Página do meu carrinho
+    url(r'^meu_carrinho', views.meu_carrinho, name='meu_carrinho'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
