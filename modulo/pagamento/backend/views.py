@@ -148,6 +148,12 @@ def cadastra_cliente(request):
             'usuario': usuario
         }
 
+        usuario = Usuario()
+        usuario.email = str(form_cliente['email'].value())
+        usuario.cpf = str(form_cliente['cpf'].value())
+        usuario.sessionToken = ''
+        usuario.save()
+
         # return JsonResponse(resposta)
         return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
 
@@ -196,6 +202,7 @@ def login(request):
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'cliente': cliente,
+        'sucesso': None,
         'usuario': usuario
     }
 
@@ -233,11 +240,22 @@ def resultado_login(request):
             'sessionToken': resposta['sessionToken']
         }
 
+        usuario = Usuario.objects.get(email=str(form_cliente['email'].value()))
+        usuario.sessionToken = resposta['sessionToken']
+        usuario.save()
+
         return render(request=request, template_name='backend/login_confirmado.html')
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        cliente = DadosCliente()
+
+        context = {
+            'cliente': cliente,
+            'sucesso': True,
+        }
+
+        return render(request=request, template_name='backend/login.html', context=context)
 
 def logout(request):
     request.session['usuario'] = ''
@@ -449,4 +467,3 @@ def meu_carrinho(request):
             'usuario': usuario
         }
     return render(request=request, template_name='backend/meu_carrinho.html', context=context)
-
