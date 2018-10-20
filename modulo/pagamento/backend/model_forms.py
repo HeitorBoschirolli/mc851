@@ -51,6 +51,23 @@ class DadosCliente(forms.Form):
         }
     ))
 
+class DadosProduto(forms.Form):
+
+    id_produto = forms.CharField(label='ID do Produto', max_length=100)
+    name = forms.CharField(label='Nome do Produto' ,max_length=100)
+    ownerGroup = forms.CharField(label='Modulo (Pagamento)',max_length=20)
+    category = forms.CharField(label='Categoria', max_length=50)
+    type_produto = forms.CharField(label='Tipo do Produto', max_length=50)
+    manufacturer = forms.CharField(label='Fabricante', max_length=50)
+    quantityInStock = forms.IntegerField(label='Quantidade em Estoque')
+    value = forms.FloatField(label='Valor do Produto')
+    availableToSell = forms.BooleanField(label='Produto Disponivel')
+    creationDate = forms.CharField(label='Data de criacao (aaaa-mm-dd)', max_length=20)
+    updateDate = forms.CharField(label='Data de atualizacao (aaaa-mm-dd)', max_length=20)
+    weight = forms.FloatField(label='Peso do Produto')
+    imageURLs = forms.CharField(label='URLs das Imagens (Separar URLs por @)', max_length=100000)
+    description = forms.CharField(label='Descricao do Produto', max_length=1000)
+
 class DadosEndereco(forms.Form):
     id = forms.IntegerField(label="Id do Endereco")
     cep = forms.CharField(label="CEP", max_length=8, widget=forms.TextInput(
