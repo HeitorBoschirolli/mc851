@@ -54,7 +54,7 @@ def endereco_cep(request):
         # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
-        
+
         context = {
             'bairro': resposta['Endereco'][0]['bairro'],
             'cidade': resposta['Endereco'][0]['cidade'],
@@ -71,7 +71,7 @@ def endereco_cep(request):
             request=request,
             template_name="backend/confirma_endereco.html",
             context=context
-        )            
+        )
 
     except Exception as e:
 
@@ -196,8 +196,8 @@ def resultado_login(request):
     data = json.dumps(data)
 
     request2 = urllib2.Request(
-        url=url, 
-        data=data, 
+        url=url,
+        data=data,
         headers={'Content-Type': 'application/json'}
     )
 
@@ -214,3 +214,41 @@ def resultado_login(request):
     except Exception as e:
 
         return JsonResponse({'error': e})
+
+
+'''---------------------------------------------------------------------------------------------------------'''
+'''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
+'''---------------------------------------------------------------------------------------------------------'''
+
+def produtos_eletrodomesticos(request, pagina):
+    #produtos (request, pagina, "eletromestico")
+    return HttpResponse("eletro" + str(pagina))
+
+def produtos_computadores(request, pagina):
+    #produtos (request, pagina, "computador")
+    return HttpResponse("comp" + str(pagina))
+
+def produtos_celulares(request, pagina):
+    #produtos (request, pagina, "celular")
+    return HttpResponse("celulares" + str(pagina))
+
+def produtos (request, pagina, categoria):
+
+    url = 'ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products'
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        context = {
+            'registerToken': resposta['registerToken']
+        }
+
+        # return JsonResponse(resposta)
+        return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e.code})

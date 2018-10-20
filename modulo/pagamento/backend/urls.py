@@ -34,4 +34,16 @@ urlpatterns = [
     url(r'^endereco_cliente', views.endereco_cliente, name='endereco_cliente'),
     #Faz uma requisicao do endereco pelo cep, na api de Enderecos
     url(r'^endereco_cep', views.endereco_cep, name='endereco_por_cep_api'),
+
+    #---------------------------------------------------------------------------------------------------------#
+    #---------------------------------------------API DE PRODUTOS---------------------------------------------#
+    #---------------------------------------------------------------------------------------------------------#
+
+    #busca por eletromesticos
+    url(r'^produtos_eletrodomesticos/(?P<pagina>[0-9]+)', views.produtos_eletrodomesticos, name='produtos_eletrodomesticos'),
+    #busca por computadores
+    url(r'^produtos_computadores/(?P<pagina>[0-9]+)', views.produtos_computadores, name='produtos_computadores'),
+    #busca por celulares
+    url(r'^produtos_celulares/(?P<pagina>[0-9]+)', views.produtos_celulares, name='produtos_celulares'),
+
 ]
