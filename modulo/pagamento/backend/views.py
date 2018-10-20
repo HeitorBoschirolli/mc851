@@ -253,6 +253,8 @@ def resultado_login(request):
 '''---------------------------------------------------------------------------------------------------------'''
 
 def produtos_eletrodomesticos(request, pagina):
+    #return get_produtos (request, pagina, "eletromestico")
+    # return HttpResponse("eletro" + str(pagina))
     #produtos (request, pagina, "eletromestico")
     # Pega o usuário caso exista
     usuario = request.session.get('usuario', False)
@@ -267,30 +269,118 @@ def produtos_celulares(request, pagina):
     #produtos (request, pagina, "celular")
     return HttpResponse("celulares" + str(pagina))
 
-def produtos (request, pagina, categoria):
+#Funcao que realiza um request para a api de produtos para pegar a lista de produtos
+def get_produtos(request, pagina, categoria):
 
-    url = 'ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products'
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=' + pagina + '&itemsPerPage=10'
 
-    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2 = urllib2.Request(url=url)
+
+    #Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
 
     try:
+        #Realiza o request e obtem os dados retornados
+
         # Pega o usuário caso exista
         usuario = request.session.get('usuario', False)
 
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
+        #Lista com os produtos retornados
+        produtos = resposta['content']
+
+        #Adiciona os ids dos produtos no banco de dados
+        for i in range(0, len(produtos)):
+
+            if(Produtos.objects.filter(id_produto=resposta['content'][i]['id']) == False):
+
+                p = Produtos()
+                p.id_produto = resposta['content'][i]['id']
+                p.save()
+
+        #JSON com a lista de produtos que sera retornado
         context = {
+            'produtos': produtos,
             'registerToken': resposta['registerToken'],
             'usuario': usuario
+
         }
 
-        # return JsonResponse(resposta)
-        return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+        return JsonResponse(context)
 
     except Exception as e:
 
-        return JsonResponse({'error': e.code})
+        return JsonResponse({'error': e})
+
+#Funcao que atualiza as informacoes de um produto
+def att_produto(request, pagina, categoria):
+
+    #Recebe o id do produto por post
+    id_produto = request.POST.get('id_produto')
+
+    #Url da requisicao
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + id_produto
+
+    #Realiza uma requisicao ao
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        return JsonResponse(resposta)
+        # return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+
+
+def produtos (request, pagina, categoria):
+
+    # url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=0&itemsPerPage=10'
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/f47eaf47-0669-40d2-8b13-d983c871e0ba'
+
+    data = {
+            "id": "f47eaf47-0669-40d2-8b13-d983c871e0ba",
+            "name": "TESTE2",
+            "description": "Geladeira Brastemp Frost Free Duplex 500 litros cor Inox com Turbo Control",
+            "weight": 82,
+            "category": "ELETRODOMESTICO",
+            "type": "Geladeira",
+            "manufacturer": "Brastemp",
+            "quantityInStock": 10,
+            "value": 3499.99,
+            "promotionalValue": 10,
+            "availableToSell": True,
+            "onSale": False,
+            "ownerGroup": "pagamento",
+            "images": [],
+            "creationDate": "2018-10-10",
+            "updateDate": "2018-10-10",
+            "lastModifiedBy": "pagamento"
+            }
+
+    data = json.dumps(data)
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2.get_method = lambda: 'PATCH'
+
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+
+        return JsonResponse(resposta)
+        # return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
 
 
 def logout(request):
@@ -317,3 +407,4 @@ def meu_carrinho(request):
             'usuario': usuario
         }
     return render(request=request, template_name='backend/meu_carrinho.html', context=context)
+

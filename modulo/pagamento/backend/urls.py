@@ -54,4 +54,5 @@ urlpatterns = [
     #busca por celulares
     url(r'^produtos_celulares/(?P<pagina>[0-9]+)', views.produtos_celulares, name='produtos_celulares'),
 
+
 ]
