@@ -175,7 +175,8 @@ def login(request):
 
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
-        'cliente': cliente
+        'cliente': cliente,
+        'sucesso': None,
     }
 
     return render(request=request, template_name='backend/login.html', context=context)
@@ -213,7 +214,14 @@ def resultado_login(request):
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        cliente = DadosCliente()
+
+        context = {
+            'cliente': cliente,
+            'sucesso': True,
+        }
+
+        return render(request=request, template_name='backend/login.html', context=context)
 
 
 '''---------------------------------------------------------------------------------------------------------'''
