@@ -221,7 +221,7 @@ def resultado_login(request):
 '''---------------------------------------------------------------------------------------------------------'''
 
 def produtos_eletrodomesticos(request, pagina):
-    return produtos (request, pagina, "eletromestico")
+    return get_produtos (request, pagina, "eletromestico")
     # return HttpResponse("eletro" + str(pagina))
 
 def produtos_computadores(request, pagina):
@@ -231,6 +231,69 @@ def produtos_computadores(request, pagina):
 def produtos_celulares(request, pagina):
     #produtos (request, pagina, "celular")
     return HttpResponse("celulares" + str(pagina))
+
+#Funcao que realiza um request para a api de produtos para pegar a lista de produtos
+def get_produtos(request, pagina, categoria):
+
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=' + pagina + '&itemsPerPage=10'
+
+    request2 = urllib2.Request(url=url)
+
+    #Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    try:
+
+        #Realiza o request e obtem os dados retornados
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        #Lista com os produtos retornados
+        produtos = resposta['content']
+
+        #Adiciona os ids dos produtos no banco de dados
+        for i in range(0, len(produtos)):
+
+            if(Produtos.objects.filter(id_produto=resposta['content'][i]['id']) == False):
+
+                p = Produtos()
+                p.id_produto = resposta['content'][i]['id']
+                p.save()
+
+        #JSON com a lista de produtos que sera retornado
+        context = {
+            'produtos': produtos
+        }
+
+        return JsonResponse(context)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+#Funcao que atualiza as informacoes de um produto
+def att_produto(request, pagina, categoria):
+
+    #Recebe o id do produto por post
+    id_produto = request.POST.get('id_produto')
+
+    #Url da requisicao
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + id_produto
+
+    #Realiza uma requisicao ao
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        return JsonResponse(resposta)
+        # return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+
 
 def produtos (request, pagina, categoria):
 

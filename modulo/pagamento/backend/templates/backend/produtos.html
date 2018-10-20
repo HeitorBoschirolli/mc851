@@ -1,72 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Produtos</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
+{% extends "base_generic.html" %}
 
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
-     <a class="navbar-brand" href="./home">Cyndello</a>
-     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-       <span class="navbar-toggler-icon"></span>
-     </button>
-     <div class="collapse navbar-collapse" id="navbarText">
-       <ul class="navbar-nav mr-auto">
-         <li class="nav-item">
-           <a class="nav-link" href="./home">Home <span class="sr-only"></span></a>
-         </li>
-         <li class="nav-item dropdown">
-           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Produtos</a>
-           <div class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdown">
-             <a class="dropdown-item bg-secondary" href="./produtos_eletrodomesticos">Eletrodomésticos</a>
-             <a class="dropdown-item bg-secondary" href="./produtos_computadores">Computadores</a>
-             <a class="dropdown-item bg-secondary" href="./produtos_celulares">Celulares</a>
-           </div>
-         </li>
-         <li class="nav-item">
-           <a class="nav-link" href="./endereco_cliente">Cadastro</a>
-         </li>
-         <li class="nav-item">
-           <a class="nav-link" href="./login">Login</a>
-         </li>
-         <li class="nav-item">
-           <a class="nav-link" href="#">SAC</a>
-         </li>
-       </ul>
-       <form class="form-inline">
-         <!--<input class="form-control mr-sm-2" type="text" placeholder="Email" aria-label="Email">-->
-         <!--<input class="form-control mr-sm-2" type="password" placeholder="Senha" aria-label="Senha">-->
-         <!--<button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Entrar</button>-->
+{% block title %}
+<title>Produtos</title>
+{% endblock %}
 
-             <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar">
-             <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
-
-       </form>
-     </div>
-   </nav>
-  <div class="container col-md-8">
-    <div class="card border-dark mb-3" style="width: 18rem;">
-      <img class="card-img-top" src="..." alt="Card image cap">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+{% block content %}
+{% load staticfiles %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <img class="card-img-top" src="{% static "backend/eletrodosmeticos.jpg" %}" alt="Imagem de eletrodomésticos" />
+        </div>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">Cras justo odio</li>
-        <li class="list-group-item">Dapibus ac facilisis in</li>
-        <li class="list-group-item">Vestibulum at eros</li>
-      </ul>
-      <div class="card-body">
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
-      </div>
-    </div>
-  </div>
+<div class="container">
+<table id="tabela_produtos" class="" style="width:100%">
+        
+        <tbody>
+            <tr style="border-bottom: 1px solid black;">
+                <td >
+                  <img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src="{% static "backend/fogao1.jpg" %}" alt="Imagem de eletrodomésticos" />
+                </td>
+                <td>
+                  <h4>Fogão de Piso 5 Bocas Preto Atlas U Top Glass Bivolt</h4>
+                  <br>
+                  Works with Alexa: Ask Alexa to show your front door, kid's room, or anywhere else you have your Wyze Cam
+                  <br><br>
+                  <strong>R$1.422,90</strong>
+                </td>
+                
+                <td>
+                  <button type="button" class="btn btn-warning">
+                      <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
+                  </button>
+                </td>
+            </tr>
 
+            <tr style="border-bottom: 1px solid black;">
+                <td>
+                  <img  style="height:300px; width:auto; margin: 20px;" class="card-img-top" src="{% static "backend/geladeira1.jpg" %}" alt="Imagem de eletrodomésticos" />
+                </td>
+                <td>
+                  <h4>Geladeira / Refrigerador Brastemp Inverse Frost Free BRE50 422L Inox</h4>
+                  <br>
+                  A Ative Inverse tem capacidade líquida do refrigerador de 302 litros e capacidade do freezer de 120 litros. 
+                  <br><br>
+                  <strong>R$3.297,80</strong>
+                </td>
+                
+                <td>
+                  <button type="button" class="btn btn-warning">
+                      <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
+                  </button>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+ </div>
+{% endblock %}
 
-</body>
+{% block scripts %}
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#tabela_produtos').DataTable();
+} );
+</script>
+
+{% endblock %}
