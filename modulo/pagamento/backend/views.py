@@ -148,6 +148,12 @@ def cadastra_cliente(request):
             'usuario': usuario
         }
 
+        usuario = Usuario()
+        usuario.email = str(form_cliente['email'].value())
+        usuario.cpf = str(form_cliente['cpf'].value())
+        usuario.sessionToken = ''
+        usuario.save()
+
         # return JsonResponse(resposta)
         return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
 
@@ -233,6 +239,10 @@ def resultado_login(request):
         context = {
             'sessionToken': resposta['sessionToken']
         }
+
+        usuario = Usuario.objects.get(email=str(form_cliente['email'].value()))
+        usuario.sessionToken = resposta['sessionToken']
+        usuario.save()
 
         return render(request=request, template_name='backend/login_confirmado.html')
 
@@ -407,4 +417,3 @@ def meu_carrinho(request):
             'usuario': usuario
         }
     return render(request=request, template_name='backend/meu_carrinho.html', context=context)
-
