@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render
 from datetime import *
 from django.http import HttpResponse, JsonResponse
@@ -13,7 +15,10 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
-    return render(request, 'backend/home.html')
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
+
+    return render(request, 'backend/home.html', {'usuario': usuario})
 
 
 def recuperar(request):
@@ -26,13 +31,16 @@ def recuperar(request):
 
 #Renderiza a pagina que ira enviar o cep do endereco a ser pesquisado na api de enderecos
 def endereco_cliente(request):
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
 
     # Recupera do forms enviado pelo html o cep
     endereco = DadosEndereco()
 
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
-        'endereco': endereco
+        'endereco': endereco,
+        'usuario': usuario
     }
 
     return render(request=request, template_name='backend/endereco_cep.html', context=context)
@@ -40,6 +48,8 @@ def endereco_cliente(request):
 
 #Funcao que ira requisitar a api de enderecos, os dados de uma busca de endereco por cep
 def endereco_cep(request):
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
 
     #URL com o endereco da api para fazer a requisicao
     url = 'http://wsendereco.tk/api/enderecos/cep/'
@@ -64,7 +74,8 @@ def endereco_cep(request):
             'cep': resposta['Endereco'][0]['cep'],
             'latitude': resposta['Endereco'][0]['latitude'],
             'estado': resposta['Endereco'][0]['estado'],
-            'fim': resposta['Endereco'][0]['fim']
+            'fim': resposta['Endereco'][0]['fim'],
+            'usuario': usuario
         }
         # return JsonResponse(resposta)
         return render(
@@ -85,12 +96,15 @@ def endereco_cep(request):
 
 #Renderiza pagina que ira receber os dados do cliente para cadastrar na api de clientes
 def dados_cliente(request):
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
 
     cliente = DadosCliente()
 
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
-        'cliente': cliente
+        'cliente': cliente,
+        'usuario': usuario
     }
 
     return render(
@@ -123,11 +137,15 @@ def cadastra_cliente(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+        # Pega o usuário caso exista
+        usuario = request.session.get('usuario', False)
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
         context = {
-            'registerToken': resposta['registerToken']
+            'registerToken': resposta['registerToken'],
+            'usuario': usuario
         }
 
         # return JsonResponse(resposta)
@@ -169,6 +187,8 @@ def confirma_cadastro(request):
 
 #Renderiza a pagina de login
 def login(request):
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
 
     # Instancia um forms para os dados do cliente
     cliente = DadosCliente()
@@ -177,6 +197,7 @@ def login(request):
     context = {
         'cliente': cliente,
         'sucesso': None,
+        'usuario': usuario
     }
 
     return render(request=request, template_name='backend/login.html', context=context)
@@ -206,8 +227,11 @@ def resultado_login(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
+        # Trocar para nome do cliente
+        request.session['usuario'] = form_cliente['email'].value().split("@")[0]
+
         context = {
-            'registerToken': resposta['sessionToken']
+            'sessionToken': resposta['sessionToken']
         }
 
         return render(request=request, template_name='backend/login_confirmado.html')
@@ -230,7 +254,10 @@ def resultado_login(request):
 
 def produtos_eletrodomesticos(request, pagina):
     #produtos (request, pagina, "eletromestico")
-    return render(request=request, template_name='backend/produtos.html')
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
+
+    return render(request=request, template_name='backend/produtos.html', context={'usuario': usuario})
 
 def produtos_computadores(request, pagina):
     #produtos (request, pagina, "computador")
@@ -247,11 +274,15 @@ def produtos (request, pagina, categoria):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+        # Pega o usuário caso exista
+        usuario = request.session.get('usuario', False)
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
         context = {
-            'registerToken': resposta['registerToken']
+            'registerToken': resposta['registerToken'],
+            'usuario': usuario
         }
 
         # return JsonResponse(resposta)
@@ -260,3 +291,29 @@ def produtos (request, pagina, categoria):
     except Exception as e:
 
         return JsonResponse({'error': e.code})
+
+
+def logout(request):
+    request.session['usuario'] = ''
+
+    return render(request=request, template_name='backend/home.html')
+
+
+def minha_conta(request):
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
+
+    context = {
+            'usuario': usuario
+        }
+
+    return render(request=request, template_name='backend/minha_conta.html', context=context)
+
+def meu_carrinho(request):
+    # Pega o usuário caso exista
+    usuario = request.session.get('usuario', False)
+
+    context = {
+            'usuario': usuario
+        }
+    return render(request=request, template_name='backend/meu_carrinho.html', context=context)
