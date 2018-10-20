@@ -262,7 +262,7 @@ def produtos_celulares(request, pagina):
     return HttpResponse("celulares" + str(pagina))
 
 #Funcao que realiza um request para a api de produtos para pegar a lista de produtos
-def get_produtos(request, pagina, categoria):
+def get_produtos(request, categoria, pagina):
 
     url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=' + pagina + '&itemsPerPage=10'
 
@@ -283,7 +283,12 @@ def get_produtos(request, pagina, categoria):
 
         #Lista com os produtos retornados
         produtos = resposta['content']
+        produtos_filtrados = []
+        for produto in produtos:
+            if produto['category'] == categoria:
+                produtos_filtrados.append(produto)
 
+        
         #Adiciona os ids dos produtos no banco de dados
         for i in range(0, len(produtos)):
 
@@ -293,15 +298,14 @@ def get_produtos(request, pagina, categoria):
                 p.id_produto = resposta['content'][i]['id']
                 p.save()
 
-        #JSON com a lista de produtos que sera retornado
+        #JSON com a lista de produtos que sera 
         context = {
-            'produtos': produtos,
-            'registerToken': resposta['registerToken'],
+            'produtos': produtos_filtrados,
             'usuario': usuario
-
         }
 
-        return JsonResponse(context)
+        #return JsonResponse(context)
+        return render(request=request, template_name='backend/produtos.html', context=context)
 
     except Exception as e:
 

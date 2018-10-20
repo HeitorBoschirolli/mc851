@@ -48,7 +48,7 @@ urlpatterns = [
     #---------------------------------------------------------------------------------------------------------#
 
     #busca por eletromesticos
-    url(r'^produtos_eletrodomesticos/(?P<pagina>[0-9]+)', views.produtos_eletrodomesticos, name='produtos_eletrodomesticos'),
+    url(r'^produtos_eletrodomesticos/(?P<categoria>[a-zA-Z]+)/(?P<pagina>[0-9]+)', views.get_produtos, name='produtos'),
     #busca por computadores
     url(r'^produtos_computadores/(?P<pagina>[0-9]+)', views.produtos_computadores, name='produtos_computadores'),
     #busca por celulares
