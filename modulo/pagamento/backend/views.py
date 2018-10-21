@@ -41,8 +41,8 @@ def endereco_cliente(request):
     }
 
     return render(
-        request=request, 
-        template_name='backend/endereco_cep.html', 
+        request=request,
+        template_name='backend/endereco_cep.html',
         context=context
     )
 
@@ -58,7 +58,7 @@ def endereco_cep(request):
     url = url + endereco['cep'].value()
 
     request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
-    
+
     try:
         # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
         serializade_data = urllib2.urlopen(request2).read()
@@ -137,9 +137,9 @@ def cadastra_cliente(request):
     }
 
     data = json.dumps(data)
-    
+
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    
+
     try:
 
         serializade_data = urllib2.urlopen(request2).read()
@@ -153,11 +153,13 @@ def cadastra_cliente(request):
         usuario.email = str(form_cliente['email'].value())
         usuario.cpf = str(form_cliente['cpf'].value())
         usuario.sessionToken = ''
+        carrinho = Carrinho(total = 0)
+        usuario.carrinho = carrinho()
         usuario.save()
 
         # return render(
-        #     request=request, 
-        #     template_name='backend/confirma_cadastro.html', 
+        #     request=request,
+        #     template_name='backend/confirma_cadastro.html',
         #     context=context
         # )
         return confirma_cadastro(request)
