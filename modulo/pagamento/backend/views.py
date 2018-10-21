@@ -15,7 +15,7 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
-    # _ = get_produtos(request)
+    _ = get_produtos(request)
 
     return render(request, 'backend/home.html')
 
@@ -561,4 +561,3 @@ def meu_carrinho(request):
     except Exception as e:
 
         return JsonResponse({'error': e.code})
-
