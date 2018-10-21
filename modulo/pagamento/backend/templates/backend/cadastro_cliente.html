@@ -32,7 +32,7 @@
                   {{cliente.senha.label}}
                 <br/> {{cliente.senha}}
               </div>
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-6" id="cpf_form">
                   {{cliente.cpf.label}}
                 <br/> {{cliente.cpf}}
               </div>
@@ -51,5 +51,27 @@
                 <button type="submit" class="btn btn-primary">Criar seu cadastro</button>
             </div>
         </form>
+        {% if error %}
+        <div>
+            <br/>
+            <p class="alert alert-danger">Este CPF já possui um cadastro</p>
+        </div>
+        {% endif %}
     </div>
+
+    {% comment %} <script>
+    $('#cpf_form input[type=text]').on('change invalid', function() {
+        var textfield = $(this).get(0);
+    
+        // 'setCustomValidity not only sets the message, but also marks
+        // the field as invalid. In order to see whether the field really is
+        // invalid, we have to remove the message first
+        textfield.setCustomValidity('');
+        
+        if (!textfield.validity.valid) {
+            textfield.setCustomValidity('O CPF deve ter exatamente 11 dígitos');  
+        }
+    });
+    </script> {% endcomment %}
+
 {% endblock %}

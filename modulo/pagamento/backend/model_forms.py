@@ -1,46 +1,65 @@
 from django import forms
 
 class DadosCliente(forms.Form):
-    nome_cliente = forms.CharField(label="Nome do Cliente", max_length=100, widget=forms.TextInput(
-        attrs={
-            'type': 'name',
-            'class': 'form-control',
-            'placeholder': "Nome"
-        }
-    ))
+    nome_cliente = forms.CharField(
+        label="Nome do Cliente", 
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'name',
+                'class': 'form-control',
+                'placeholder': "Nome",
+                'required': True
+            },
+        )
+    )
     email = forms.CharField(label="Email", max_length=100, widget=forms.TextInput(
         attrs={
             'type': 'email',
             'class': 'form-control',
-            'placeholder': "Exemplo: email@email.com"
+            'placeholder': "Exemplo: email@email.com",
         }
     ))
     senha = forms.CharField(label="Senha", max_length=100, widget=forms.TextInput(
         attrs={
             'type': 'password',
             'class': 'form-control',
-            'placeholder': "Senha"
+            'placeholder': "Senha",
+            'required': True
         }
     ))
-    cpf = forms.CharField(label="CPF", max_length=11, widget=forms.TextInput(
-        attrs={
-            'type': 'text',
-            'class': 'form-control',
-            'placeholder': "Exemplo: 12345678912"
-        }
-    ))
-    data_nascimento = forms.CharField(label="Data de Nascimento", max_length=100, widget=forms.TextInput(
-        attrs={
-            'type': 'date',
-            'class': 'form-control',
-            'placeholder': "Exemplo: 01/01/2000"
-        }
-    ))
+    cpf = forms.CharField(
+        label="CPF", 
+        max_length=11, 
+        widget=forms.TextInput(
+            attrs={
+                'type': 'text',
+                'class': 'form-control',
+                'pattern': '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]',
+                'placeholder': "Exemplo: 12345678912",
+                'required': True,
+                'title': 'Example: 12312312312'
+            }
+        ),
+        # error_message='sdfhsakdf'
+    )
+    data_nascimento = forms.CharField(
+        label="Data de Nascimento", 
+        max_length=100, 
+        widget=forms.TextInput(
+            attrs={
+                'type': 'date',
+                'class': 'form-control',
+                'placeholder': "Exemplo: 01/01/2000",
+                'required': True
+            },
+        )
+    )
     telefone = forms.CharField(label="Telefone", max_length=9, widget=forms.TextInput(
         attrs={
             'type': 'tel',
             'class': 'form-control',
-            'placeholder': "Exemplo: 123456789"
+            'placeholder': "Exemplo: 123456789",
         }
     ))
     id_grupo = forms.CharField(label="Id do Grupo", max_length=100, widget=forms.TextInput(

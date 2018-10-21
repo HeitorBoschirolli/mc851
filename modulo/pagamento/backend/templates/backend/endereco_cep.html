@@ -35,6 +35,11 @@
                 <button type="submit" class="btn btn-primary">Avançar</button>
             </div>
         </form>
+        {% if cep_failed %}
+            <br/>
+            <p class="alert alert-danger">CEP inválido</p>
+        {% endif %}
+        <div>
     </div>
 
 {% endblock %}
