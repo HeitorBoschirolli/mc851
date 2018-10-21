@@ -15,6 +15,7 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
+    _ = get_produtos(request)
 
     return render(request, 'backend/home.html')
 
@@ -277,9 +278,8 @@ def produtos_celulares(request, pagina):
     return HttpResponse("celulares" + str(pagina))
 
 #Funcao que realiza um request para a api de produtos para pegar a lista de produtos
-def get_produtos(request, categoria, pagina):
-
-    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=' + pagina + '&itemsPerPage=10'
+def get_produtos(request, pagina='0'):
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=' + pagina + '&itemsPerPage=1000'
 
     request2 = urllib2.Request(url=url)
 
@@ -295,7 +295,8 @@ def get_produtos(request, categoria, pagina):
 
         #Lista com os produtos retornados
         produtos = resposta['content']
-        produtos_filtrados = []
+        
+        # Cria as categorias existentes dos produtos retornados e salva na session
         categorias_dict = {}
         categorias = []
 
@@ -306,32 +307,49 @@ def get_produtos(request, categoria, pagina):
                 categorias_dict[categoria_produto] = 1
                 categorias.append(categoria_produto)
 
-            # Seleciona apenas os produtos da categoria recebida
-            if categoria_produto == categoria:
-                produtos_filtrados.append(produto)
-        
-        # Salva em session as categorias para atualizar a home
         request.session['categorias'] = categorias
+
         #Adiciona os ids dos produtos no banco de dados
-        for i in range(0, len(produtos)):
+        # for i in range(0, len(produtos)):
 
-            if(Produtos.objects.filter(id_produto=resposta['content'][i]['id']) == False):
+        #     if(Produtos.objects.filter(id_produto=resposta['content'][i]['id']) == False):
 
-                p = Produtos()
-                p.id_produto = resposta['content'][i]['id']
-                p.save()
+        #         p = Produtos()
+        #         p.id_produto = resposta['content'][i]['id']
+        #         p.save()
 
         #JSON com a lista de produtos que sera 
-        context = {
-            'produtos': produtos_filtrados,
-        }
+        # context = {
+        #     #'produtos': produtos_filtrados,
+        #     'produtos': produtos,
+        # }
 
-        #return JsonResponse(context)
-        return render(request=request, template_name='backend/produtos.html', context=context)
+        # return JsonResponse(context)
+        #return render(request=request, template_name='backend/produtos.html', context=context)
+        return produtos
 
     except Exception as e:
 
         return JsonResponse({'error': e})
+
+def produtos(request, categoria, pagina):
+    
+    produtos = get_produtos(request, pagina)
+
+    #Lista com os produtos retornados
+    produtos_filtrados = []
+
+    for produto in produtos:
+        # Seleciona apenas os produtos da categoria recebida
+        if produto['category'] == categoria:
+            produtos_filtrados.append(produto)
+
+    context = {
+            'produtos': produtos_filtrados,
+        }
+
+
+    return render(request=request, template_name='backend/produtos.html', context=context)
 
 #Funcao que renderiza a pagina para o admin que ira atualizar os dados de um produto
 def render_att_produtos(request):
@@ -399,51 +417,6 @@ def att_produto(request):
         resposta = json.loads(serializade_data)
 
         return JsonResponse(resposta)
-
-    except Exception as e:
-
-        return JsonResponse({'error': e})
-
-
-def produtos (request, pagina, categoria):
-
-    # url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=0&itemsPerPage=10'
-    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/f47eaf47-0669-40d2-8b13-d983c871e0ba'
-
-    data = {
-            "id": "f47eaf47-0669-40d2-8b13-d983c871e0ba",
-            "name": "TESTE2",
-            "description": "Geladeira Brastemp Frost Free Duplex 500 litros cor Inox com Turbo Control",
-            "weight": 82,
-            "category": "ELETRODOMESTICO",
-            "type": "Geladeira",
-            "manufacturer": "Brastemp",
-            "quantityInStock": 10,
-            "value": 3499.99,
-            "promotionalValue": 10,
-            "availableToSell": True,
-            "onSale": False,
-            "ownerGroup": "pagamento",
-            "images": [],
-            "creationDate": "2018-10-10",
-            "updateDate": "2018-10-10",
-            "lastModifiedBy": "pagamento"
-            }
-
-    data = json.dumps(data)
-    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    request2.get_method = lambda: 'PATCH'
-
-    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
-    request2.add_header("Authorization", "Basic %s" % basic_auth)
-
-    try:
-        serializade_data = urllib2.urlopen(request2).read()
-        resposta = json.loads(serializade_data)
-
-
-        return JsonResponse(resposta)
-        # return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
 
     except Exception as e:
 
