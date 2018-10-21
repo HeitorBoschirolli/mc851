@@ -41,8 +41,8 @@ def endereco_cliente(request):
     }
 
     return render(
-        request=request, 
-        template_name='backend/endereco_cep.html', 
+        request=request,
+        template_name='backend/endereco_cep.html',
         context=context
     )
 
@@ -58,7 +58,7 @@ def endereco_cep(request):
     url = url + endereco['cep'].value()
 
     request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
-    
+
     try:
         # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
         serializade_data = urllib2.urlopen(request2).read()
@@ -137,9 +137,9 @@ def cadastra_cliente(request):
     }
 
     data = json.dumps(data)
-    
+
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    
+
     try:
 
         serializade_data = urllib2.urlopen(request2).read()
@@ -153,11 +153,14 @@ def cadastra_cliente(request):
         usuario.email = str(form_cliente['email'].value())
         usuario.cpf = str(form_cliente['cpf'].value())
         usuario.sessionToken = ''
+        carrinho = Carrinho(total = 0)
+        carrinho.save()
+        usuario.carrinho = carrinho
         usuario.save()
 
         # return render(
-        #     request=request, 
-        #     template_name='backend/confirma_cadastro.html', 
+        #     request=request,
+        #     template_name='backend/confirma_cadastro.html',
         #     context=context
         # )
         return confirma_cadastro(request)
@@ -191,8 +194,8 @@ def confirma_cadastro(request):
     data = json.dumps(data)
 
     request2 = urllib2.Request(
-        url=url, 
-        data=data, 
+        url=url,
+        data=data,
         headers={'Content-Type': 'application/json'}
     )
 
@@ -201,7 +204,7 @@ def confirma_cadastro(request):
         resposta = json.loads(serializade_data)
 
         return render(
-            request=request, 
+            request=request,
             template_name='backend/cadastro_cliente_confirmado.html'
         )
 
@@ -223,8 +226,8 @@ def login(request):
     }
 
     return render(
-        request=request, 
-        template_name='backend/login.html', 
+        request=request,
+        template_name='backend/login.html',
         context=context
     )
 
@@ -265,7 +268,7 @@ def resultado_login(request):
         usuario.save()
 
         return render(
-            request=request, 
+            request=request,
             template_name='backend/login_confirmado.html'
         )
 
@@ -279,8 +282,8 @@ def resultado_login(request):
         }
 
         return render(
-            request=request, 
-            template_name='backend/login.html', 
+            request=request,
+            template_name='backend/login.html',
             context=context
         )
 
@@ -296,8 +299,8 @@ def minha_conta(request):
         }
 
     return render(
-        request=request, 
-        template_name='backend/minha_conta.html', 
+        request=request,
+        template_name='backend/minha_conta.html',
         context=context
     )
 
@@ -397,8 +400,8 @@ def produtos(request, categoria, pagina):
 
 
     return render(
-        request=request, 
-        template_name='backend/produtos.html', 
+        request=request,
+        template_name='backend/produtos.html',
         context=context
     )
 
@@ -414,8 +417,8 @@ def render_att_produtos(request):
     }
 
     return render(
-        request=request, 
-        template_name='backend/admin_dados_produto.html', 
+        request=request,
+        template_name='backend/admin_dados_produto.html',
         context=context
     )
 
