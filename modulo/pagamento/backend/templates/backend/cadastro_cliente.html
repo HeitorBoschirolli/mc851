@@ -57,19 +57,25 @@
             <p class="alert alert-danger">Este CPF já possui um cadastro</p>
         </div>
         {% endif %}
+        {% if cadastro %}
+        <div>
+            <br/>
+            <p class="alert alert-danger">Email já cadastrado!</p>
+        </div>
+        {% endif %}
     </div>
 
     {% comment %} <script>
     $('#cpf_form input[type=text]').on('change invalid', function() {
         var textfield = $(this).get(0);
-    
+
         // 'setCustomValidity not only sets the message, but also marks
         // the field as invalid. In order to see whether the field really is
         // invalid, we have to remove the message first
         textfield.setCustomValidity('');
-        
+
         if (!textfield.validity.valid) {
-            textfield.setCustomValidity('O CPF deve ter exatamente 11 dígitos');  
+            textfield.setCustomValidity('O CPF deve ter exatamente 11 dígitos');
         }
     });
     </script> {% endcomment %}

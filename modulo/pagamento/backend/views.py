@@ -136,6 +136,21 @@ def cadastra_cliente(request):
         "idGrupo": 5
     }
 
+    filtro = Usuario.objects.filter(email=data['email'])
+    if (filtro.count() > 0):
+        cliente = DadosCliente()
+        context = {
+            'cliente': cliente,
+            'error': False,
+            'cadastro': True,
+        }
+
+        return render(
+            request=request,
+            template_name='backend/cadastro_cliente.html',
+            context=context
+        )
+
     data = json.dumps(data)
 
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
@@ -169,7 +184,8 @@ def cadastra_cliente(request):
         cliente = DadosCliente()
         context = {
             'cliente': cliente,
-            'error': True
+            'error': True,
+            'cadastro': False,
         }
 
         return render(
