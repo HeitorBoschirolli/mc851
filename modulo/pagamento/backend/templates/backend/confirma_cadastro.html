@@ -55,7 +55,7 @@
         <p class="text-center">Para terminar seu cadastramento, clique abaixo em confirmar</p>
     </div>
 
-    <form action="/backend/confirma_cadastro" method="POST" autocomplete="off">{% csrf_token %}
+    <form action="/confirma_cadastro" method="POST" autocomplete="off">{% csrf_token %}
 
         <div class="input-group">
              <input hidden name="registerToken" value="{{registerToken}}" />

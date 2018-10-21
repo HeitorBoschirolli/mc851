@@ -190,13 +190,20 @@ def confirma_cadastro(request):
 
     data = json.dumps(data)
 
-    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2 = urllib2.Request(
+        url=url, 
+        data=data, 
+        headers={'Content-Type': 'application/json'}
+    )
 
     try:
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return render(request=request, template_name='backend/cadastro_cliente_confirmado.html')
+        return render(
+            request=request, 
+            template_name='backend/cadastro_cliente_confirmado.html'
+        )
 
     except Exception as e:
 
@@ -215,7 +222,11 @@ def login(request):
         'sucesso': None,
     }
 
-    return render(request=request, template_name='backend/login.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/login.html', 
+        context=context
+    )
 
 #Realiza o login na api de clientes
 def resultado_login(request):
@@ -253,7 +264,10 @@ def resultado_login(request):
         usuario.sessionToken = resposta['sessionToken']
         usuario.save()
 
-        return render(request=request, template_name='backend/login_confirmado.html')
+        return render(
+            request=request, 
+            template_name='backend/login_confirmado.html'
+        )
 
     except Exception as e:
 
@@ -264,7 +278,11 @@ def resultado_login(request):
             'sucesso': True,
         }
 
-        return render(request=request, template_name='backend/login.html', context=context)
+        return render(
+            request=request, 
+            template_name='backend/login.html', 
+            context=context
+        )
 
 def logout(request):
     request.session['usuario'] = ''
@@ -277,7 +295,11 @@ def minha_conta(request):
     context = {
         }
 
-    return render(request=request, template_name='backend/minha_conta.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/minha_conta.html', 
+        context=context
+    )
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
@@ -374,7 +396,11 @@ def produtos(request, categoria, pagina):
         }
 
 
-    return render(request=request, template_name='backend/produtos.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/produtos.html', 
+        context=context
+    )
 
 #Funcao que renderiza a pagina para o admin que ira atualizar os dados de um produto
 def render_att_produtos(request):
@@ -387,7 +413,11 @@ def render_att_produtos(request):
         'produto': produto,
     }
 
-    return render(request=request, template_name='backend/admin_dados_produto.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/admin_dados_produto.html', 
+        context=context
+    )
 
 
 #Funcao que atualiza as informacoes de um produto
