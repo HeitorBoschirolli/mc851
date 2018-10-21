@@ -15,6 +15,7 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
+    _ = get_produtos(request)
 
     return render(request, 'backend/home.html')
 
@@ -36,9 +37,14 @@ def endereco_cliente(request):
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'endereco': endereco,
+        'cep_failed': False
     }
 
-    return render(request=request, template_name='backend/endereco_cep.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/endereco_cep.html', 
+        context=context
+    )
 
 
 #Funcao que ira requisitar a api de enderecos, os dados de uma busca de endereco por cep
@@ -52,7 +58,7 @@ def endereco_cep(request):
     url = url + endereco['cep'].value()
 
     request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
-
+    
     try:
         # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
         serializade_data = urllib2.urlopen(request2).read()
@@ -76,9 +82,17 @@ def endereco_cep(request):
             context=context
         )
 
-    except Exception as e:
-
-        return JsonResponse({'error': e.code})
+    except:
+        endereco = DadosEndereco()
+        context = {
+            'endereco': endereco,
+            'cep_failed': True
+        }
+        return render(
+            request,
+            template_name="backend/endereco_cep.html",
+            context=context
+        )
 
 
 '''---------------------------------------------------------------------------------------------------------'''
@@ -94,6 +108,7 @@ def dados_cliente(request):
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'cliente': cliente,
+        'error': False
     }
 
     return render(
@@ -122,9 +137,9 @@ def cadastra_cliente(request):
     }
 
     data = json.dumps(data)
-
+    
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-
+    
     try:
 
         serializade_data = urllib2.urlopen(request2).read()
@@ -140,14 +155,25 @@ def cadastra_cliente(request):
         usuario.sessionToken = ''
         usuario.save()
 
-        # return JsonResponse(resposta)
-        return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+        # return render(
+        #     request=request, 
+        #     template_name='backend/confirma_cadastro.html', 
+        #     context=context
+        # )
+        return confirma_cadastro(request)
 
-    except Exception as e:
+    except:
+        cliente = DadosCliente()
+        context = {
+            'cliente': cliente,
+            'error': True
+        }
 
-        return JsonResponse({'error': e.code})
-
-
+        return render(
+            request=request,
+            template_name='backend/cadastro_cliente.html',
+            context=context
+        )
 # Confirma o cadastro de um cliente
 def confirma_cadastro(request):
 
@@ -277,9 +303,8 @@ def produtos_celulares(request, pagina):
     return HttpResponse("celulares" + str(pagina))
 
 #Funcao que realiza um request para a api de produtos para pegar a lista de produtos
-def get_produtos(request, categoria, pagina):
-
-    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=' + pagina + '&itemsPerPage=10'
+def get_produtos(request, pagina='0'):
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=' + pagina + '&itemsPerPage=1000'
 
     request2 = urllib2.Request(url=url)
 
@@ -295,7 +320,8 @@ def get_produtos(request, categoria, pagina):
 
         #Lista com os produtos retornados
         produtos = resposta['content']
-        produtos_filtrados = []
+
+        # Cria as categorias existentes dos produtos retornados e salva na session
         categorias_dict = {}
         categorias = []
 
@@ -306,32 +332,49 @@ def get_produtos(request, categoria, pagina):
                 categorias_dict[categoria_produto] = 1
                 categorias.append(categoria_produto)
 
-            # Seleciona apenas os produtos da categoria recebida
-            if categoria_produto == categoria:
-                produtos_filtrados.append(produto)
-        
-        # Salva em session as categorias para atualizar a home
         request.session['categorias'] = categorias
+
         #Adiciona os ids dos produtos no banco de dados
-        for i in range(0, len(produtos)):
+        # for i in range(0, len(produtos)):
 
-            if(Produtos.objects.filter(id_produto=resposta['content'][i]['id']) == False):
+        #     if(Produtos.objects.filter(id_produto=resposta['content'][i]['id']) == False):
 
-                p = Produtos()
-                p.id_produto = resposta['content'][i]['id']
-                p.save()
+        #         p = Produtos()
+        #         p.id_produto = resposta['content'][i]['id']
+        #         p.save()
 
-        #JSON com a lista de produtos que sera 
-        context = {
-            'produtos': produtos_filtrados,
-        }
+        #JSON com a lista de produtos que sera
+        # context = {
+        #     #'produtos': produtos_filtrados,
+        #     'produtos': produtos,
+        # }
 
-        #return JsonResponse(context)
-        return render(request=request, template_name='backend/produtos.html', context=context)
+        # return JsonResponse(context)
+        #return render(request=request, template_name='backend/produtos.html', context=context)
+        return produtos
 
     except Exception as e:
 
         return JsonResponse({'error': e})
+
+def produtos(request, categoria, pagina):
+
+    produtos = get_produtos(request, pagina)
+
+    #Lista com os produtos retornados
+    produtos_filtrados = []
+
+    for produto in produtos:
+        # Seleciona apenas os produtos da categoria recebida
+        if produto['category'] == categoria:
+            produtos_filtrados.append(produto)
+
+    context = {
+            'produtos': produtos_filtrados,
+        }
+
+
+    return render(request=request, template_name='backend/produtos.html', context=context)
 
 #Funcao que renderiza a pagina para o admin que ira atualizar os dados de um produto
 def render_att_produtos(request):
@@ -403,17 +446,6 @@ def att_produto(request):
     except Exception as e:
 
         return JsonResponse({'error': e})
-
-
-def meu_carrinho(request):
-    # Pega o usuário caso exista
-
-
-    context = {
-
-        }
-    return render(request=request, template_name='backend/meu_carrinho.html', context=context)
-
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''--------------------------------------------API DE PAGAMENTO---------------------------------------------'''
@@ -526,4 +558,31 @@ def consulta_pagamento(request):
         return JsonResponse({'error': e.code})
 
 def pagamento(request):
-    return render(request=request, template_name='backend/pagamento.html')    
+    return render(request=request, template_name='backend/pagamento.html')
+
+def meu_carrinho(request):
+    # Pega o usuário caso exista
+
+    #URL para api de pagamento
+    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
+
+    # Variaveis de teste
+    data = {
+        "pk_pagamento": "1"
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+
+        return JsonResponse(resposta)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e.code})

@@ -48,7 +48,7 @@ urlpatterns = [
     #---------------------------------------------------------------------------------------------------------#
 
     #busca por produtos
-    url(r'^produtos/(?P<categoria>[a-zA-Z]+)/(?P<pagina>[0-9]+)', views.get_produtos, name='produtos'),
+    url(r'^produtos/(?P<categoria>[a-zA-Z]+)/(?P<pagina>[0-9]+)', views.produtos, name='produtos'),
     #Renderiza pagina onde o admin colocara os dados para atualizar um produto
     url(r'^dados_produto', views.render_att_produtos, name='dados_produto'),
     #Link para atualizacao de dados do produto
