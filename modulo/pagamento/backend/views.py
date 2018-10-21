@@ -295,7 +295,7 @@ def get_produtos(request, pagina='0'):
 
         #Lista com os produtos retornados
         produtos = resposta['content']
-        
+
         # Cria as categorias existentes dos produtos retornados e salva na session
         categorias_dict = {}
         categorias = []
@@ -318,7 +318,7 @@ def get_produtos(request, pagina='0'):
         #         p.id_produto = resposta['content'][i]['id']
         #         p.save()
 
-        #JSON com a lista de produtos que sera 
+        #JSON com a lista de produtos que sera
         # context = {
         #     #'produtos': produtos_filtrados,
         #     'produtos': produtos,
@@ -333,7 +333,7 @@ def get_produtos(request, pagina='0'):
         return JsonResponse({'error': e})
 
 def produtos(request, categoria, pagina):
-    
+
     produtos = get_produtos(request, pagina)
 
     #Lista com os produtos retornados
@@ -426,12 +426,29 @@ def att_produto(request):
 def meu_carrinho(request):
     # Pega o usuário caso exista
 
+    #URL para api de pagamento
+    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
 
-    context = {
+    # Variaveis de teste
+    data = {
+        "pk_pagamento": "1"
+    }
 
-        }
-    return render(request=request, template_name='backend/meu_carrinho.html', context=context)
+    data = json.dumps(data)
 
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+
+        return JsonResponse(resposta)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e.code})
 
 def pagamento(request):
-    return render(request=request, template_name='backend/pagamento.html')    
+    return render(request=request, template_name='backend/pagamento.html')
