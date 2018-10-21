@@ -154,7 +154,8 @@ def cadastra_cliente(request):
         usuario.cpf = str(form_cliente['cpf'].value())
         usuario.sessionToken = ''
         carrinho = Carrinho(total = 0)
-        usuario.carrinho = carrinho()
+        carrinho.save()
+        usuario.carrinho = carrinho
         usuario.save()
 
         # return render(
@@ -193,8 +194,8 @@ def confirma_cadastro(request):
     data = json.dumps(data)
 
     request2 = urllib2.Request(
-        url=url, 
-        data=data, 
+        url=url,
+        data=data,
         headers={'Content-Type': 'application/json'}
     )
 
@@ -203,7 +204,7 @@ def confirma_cadastro(request):
         resposta = json.loads(serializade_data)
 
         return render(
-            request=request, 
+            request=request,
             template_name='backend/cadastro_cliente_confirmado.html'
         )
 
@@ -225,8 +226,8 @@ def login(request):
     }
 
     return render(
-        request=request, 
-        template_name='backend/login.html', 
+        request=request,
+        template_name='backend/login.html',
         context=context
     )
 
@@ -267,7 +268,7 @@ def resultado_login(request):
         usuario.save()
 
         return render(
-            request=request, 
+            request=request,
             template_name='backend/login_confirmado.html'
         )
 
@@ -281,8 +282,8 @@ def resultado_login(request):
         }
 
         return render(
-            request=request, 
-            template_name='backend/login.html', 
+            request=request,
+            template_name='backend/login.html',
             context=context
         )
 
@@ -298,8 +299,8 @@ def minha_conta(request):
         }
 
     return render(
-        request=request, 
-        template_name='backend/minha_conta.html', 
+        request=request,
+        template_name='backend/minha_conta.html',
         context=context
     )
 
@@ -399,8 +400,8 @@ def produtos(request, categoria, pagina):
 
 
     return render(
-        request=request, 
-        template_name='backend/produtos.html', 
+        request=request,
+        template_name='backend/produtos.html',
         context=context
     )
 
@@ -416,8 +417,8 @@ def render_att_produtos(request):
     }
 
     return render(
-        request=request, 
-        template_name='backend/admin_dados_produto.html', 
+        request=request,
+        template_name='backend/admin_dados_produto.html',
         context=context
     )
 
