@@ -15,10 +15,8 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
-    # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
 
-    return render(request, 'backend/home.html', {'usuario': usuario})
+    return render(request, 'backend/home.html')
 
 
 def recuperar(request):
@@ -31,8 +29,6 @@ def recuperar(request):
 
 #Renderiza a pagina que ira enviar o cep do endereco a ser pesquisado na api de enderecos
 def endereco_cliente(request):
-    # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
 
     # Recupera do forms enviado pelo html o cep
     endereco = DadosEndereco()
@@ -40,7 +36,6 @@ def endereco_cliente(request):
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'endereco': endereco,
-        'usuario': usuario
     }
 
     return render(request=request, template_name='backend/endereco_cep.html', context=context)
@@ -48,8 +43,6 @@ def endereco_cliente(request):
 
 #Funcao que ira requisitar a api de enderecos, os dados de uma busca de endereco por cep
 def endereco_cep(request):
-    # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
 
     #URL com o endereco da api para fazer a requisicao
     url = 'http://wsendereco.tk/api/enderecos/cep/'
@@ -75,7 +68,6 @@ def endereco_cep(request):
             'latitude': resposta['Endereco'][0]['latitude'],
             'estado': resposta['Endereco'][0]['estado'],
             'fim': resposta['Endereco'][0]['fim'],
-            'usuario': usuario
         }
         # return JsonResponse(resposta)
         return render(
@@ -96,15 +88,12 @@ def endereco_cep(request):
 
 #Renderiza pagina que ira receber os dados do cliente para cadastrar na api de clientes
 def dados_cliente(request):
-    # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
 
     cliente = DadosCliente()
 
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'cliente': cliente,
-        'usuario': usuario
     }
 
     return render(
@@ -137,15 +126,12 @@ def cadastra_cliente(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
-        # Pega o usuário caso exista
-        usuario = request.session.get('usuario', False)
 
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
         context = {
             'registerToken': resposta['registerToken'],
-            'usuario': usuario
         }
 
         usuario = Usuario()
@@ -193,8 +179,6 @@ def confirma_cadastro(request):
 
 #Renderiza a pagina de login
 def login(request):
-    # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
 
     # Instancia um forms para os dados do cliente
     cliente = DadosCliente()
@@ -203,7 +187,6 @@ def login(request):
     context = {
         'cliente': cliente,
         'sucesso': None,
-        'usuario': usuario
     }
 
     return render(request=request, template_name='backend/login.html', context=context)
@@ -264,11 +247,8 @@ def logout(request):
 
 
 def minha_conta(request):
-    # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
 
     context = {
-            'usuario': usuario
         }
 
     return render(request=request, template_name='backend/minha_conta.html', context=context)
@@ -309,9 +289,6 @@ def get_produtos(request, categoria, pagina):
 
     try:
 
-        # Pega o usuário caso exista
-        usuario = request.session.get('usuario', False)
-
         # Realiza o request e obtem os dados retornados
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
@@ -319,11 +296,22 @@ def get_produtos(request, categoria, pagina):
         #Lista com os produtos retornados
         produtos = resposta['content']
         produtos_filtrados = []
-        for produto in produtos:
-            if produto['category'] == categoria:
-                produtos_filtrados.append(produto)
+        categorias_dict = {}
+        categorias = []
 
+        for produto in produtos:
+            # Cria uma lista com os tipos de categorias existentes
+            categoria_produto = produto['category']
+            if categoria_produto not in categorias_dict:
+                categorias_dict[categoria_produto] = 1
+                categorias.append(categoria_produto)
+
+            # Seleciona apenas os produtos da categoria recebida
+            if categoria_produto == categoria:
+                produtos_filtrados.append(produto)
         
+        # Salva em session as categorias para atualizar a home
+        request.session['categorias'] = categorias
         #Adiciona os ids dos produtos no banco de dados
         for i in range(0, len(produtos)):
 
@@ -336,7 +324,6 @@ def get_produtos(request, categoria, pagina):
         #JSON com a lista de produtos que sera 
         context = {
             'produtos': produtos_filtrados,
-            'usuario': usuario
         }
 
         #return JsonResponse(context)
@@ -465,9 +452,13 @@ def produtos (request, pagina, categoria):
 
 def meu_carrinho(request):
     # Pega o usuário caso exista
-    usuario = request.session.get('usuario', False)
+
 
     context = {
-            'usuario': usuario
+
         }
     return render(request=request, template_name='backend/meu_carrinho.html', context=context)
+
+
+def pagamento(request):
+    return render(request=request, template_name='backend/pagamento.html')    
