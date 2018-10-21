@@ -405,51 +405,6 @@ def att_produto(request):
         return JsonResponse({'error': e})
 
 
-def produtos (request, pagina, categoria):
-
-    # url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=0&itemsPerPage=10'
-    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/f47eaf47-0669-40d2-8b13-d983c871e0ba'
-
-    data = {
-            "id": "f47eaf47-0669-40d2-8b13-d983c871e0ba",
-            "name": "TESTE2",
-            "description": "Geladeira Brastemp Frost Free Duplex 500 litros cor Inox com Turbo Control",
-            "weight": 82,
-            "category": "ELETRODOMESTICO",
-            "type": "Geladeira",
-            "manufacturer": "Brastemp",
-            "quantityInStock": 10,
-            "value": 3499.99,
-            "promotionalValue": 10,
-            "availableToSell": True,
-            "onSale": False,
-            "ownerGroup": "pagamento",
-            "images": [],
-            "creationDate": "2018-10-10",
-            "updateDate": "2018-10-10",
-            "lastModifiedBy": "pagamento"
-            }
-
-    data = json.dumps(data)
-    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    request2.get_method = lambda: 'PATCH'
-
-    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
-    request2.add_header("Authorization", "Basic %s" % basic_auth)
-
-    try:
-        serializade_data = urllib2.urlopen(request2).read()
-        resposta = json.loads(serializade_data)
-
-
-        return JsonResponse(resposta)
-        # return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
-
-    except Exception as e:
-
-        return JsonResponse({'error': e})
-
-
 def meu_carrinho(request):
     # Pega o usuário caso exista
 
@@ -459,6 +414,116 @@ def meu_carrinho(request):
         }
     return render(request=request, template_name='backend/meu_carrinho.html', context=context)
 
+
+'''---------------------------------------------------------------------------------------------------------'''
+'''--------------------------------------------API DE PAGAMENTO---------------------------------------------'''
+'''---------------------------------------------------------------------------------------------------------'''
+
+
+#Realiza um pagamento por cartão
+def pagamento_cartao(request):
+
+    #Recupera os dados do pagamento para enviar para a api de pagamento
+    # forms_pagamento = Pagamento(data=request.POST)
+
+    #URL para api de pagamento
+    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
+
+    # Variaveis de teste
+    data = {
+        "cpf_comprador": "12356712345",
+        "valor_compra": "10.20",
+        "cnpj_site": "12345678992735",
+        "data_emissao_pedido": "2/10/2018",
+        "numero_cartao": "1234123412341111",
+        "nome_cartao": "SINDAO",
+        "cvv_cartao": "123",
+        "data_vencimento_cartao": "2/10/2025",
+        "credito": "1",
+        "num_parcelas": "2"
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+
+        return JsonResponse(resposta)
+
+    except Exception as e:
+        return JsonResponse({'error': e.code})
+
+
+#Realiza um pagamento por boleto
+def pagamento_boleto(request):
+
+    #Recupera os dados do pagamento para enviar para a api de pagamento
+    # forms_pagamento = Pagamento(data=request.POST)
+
+    #URL para api de pagamento
+    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
+
+    # Variaveis de teste
+    data = {
+        "cpf_comprador": "12356712345",
+        "valor_compra":"10.20",
+        "cnpj_site":"12345678992735",
+        "banco_gerador_boleto":"Itau",
+        "data_vencimento_boleto":"04/10/2018",
+        "endereco_fisico_site":"Rua Sindo",
+        "data_emissao_pedido": "25/06/2018"
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+
+        return JsonResponse(resposta)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e.code})
+
+#Consulta um pagamento
+def consulta_pagamento(request):
+
+    #Recupera os dados do pagamento para enviar para a api de pagamento
+    # forms_pagamento = Pagamento(data=request.POST)
+
+    #URL para api de pagamento
+    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
+
+    # Variaveis de teste
+    data = {
+        "pk_pagamento": "1"
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+
+        return JsonResponse(resposta)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e.code})
 
 def pagamento(request):
     return render(request=request, template_name='backend/pagamento.html')    

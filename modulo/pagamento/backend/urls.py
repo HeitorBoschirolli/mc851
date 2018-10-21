@@ -54,7 +54,19 @@ urlpatterns = [
     #Link para atualizacao de dados do produto
     url(r'^att_dados_produto', views.att_produto, name='att_dados_produto'),
 
-    url(r'^pagamento/', views.pagamento, name='pagamento'),
+
+    # ---------------------------------------------------------------------------------------------------------#
+    # --------------------------------------------API DE PAGAMENTO---------------------------------------------#
+    # ---------------------------------------------------------------------------------------------------------#
+
+    # URL para cadastrar um pagamento por cartão
+    url(r'^pagamento_cartao', views.pagamento_cartao, name='pagamento_cartao'),
+
+    # URL para cadastrar um pagamento por boleto
+    url(r'^pagamento_boleto', views.pagamento_boleto, name='pagamento_boleto'),
+
+    # URL para consulta de um pagamento por PK
+    url(r'^consulta_pagamento', views.consulta_pagamento, name='consulta_pagamento'),
 
 
 ]
