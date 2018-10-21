@@ -37,9 +37,14 @@ def endereco_cliente(request):
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'endereco': endereco,
+        'cep_failed': False
     }
 
-    return render(request=request, template_name='backend/endereco_cep.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/endereco_cep.html', 
+        context=context
+    )
 
 
 #Funcao que ira requisitar a api de enderecos, os dados de uma busca de endereco por cep
@@ -53,7 +58,7 @@ def endereco_cep(request):
     url = url + endereco['cep'].value()
 
     request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
-
+    
     try:
         # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
         serializade_data = urllib2.urlopen(request2).read()
@@ -77,9 +82,17 @@ def endereco_cep(request):
             context=context
         )
 
-    except Exception as e:
-
-        return JsonResponse({'error': e.code})
+    except:
+        endereco = DadosEndereco()
+        context = {
+            'endereco': endereco,
+            'cep_failed': True
+        }
+        return render(
+            request,
+            template_name="backend/endereco_cep.html",
+            context=context
+        )
 
 
 '''---------------------------------------------------------------------------------------------------------'''
@@ -95,6 +108,7 @@ def dados_cliente(request):
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
         'cliente': cliente,
+        'error': False
     }
 
     return render(
@@ -123,9 +137,9 @@ def cadastra_cliente(request):
     }
 
     data = json.dumps(data)
-
+    
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-
+    
     try:
 
         serializade_data = urllib2.urlopen(request2).read()
@@ -141,14 +155,25 @@ def cadastra_cliente(request):
         usuario.sessionToken = ''
         usuario.save()
 
-        # return JsonResponse(resposta)
-        return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+        # return render(
+        #     request=request, 
+        #     template_name='backend/confirma_cadastro.html', 
+        #     context=context
+        # )
+        return confirma_cadastro(request)
 
-    except Exception as e:
+    except:
+        cliente = DadosCliente()
+        context = {
+            'cliente': cliente,
+            'error': True
+        }
 
-        return JsonResponse({'error': e.code})
-
-
+        return render(
+            request=request,
+            template_name='backend/cadastro_cliente.html',
+            context=context
+        )
 # Confirma o cadastro de um cliente
 def confirma_cadastro(request):
 
@@ -165,13 +190,20 @@ def confirma_cadastro(request):
 
     data = json.dumps(data)
 
-    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2 = urllib2.Request(
+        url=url, 
+        data=data, 
+        headers={'Content-Type': 'application/json'}
+    )
 
     try:
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return render(request=request, template_name='backend/cadastro_cliente_confirmado.html')
+        return render(
+            request=request, 
+            template_name='backend/cadastro_cliente_confirmado.html'
+        )
 
     except Exception as e:
 
@@ -190,7 +222,11 @@ def login(request):
         'sucesso': None,
     }
 
-    return render(request=request, template_name='backend/login.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/login.html', 
+        context=context
+    )
 
 #Realiza o login na api de clientes
 def resultado_login(request):
@@ -228,7 +264,10 @@ def resultado_login(request):
         usuario.sessionToken = resposta['sessionToken']
         usuario.save()
 
-        return render(request=request, template_name='backend/login_confirmado.html')
+        return render(
+            request=request, 
+            template_name='backend/login_confirmado.html'
+        )
 
     except Exception as e:
 
@@ -239,7 +278,11 @@ def resultado_login(request):
             'sucesso': True,
         }
 
-        return render(request=request, template_name='backend/login.html', context=context)
+        return render(
+            request=request, 
+            template_name='backend/login.html', 
+            context=context
+        )
 
 def logout(request):
     request.session['usuario'] = ''
@@ -252,7 +295,11 @@ def minha_conta(request):
     context = {
         }
 
-    return render(request=request, template_name='backend/minha_conta.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/minha_conta.html', 
+        context=context
+    )
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
@@ -349,7 +396,11 @@ def produtos(request, categoria, pagina):
         }
 
 
-    return render(request=request, template_name='backend/produtos.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/produtos.html', 
+        context=context
+    )
 
 #Funcao que renderiza a pagina para o admin que ira atualizar os dados de um produto
 def render_att_produtos(request):
@@ -362,7 +413,11 @@ def render_att_produtos(request):
         'produto': produto,
     }
 
-    return render(request=request, template_name='backend/admin_dados_produto.html', context=context)
+    return render(
+        request=request, 
+        template_name='backend/admin_dados_produto.html', 
+        context=context
+    )
 
 
 #Funcao que atualiza as informacoes de um produto
@@ -561,4 +616,3 @@ def meu_carrinho(request):
     except Exception as e:
 
         return JsonResponse({'error': e.code})
-
