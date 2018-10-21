@@ -30,10 +30,24 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Produtos</a>
           <div class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item bg-secondary" href="/backend/produtos_eletrodomesticos/1">Eletrodomésticos</a>
-            <a class="dropdown-item bg-secondary" href="/backend/produtos_computadores/1">Computadores</a>
-            <a class="dropdown-item bg-secondary" href="/backend/produtos_celulares/1">Celulares</a>
+            {% for categoria in request.session.categorias %}
+              <a class="dropdown-item bg-secondary" href="/backend/produtos/{{categoria|safe}}/0">{{categoria}}</a>
+            {% endfor %}
+            <!-- <a class="dropdown-item bg-secondary" href="/backend/produtos_eletrodomesticos/0">Eletrodomésticos</a>
+            <a class="dropdown-item bg-secondary" href="/backend/produtos_computadores/0">Computadores</a>
+            <a class="dropdown-item bg-secondary" href="/backend/produtos_celulares/0">Celulares</a> -->
           </div>
+        {%if request.session.usuario %}
+          <li class="nav-item">
+          <a class="nav-link" id="cadastro" href="/backend/minha_conta">Minha Conta</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/backend/meu_carrinho" id="login">Meu Carrinho <span class="fa fa-shopping-cart"></span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/backend/logout" id="logout">Logout</a>
+        </li>
+        {%else%}
         </li>
         <li class="nav-item">
           <a class="nav-link" id="cadastro" href="/backend/endereco_cliente">Cadastro</a>
@@ -41,6 +55,8 @@
         <li class="nav-item">
           <a class="nav-link" href="/backend/login" id="login">Login</a>
         </li>
+        {%endif%}
+
       </ul>
       <form class="form-inline">
         <!--<input class="form-control mr-sm-2" type="text" placeholder="Email" aria-label="Email">-->

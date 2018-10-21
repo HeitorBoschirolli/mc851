@@ -31,5 +31,11 @@
         <a href="./recuperar.html color-primary"> Esqueci minha senha </a>
 
     </div>
+    {% if sucesso %}
+    <div class="container col-md-4">
+        <br/>
+        <p class="alert alert-danger">Usuário ou Senha Inválidas!</p>
+    </div>
+    {% endif %}
 
   {% endblock %}

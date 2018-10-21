@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.conf.urls import url
 
 from . import views
@@ -6,6 +8,12 @@ urlpatterns = [
 
     #Home do site
     url(r'^home', views.home, name='home'),
+    #desloga o usuario
+    url(r'^logout', views.logout, name='desloga_usuario'),
+    # Página da conta do usuário
+    url(r'^minha_conta', views.minha_conta, name='minha_conta'),
+    # Página do meu carrinho
+    url(r'^meu_carrinho', views.meu_carrinho, name='meu_carrinho'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
@@ -39,11 +47,26 @@ urlpatterns = [
     #---------------------------------------------API DE PRODUTOS---------------------------------------------#
     #---------------------------------------------------------------------------------------------------------#
 
-    #busca por eletromesticos
-    url(r'^produtos_eletrodomesticos/(?P<pagina>[0-9]+)', views.produtos_eletrodomesticos, name='produtos_eletrodomesticos'),
-    #busca por computadores
-    url(r'^produtos_computadores/(?P<pagina>[0-9]+)', views.produtos_computadores, name='produtos_computadores'),
-    #busca por celulares
-    url(r'^produtos_celulares/(?P<pagina>[0-9]+)', views.produtos_celulares, name='produtos_celulares'),
+    #busca por produtos
+    url(r'^produtos/(?P<categoria>[a-zA-Z]+)/(?P<pagina>[0-9]+)', views.produtos, name='produtos'),
+    #Renderiza pagina onde o admin colocara os dados para atualizar um produto
+    url(r'^dados_produto', views.render_att_produtos, name='dados_produto'),
+    #Link para atualizacao de dados do produto
+    url(r'^att_dados_produto', views.att_produto, name='att_dados_produto'),
+
+
+    # ---------------------------------------------------------------------------------------------------------#
+    # --------------------------------------------API DE PAGAMENTO---------------------------------------------#
+    # ---------------------------------------------------------------------------------------------------------#
+
+    # URL para cadastrar um pagamento por cartão
+    url(r'^pagamento_cartao', views.pagamento_cartao, name='pagamento_cartao'),
+
+    # URL para cadastrar um pagamento por boleto
+    url(r'^pagamento_boleto', views.pagamento_boleto, name='pagamento_boleto'),
+
+    # URL para consulta de um pagamento por PK
+    url(r'^consulta_pagamento', views.consulta_pagamento, name='consulta_pagamento'),
+
 
 ]

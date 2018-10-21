@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render
 from datetime import *
 from django.http import HttpResponse, JsonResponse
@@ -13,6 +15,8 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
+    _ = get_produtos(request)
+
     return render(request, 'backend/home.html')
 
 
@@ -69,7 +73,7 @@ def endereco_cep(request):
             'cep': resposta['Endereco'][0]['cep'],
             'latitude': resposta['Endereco'][0]['latitude'],
             'estado': resposta['Endereco'][0]['estado'],
-            'fim': resposta['Endereco'][0]['fim']
+            'fim': resposta['Endereco'][0]['fim'],
         }
         # return JsonResponse(resposta)
         return render(
@@ -137,12 +141,19 @@ def cadastra_cliente(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
     
     try:
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
         context = {
             'registerToken': resposta['registerToken'],
         }
+
+        usuario = Usuario()
+        usuario.email = str(form_cliente['email'].value())
+        usuario.cpf = str(form_cliente['cpf'].value())
+        usuario.sessionToken = ''
+        usuario.save()
 
         # return render(
         #     request=request, 
@@ -200,7 +211,8 @@ def login(request):
 
     # Passa o forms como contexto para ser utilizado para obtencao de dados no html
     context = {
-        'cliente': cliente
+        'cliente': cliente,
+        'sucesso': None,
     }
 
     return render(request=request, template_name='backend/login.html', context=context)
@@ -230,24 +242,57 @@ def resultado_login(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
+        # Trocar para nome do cliente
+        request.session['usuario'] = form_cliente['email'].value().split("@")[0]
+
         context = {
-            'registerToken': resposta['sessionToken']
+            'sessionToken': resposta['sessionToken']
         }
+
+        usuario = Usuario.objects.get(email=str(form_cliente['email'].value()))
+        usuario.sessionToken = resposta['sessionToken']
+        usuario.save()
 
         return render(request=request, template_name='backend/login_confirmado.html')
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        cliente = DadosCliente()
 
+        context = {
+            'cliente': cliente,
+            'sucesso': True,
+        }
+
+        return render(request=request, template_name='backend/login.html', context=context)
+
+def logout(request):
+    request.session['usuario'] = ''
+
+    return render(request=request, template_name='backend/home.html')
+
+
+def minha_conta(request):
+
+    context = {
+        }
+
+    return render(request=request, template_name='backend/minha_conta.html', context=context)
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
 '''---------------------------------------------------------------------------------------------------------'''
 
 def produtos_eletrodomesticos(request, pagina):
+
+    return att_produto(request, pagina, "eletrodomestico")
+    #return get_produtos (request, pagina, "eletromestico")
+    # return HttpResponse("eletro" + str(pagina))
     #produtos (request, pagina, "eletromestico")
-    return render(request=request, template_name='backend/produtos.html')
+    # Pega o usuário caso exista
+    # usuario = request.session.get('usuario', False)
+    #
+    # return render(request=request, template_name='backend/produtos.html', context={'usuario': usuario})
 
 def produtos_computadores(request, pagina):
     #produtos (request, pagina, "computador")
@@ -257,23 +302,178 @@ def produtos_celulares(request, pagina):
     #produtos (request, pagina, "celular")
     return HttpResponse("celulares" + str(pagina))
 
-def produtos (request, pagina, categoria):
+#Funcao que realiza um request para a api de produtos para pegar a lista de produtos
+def get_produtos(request, pagina='0'):
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products?page=' + pagina + '&itemsPerPage=1000'
 
-    url = 'ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products'
+    request2 = urllib2.Request(url=url)
 
+    #Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    try:
+
+        # Realiza o request e obtem os dados retornados
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        #Lista com os produtos retornados
+        produtos = resposta['content']
+
+        # Cria as categorias existentes dos produtos retornados e salva na session
+        categorias_dict = {}
+        categorias = []
+
+        for produto in produtos:
+            # Cria uma lista com os tipos de categorias existentes
+            categoria_produto = produto['category']
+            if categoria_produto not in categorias_dict:
+                categorias_dict[categoria_produto] = 1
+                categorias.append(categoria_produto)
+
+        request.session['categorias'] = categorias
+
+        #Adiciona os ids dos produtos no banco de dados
+        # for i in range(0, len(produtos)):
+
+        #     if(Produtos.objects.filter(id_produto=resposta['content'][i]['id']) == False):
+
+        #         p = Produtos()
+        #         p.id_produto = resposta['content'][i]['id']
+        #         p.save()
+
+        #JSON com a lista de produtos que sera
+        # context = {
+        #     #'produtos': produtos_filtrados,
+        #     'produtos': produtos,
+        # }
+
+        # return JsonResponse(context)
+        #return render(request=request, template_name='backend/produtos.html', context=context)
+        return produtos
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+def produtos(request, categoria, pagina):
+
+    produtos = get_produtos(request, pagina)
+
+    #Lista com os produtos retornados
+    produtos_filtrados = []
+
+    for produto in produtos:
+        # Seleciona apenas os produtos da categoria recebida
+        if produto['category'] == categoria:
+            produtos_filtrados.append(produto)
+
+    context = {
+            'produtos': produtos_filtrados,
+        }
+
+
+    return render(request=request, template_name='backend/produtos.html', context=context)
+
+#Funcao que renderiza a pagina para o admin que ira atualizar os dados de um produto
+def render_att_produtos(request):
+
+    # Instancia um forms para os dados do Produto
+    produto = DadosProduto()
+
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
+    context = {
+        'produto': produto,
+    }
+
+    return render(request=request, template_name='backend/admin_dados_produto.html', context=context)
+
+
+#Funcao que atualiza as informacoes de um produto
+def att_produto(request):
+
+    #Recebe o id do produto por post
+    form_Produto = DadosProduto(data=request.POST)
+    id_produto = form_Produto['id_produto'].value()
+
+    #PROCURA O PRODUTO NA API DE PRODUTOS, PARA QUE SEUS DADOS SEJAM ATUALIZADOS
+
+    #Url da requisicao
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + id_produto
+
+    request2 = urllib2.Request(url=url)
+
+    # Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        dados_produto = json.loads(serializade_data)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+    #Atualiza os dados que o admin quer que sejam atualizados
+    for key in form_Produto.fields:
+
+        if(form_Produto[key].data):
+            dados_produto[key] = form_Produto[key].data
+
+
+    #ATUALIZA OS DADOS DO PRODUTO
+
+    # Url da requisicao
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + id_produto
+
+    data = json.dumps(dados_produto)
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2.get_method = lambda: 'PATCH'
 
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    #Envia a requsicao ao modulo
     try:
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        context = {
-            'registerToken': resposta['registerToken']
-        }
+        return JsonResponse(resposta)
 
-        # return JsonResponse(resposta)
-        return render(request=request, template_name='backend/confirma_cadastro.html', context=context)
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+
+def meu_carrinho(request):
+    # Pega o usuário caso exista
+
+    #URL para api de pagamento
+    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
+
+    # Variaveis de teste
+    data = {
+        "pk_pagamento": "1"
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+
+        return JsonResponse(resposta)
 
     except Exception as e:
 
         return JsonResponse({'error': e.code})
+
+def pagamento(request):
+    return render(request=request, template_name='backend/pagamento.html')
