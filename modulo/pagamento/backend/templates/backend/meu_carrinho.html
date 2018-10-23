@@ -16,23 +16,23 @@
 <table id="tabela_produtos" class="" style="width:100%">
 
         <tbody>
-
+            {% for produto in produtos %}
             <tr style="border-bottom: 1px solid black;">
-                <td >
+                <td>
                   <img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src="{% static "backend/fogao1.jpg" %}" alt="Imagem de eletrodomésticos" />
                 </td>
                 <td>
-                  <h4>{{produtos.0.name|safe}}</h4>
+                  <h4>{{produto.name|safe}}</h4>
                   <br>
-                  Descrição Produto
+                  {{ produto.description|safe }}
                   <br><br>
-                  <strong>R$<span id="valor_unitario" value="1000">1000</span></strong>
+                  <strong>R$<span id="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong>
                 </td>
 
                 <td>
-                  <form action="/meu_carrinho/">
+                  <form style="margin: 15px;" action="/meu_carrinho/">
                     Quantidade:
-                    <input type="number" name="quantity" onclick="atualiza_valor()" id="quantidade" min="0" max="100" step="1" value="1">
+                    <input type="number" name="quantity" onkeypress="atualiza_valor()" onclick="atualiza_valor()" id="quantidade" min="0" max="100" step="1" value="1">
                       <button type="button" class="btn btn-link">
                           Verificar Disponibilidade
                       </button>
@@ -45,6 +45,7 @@
 
                 </td>
             </tr>
+            {% endfor%}
         </tbody>
     </table>
  </div>
