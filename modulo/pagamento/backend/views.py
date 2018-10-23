@@ -635,3 +635,61 @@ def meu_carrinho(request):
     except Exception as e:
 
         return JsonResponse({'error': e.code})
+
+
+'''---------------------------------------------------------------------------------------------------------'''
+'''--------------------------------------------API DE LOGISTICA---------------------------------------------'''
+'''---------------------------------------------------------------------------------------------------------'''
+
+#Funcao que pega o valor de frete da api de logistica
+def get_valor_frete(request):
+
+    #URL para acesso da api (VAI PRECISAR SER ALTERADA DEPOIS)
+    url = 'https://frete-grupo06.herokuapp.com/search'
+
+    #Pega o cep do cliente passado por um post, por meio do id 'cep'
+    cep = request.POST.get('cep')
+
+    data = {
+        'codigo': cep
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        return JsonResponse(resposta)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+
+'''---------------------------------------------------------------------------------------------------------'''
+'''---------------------------------------------API DE CRÉDITO----------------------------------------------'''
+'''---------------------------------------------------------------------------------------------------------'''
+
+#Funcao que pega o score de um cliente na api de credito
+def get_score(request):
+
+    #Pega o cpf do cliente passado no momento do pagamento
+    cpf = request.POST.get('cpf')
+
+    # URL para acesso da api de credito
+    url = 'http://ec2-54-233-234-42.sa-east-1.compute.amazonaws.com:3000/api/v1/score/' + cpf
+
+    request2 = urllib2.Request(url=url)
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        return JsonResponse(resposta)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})

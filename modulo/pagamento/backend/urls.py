@@ -68,5 +68,17 @@ urlpatterns = [
     # URL para consulta de um pagamento por PK
     url(r'^consulta_pagamento', views.consulta_pagamento, name='consulta_pagamento'),
 
+    # ---------------------------------------------------------------------------------------------------------#
+    # --------------------------------------------API DE LOGISTICA---------------------------------------------#
+    # ---------------------------------------------------------------------------------------------------------#
 
+    # URL para consulta de valor de frete para um determinado cep
+    url(r'^get_valor_frete', views.get_valor_frete, name='get_valor_frete'),
+
+    # ---------------------------------------------------------------------------------------------------------#
+    # ---------------------------------------------API DE CRÉDITO----------------------------------------------#
+    # ---------------------------------------------------------------------------------------------------------#
+
+    # URL para consulta de um score de um cliente
+    url(r'^get_score', views.get_score, name='get_score'),
 ]
