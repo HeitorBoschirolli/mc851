@@ -671,12 +671,7 @@ def remove_carrinho(request):
 
     return meu_carrinho(request)
 
-
-
-def teste_carrinho(request):
-
-    return render(request=request, template_name='backend/meu_carrinho.html')
-
+    
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''--------------------------------------------API DE LOGISTICA---------------------------------------------'''
@@ -719,11 +714,7 @@ def get_score(request):
 
     #Pega o cpf do cliente passado no momento do pagamento
     #cpf = request.POST.get('cpf')
-<<<<<<< HEAD
     cpf=str("20314520369")
-=======
-    cpf = '20314520369'
->>>>>>> 25f57bb432d75d2c5a021e205982486b063aefa6
     # URL para acesso da api de credito
     url = 'http://ec2-54-233-234-42.sa-east-1.compute.amazonaws.com:3000/api/v1/score/' + cpf
 
