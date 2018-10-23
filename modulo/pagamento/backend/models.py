@@ -29,7 +29,7 @@ class Pedidos(models.Model):
     carrinho = models.OneToOneField(Carrinho, on_delete=models.CASCADE, null=False)
 
     def __str__ (self):
-        return "Peido do usuario: " + usuario + " com carrinho: " + carrinho
+        return "Peido do usuario: " + str(self.usuario) + " com carrinho: " + str(self.carrinho)
 
 class Produtos_no_Carrinho(models.Model):
     produto = models.ForeignKey(Produtos, on_delete=models.DO_NOTHING, null=False)
@@ -37,4 +37,4 @@ class Produtos_no_Carrinho(models.Model):
     carrinho = models.ForeignKey(Carrinho, on_delete=models.DO_NOTHING, null=False)
 
     def __str__ (self):
-        return "Produto: " + produto + " no carrinho: " + carrinho
+        return "Produto: " + str(self.produto) + " no carrinho: " + str(self.carrinho)
