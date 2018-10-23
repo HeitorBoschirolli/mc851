@@ -633,17 +633,23 @@ def adciona_carrinho(request):
 
     id_produto = request.POST.get("id_produto")
 
-    usuario = Usuario.objects.get(email=request.session['usuario'])
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return HttpResponse("USUARIO NAO LOGADOOOOOO")
 
-    if (Produtos.objects.get(id_produto=id_produto)):
+    #import pdb;pdb.set_trace()
+
+    try:
+        Produtos.objects.get(id_produto=id_produto)
         produto_no_carrinho = Produtos_no_Carrinho()
         produto_no_carrinho.produto = Produtos.objects.get(id_produto=id_produto)
         produto_no_carrinho.quantidade = 1
         produto_no_carrinho.carrinho = usuario.carrinho
         produto_no_carrinho.save()
-    else:
+    except:
         produto = Produtos()
-        produto.id_pedido = id_produto
+        produto.id_produto = id_produto
         produto.save()
         produto_no_carrinho = Produtos_no_Carrinho()
         produto_no_carrinho.produto = produto
