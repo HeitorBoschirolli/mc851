@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^minha_conta', views.minha_conta, name='minha_conta'),
     # Página do meu carrinho
     url(r'^meu_carrinho', views.meu_carrinho, name='meu_carrinho'),
+    #adciona item ao carrinho
+    url(r'^adciona_carrinho', views.adciona_carrinho, name='adciona_carrinho'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
