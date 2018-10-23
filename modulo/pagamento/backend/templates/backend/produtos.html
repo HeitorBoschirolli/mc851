@@ -14,7 +14,7 @@
       </div>
 <div class="container">
 <table id="tabela_produtos" class="" style="width:100%">
-        
+
         <tbody>
           {% for produto in produtos %}
             <tr style="border-bottom: 1px solid black;">
@@ -28,11 +28,14 @@
                   <br><br>
                   <strong>R${{ produto.value|safe }}</strong>
                 </td>
-                
+
                 <td>
-                  <button type="button" class="btn btn-warning">
-                      <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
-                  </button>
+                  <form action="/meu_carrinho/" method="POST">
+                    <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
+                    <button type="submit" class="btn btn-warning">
+                        <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
+                    </button>
+                  </form>
                 </td>
             </tr>
             {% endfor%}

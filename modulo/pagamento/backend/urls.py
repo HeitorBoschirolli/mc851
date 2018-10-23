@@ -13,7 +13,7 @@ urlpatterns = [
     # Página da conta do usuário
     url(r'^minha_conta', views.minha_conta, name='minha_conta'),
     # Página do meu carrinho
-    url(r'^meu_carrinho', views.meu_carrinho, name='meu_carrinho'),
+    url(r'^meu_carrinho', views.teste_carrinho, name='meu_carrinho'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#

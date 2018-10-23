@@ -273,7 +273,7 @@ def resultado_login(request):
         resposta = json.loads(serializade_data)
 
         # Trocar para nome do cliente
-        request.session['usuario'] = form_cliente['email'].value().split("@")[0]
+        request.session['usuario'] = form_cliente['email'].value()
 
         context = {
             'sessionToken': resposta['sessionToken']
@@ -324,24 +324,6 @@ def minha_conta(request):
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
 '''---------------------------------------------------------------------------------------------------------'''
 
-def produtos_eletrodomesticos(request, pagina):
-
-    return att_produto(request, pagina, "eletrodomestico")
-    #return get_produtos (request, pagina, "eletromestico")
-    # return HttpResponse("eletro" + str(pagina))
-    #produtos (request, pagina, "eletromestico")
-    # Pega o usuário caso exista
-    # usuario = request.session.get('usuario', False)
-    #
-    # return render(request=request, template_name='backend/produtos.html', context={'usuario': usuario})
-
-def produtos_computadores(request, pagina):
-    #produtos (request, pagina, "computador")
-    return HttpResponse("comp" + str(pagina))
-
-def produtos_celulares(request, pagina):
-    #produtos (request, pagina, "celular")
-    return HttpResponse("celulares" + str(pagina))
 
 #Funcao que realiza um request para a api de produtos para pegar a lista de produtos
 def get_produtos(request, pagina='0'):
@@ -635,3 +617,7 @@ def meu_carrinho(request):
     except Exception as e:
 
         return JsonResponse({'error': e.code})
+
+def teste_carrinho(request):
+
+    return render(request=request, template_name='backend/meu_carrinho.html')
