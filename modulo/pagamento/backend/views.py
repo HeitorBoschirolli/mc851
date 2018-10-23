@@ -591,32 +591,86 @@ def consulta_pagamento(request):
 def pagamento(request):
     return render(request=request, template_name='backend/pagamento.html')
 
+
+# Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
 def meu_carrinho(request):
-    # Pega o usuário caso exista
+    usuario = Usuario.objects.get(email=request.session['usuario'])
 
-    #URL para api de pagamento
-    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
+    produtos = []
 
-    # Variaveis de teste
-    data = {
-        "pk_pagamento": "1"
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
+
+    for produto_no_carrinho in usuario.carrinho.produtos_no_carrinho_set.all():
+        url_pedido_atual = url + str(produto_no_carrinho.produto.id_produto)
+
+        request2 = urllib2.Request(url=url_pedido_atual)
+
+        # Adiciona ao request o login de autorizacao
+        basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+        request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+        #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+        try:
+            serializade_data = urllib2.urlopen(request2).read()
+            dados_produto = json.loads(serializade_data)
+            produtos.append(dados_produto)
+        except Exception as e:
+            return JsonResponse({'error': e.code})
+
+    context = {
+        'produtos': produtos
     }
 
-    data = json.dumps(data)
-
-    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-
-    try:
-
-        serializade_data = urllib2.urlopen(request2).read()
-        resposta = json.loads(serializade_data)
+    return render (
+        request=request,
+        template_name='backend/meu_carrinho.html',
+        context=context
+    )
 
 
-        return JsonResponse(resposta)
+# Recebe um produto do front end (id) e o adciona ao carrinho do usuario da sessao atual
+def adciona_carrinho(request):
 
-    except Exception as e:
+    id_produto = request.POST.get("id_produto")
 
-        return JsonResponse({'error': e.code})
+    usuario = Usuario.objects.get(email=request.session['usuario'])
+
+    if (Produtos.objects.get(id_produto=id_produto)):
+        produto_no_carrinho = Produtos_no_Carrinho()
+        produto_no_carrinho.produto = Produtos.objects.get(id_produto=id_produto)
+        produto_no_carrinho.quantidade = 1
+        produto_no_carrinho.carrinho = usuario.carrinho
+        produto_no_carrinho.save()
+    else:
+        produto = Produtos()
+        produto.id_pedido = id_produto
+        produto.save()
+        produto_no_carrinho = Produtos_no_Carrinho()
+        produto_no_carrinho.produto = produto
+        produto_no_carrinho.quantidade = 1
+        produto_no_carrinho.carrinho = usuario.carrinho
+        produto_no_carrinho.save()
+
+    context = {}
+
+    return render(
+        request=request,
+        template_name='backend/home.html',
+        context=context
+    )
+
+# Remove um produto do carrinho
+def remove_carrinho(request):
+
+    usuario = Usuario.objects.get(email=request.session['usuario'])
+    id_produto = request.POST.get("id_produto")
+
+    for produto_no_carrinho in usuario.carrinho.produdos_no_carrinho_set.all():
+        if (produto_no_carrinho.produto.id_produto == id_produto):
+            produto_no_carrinho.delete()
+
+    return meu_carrinho(request)
+
 
 
 def teste_carrinho(request):
@@ -665,7 +719,11 @@ def get_score(request):
 
     #Pega o cpf do cliente passado no momento do pagamento
     #cpf = request.POST.get('cpf')
+<<<<<<< HEAD
     cpf=str("20314520369")
+=======
+    cpf = '20314520369'
+>>>>>>> 25f57bb432d75d2c5a021e205982486b063aefa6
     # URL para acesso da api de credito
     url = 'http://ec2-54-233-234-42.sa-east-1.compute.amazonaws.com:3000/api/v1/score/' + cpf
 
