@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+
 from django import forms
 
 class DadosCliente(forms.Form):
     nome_cliente = forms.CharField(
-        label="Nome do Cliente", 
+        label="Nome do Cliente",
         max_length=100,
         widget=forms.TextInput(
             attrs={
@@ -29,8 +31,8 @@ class DadosCliente(forms.Form):
         }
     ))
     cpf = forms.CharField(
-        label="CPF", 
-        max_length=11, 
+        label="CPF",
+        max_length=11,
         widget=forms.TextInput(
             attrs={
                 'type': 'text',
@@ -44,8 +46,8 @@ class DadosCliente(forms.Form):
         # error_message='sdfhsakdf'
     )
     data_nascimento = forms.CharField(
-        label="Data de Nascimento", 
-        max_length=100, 
+        label="Data de Nascimento",
+        max_length=100,
         widget=forms.TextInput(
             attrs={
                 'type': 'date',
@@ -118,3 +120,65 @@ class DadosEndereco(forms.Form):
             'placeholder': 'Exemplo: ap. 101'
         }
     ))
+
+
+
+class DadosCartao(forms.Form):
+    nome_cartao = forms.CharField(
+        label="Nome do Cartão",
+        max_length=40,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'text',
+                'class': 'form-control',
+                'placeholder': "Exemplo: Joaquim da Silva",
+                'required': True,
+                'title': "Exemplo: Joaquim da Silva",
+            },
+        )
+    )
+
+
+    numero_cartao = forms.CharField(
+        label="Número do Cartão",
+        max_length=16,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'text',
+                'class': 'form-control',
+                'pattern': '[0-9][0-9][0-9][0-9] [0-9][0-9][0-9][0-9] [0-9][0-9][0-9][0-9] [0-9][0-9][0-9][0-9]',
+                'placeholder': "Exemplo: 1234 5678 9102 3456",
+                'required': True,
+                'title': "Exemplo: 1234 5678 9102 3456",
+            },
+        )
+    )
+
+    cvv = forms.CharField(
+        label="CVV",
+        max_length=3,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'text',
+                'class': 'form-control',
+                'pattern': '[0-9][0-9][0-9]',
+                'placeholder': "Exemplo: 123",
+                'required': True,
+                'title': "Exemplo: 123",
+            },
+        )
+    )
+
+
+    data_vencimento_cartao = forms.CharField(
+        label="Data de Vencimento",
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'month',
+                'class': 'form-control',
+                'min': '2018-08',
+                'required': True
+            },
+        )
+    )

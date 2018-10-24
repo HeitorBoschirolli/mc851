@@ -403,6 +403,32 @@ def produtos(request, categoria, pagina):
         context=context
     )
 
+# Função que busca produto (search)
+# Procura por categoria, nome e descrição (NÃO é case sensitive)
+def buscar_produto(request):
+    nome_produto = request.POST.get('nome_produto')
+
+    produtos = get_produtos(request, pagina='0')
+
+    produtos_busca = []
+    for produto in produtos:
+        if (nome_produto in produto['category']) or (nome_produto in produto['name']) or (nome_produto in produto['description']):
+            produtos_busca.append(produto)
+
+    context = {
+            'produtos': produtos_busca,
+        }
+
+
+    return render(
+        request=request,
+        template_name='backend/produtos.html',
+        context=context
+    )
+
+
+
+
 #Funcao que renderiza a pagina para o admin que ira atualizar os dados de um produto
 def render_att_produtos(request):
 
@@ -589,7 +615,14 @@ def consulta_pagamento(request):
         return JsonResponse({'error': e.code})
 
 def pagamento(request):
-    return render(request=request, template_name='backend/pagamento.html')
+    form_cartao = DadosCartao(data=request.POST)
+    valor_total = request.POST.get('valor_total_form', 0)
+    context = {
+        'form_cartao': form_cartao,
+        'valor_total': valor_total,
+    }
+
+    return render(request=request, context=context, template_name='backend/pagamento.html')
 
 
 # Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
@@ -617,8 +650,10 @@ def meu_carrinho(request):
         except Exception as e:
             return JsonResponse({'error': e.code})
 
+    valor_frete = get_valor_frete()
     context = {
-        'produtos': produtos
+        'produtos': produtos,
+        'valor_frete': valor_frete
     }
 
     return render (
@@ -684,13 +719,13 @@ def remove_carrinho(request):
 '''---------------------------------------------------------------------------------------------------------'''
 
 #Funcao que pega o valor de frete da api de logistica
-def get_valor_frete(request):
+def get_valor_frete(cep="01001001"):
 
     #URL para acesso da api (VAI PRECISAR SER ALTERADA DEPOIS)
     url = 'https://frete-grupo06.herokuapp.com/search'
 
     #Pega o cep do cliente passado por um post, por meio do id 'cep'
-    cep = request.POST.get('cep')
+    #cep = request.POST.get('cep')
 
     data = {
         'codigo': cep
@@ -704,7 +739,7 @@ def get_valor_frete(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return JsonResponse(resposta)
+        return resposta
 
     except Exception as e:
 

@@ -16,6 +16,10 @@ urlpatterns = [
     url(r'^meu_carrinho', views.meu_carrinho, name='meu_carrinho'),
     #adciona item ao carrinho
     url(r'^adciona_carrinho', views.adciona_carrinho, name='adciona_carrinho'),
+    #procura produto (search)
+    url(r'^buscar_produto', views.buscar_produto, name='buscar_produto'),
+    # URL para pagamento (quando clica em pagar em "Meu Carrinho")
+    url(r'^pagamento', views.pagamento, name='pagamento'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
@@ -69,6 +73,8 @@ urlpatterns = [
 
     # URL para consulta de um pagamento por PK
     url(r'^consulta_pagamento', views.consulta_pagamento, name='consulta_pagamento'),
+
+
 
     # ---------------------------------------------------------------------------------------------------------#
     # --------------------------------------------API DE LOGISTICA---------------------------------------------#

@@ -17,7 +17,7 @@
 
         <tbody>
             {% for produto in produtos %}
-            <tr style="border-bottom: 1px solid black;">
+            <tr style="border-bottom: 1px solid black;" class="produto">
                 <td>
                   <img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src="{% static "backend/fogao1.jpg" %}" alt="Imagem de eletrodomésticos" />
                 </td>
@@ -26,22 +26,20 @@
                   <br>
                   {{ produto.description|safe }}
                   <br><br>
-                  <strong>R$<span id="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong>
+                  <strong>R$<span class="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong>
+                  <input hidden value="{{ produto.quantityInStock|safe }}" class="quantidade_estoque">
                 </td>
 
                 <td>
                   <form style="margin: 15px;" action="/meu_carrinho/">
                     Quantidade:
-                    <input type="number" name="quantity" onkeypress="atualiza_valor()" onclick="atualiza_valor()" id="quantidade" min="0" max="100" step="1" value="1">
-                      <button type="button" class="btn btn-link">
-                          Verificar Disponibilidade
-                      </button>
+                    <input type="number" name="quantity" onkeypress="atualiza_quantidade()" onclick="atualiza_quantidade()" class="unidades" min="0" max="100" step="1" value="1">
                   </form>
                 </td>
                 <td>
                   <strong>Valor total</strong>
                   <br/>
-                  R$<span id="valor_total">2000</span>
+                  R$<span class="valor_total">2000</span>
 
                 </td>
             </tr>
@@ -49,12 +47,23 @@
         </tbody>
     </table>
  </div>
+ <div class="container">
+   <p style="text-align: right;" >Valor Frete: R$<span id="valor_frete">{{valor_frete.valor|safe}}</span></p>
+ </div>
+<div class="container">
+  <b style="text-align: right;" ><h3>Valor Total: R$<span id="valor_total_pedido"></span></h3></b>
+</div>
+
+
 <div class="container">
 </br>
-   <button type="button" style="float:right" class="btn btn-warning">
-       <span class="fa fa-shopping-cart"></span> Efetuar pagamento
-   </button>
-   <br/>
+  <form action="/pagamento/" method="POST">
+    <input hidden value='' name="valor_total_form" id="valor_total_form">
+     <button type="submit" style="float:right" class="btn btn-warning">
+         <span class="fa fa-shopping-cart"></span> Efetuar pagamento
+     </button>
+     <br/>
+  </form>
 </div>
 {% endblock %}
 
@@ -64,12 +73,48 @@
   $(document).ready(function() {
     $('#tabela_produtos').DataTable();
     atualiza_valor();
+    atualiza_valor_total();
 } );
   atualiza_valor();
+  atualiza_valor_total();
 
+  // Atualiza quantidade (requisição AJAX para API de produtos)
+  function atualiza_quantidade() {
+    quantidade = $('.produto').length;
+    qnt_estoque = $('.quantidade_estoque');
+    unidades = $('.unidades');
+    for(i = 0; i < quantidade; i++) {
+      if (parseInt(qnt_estoque[i].value) < parseInt(unidades[i].value)) {
+        unidades[i].value = qnt_estoque[i].value
+        alert("Limite Excedido")
+      }
+    }
+
+    atualiza_valor();
+  }
+
+  // Atualiza os valores totais dos produtos individualmente
   function atualiza_valor() {
-    valor_total = $('#valor_unitario').html()*$('#quantidade').val();
-    $('#valor_total').html(valor_total);
+    quantidade = $('.produto').length;
+    valor = $('.valor_unitario');
+    unidades = $('.unidades');
+    valor_total = $('.valor_total')
+    for(i = 0; i < quantidade; i++) {
+        valor_total_produto = parseFloat(valor[i].innerHTML)*unidades[i].value;
+        valor_total[i].textContent = valor_total_produto.toFixed(2)
+    }
+    atualiza_valor_total();
+  }
+
+  function atualiza_valor_total () {
+    valor_total = $('.valor_total');
+    valor_final = 0;
+    for (i = 0; i < valor_total.length; i++) {
+      valor_final = valor_final + parseFloat(valor_total[i].innerHTML);
+    }
+    valor_final = valor_final + parseFloat($('#valor_frete').html());
+    $('#valor_total_pedido').html(valor_final.toFixed(2));
+    $('#valor_total_form').val(valor_final);
   }
 
 </script>
