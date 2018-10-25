@@ -19,7 +19,7 @@ urlpatterns = [
     #procura produto (search)
     url(r'^buscar_produto', views.buscar_produto, name='buscar_produto'),
     # URL para pagamento (quando clica em pagar em "Meu Carrinho")
-    url(r'^pagamento', views.pagamento, name='pagamento'),
+    url(r'^pagamento/$', views.pagamento, name='pagamento'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
