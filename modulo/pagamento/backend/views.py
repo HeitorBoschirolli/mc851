@@ -580,9 +580,10 @@ def pagamento_cartao(request):
         resposta = json.loads(serializade_data)
 
         if resposta['pagamento'] == 1:
-            return render(request, 'backend/sucesso_pagamento.html')
+            vincula_pagamento_pedido(request, resposta['pk_pedido'])
+            return render(request, 'backend/sucesso_pagamento_cartao.html')
         else:
-            return render(request, 'backend/falha_pagamento.html')
+            return render(request, 'backend/falha_pagamento_cartao.html')
 
     except Exception as e:
         return JsonResponse({'error': e.code})
@@ -616,9 +617,14 @@ def pagamento_boleto(request):
 
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
-
-
-        return JsonResponse(resposta)
+        if resposta['status']:
+            vincula_pagamento_pedido(request, resposta['pk_pedido'])
+            context = {
+                'numero_boleto': resposta['num_boleto']
+            }
+            return render(request=request, context=context, template_name='backend/sucesso_pagamento_boleto.html')
+        else:
+            return render(request, 'backend/falha_pagamento_boleto.html')
 
     except Exception as e:
 
@@ -664,6 +670,17 @@ def pagamento(request):
 
     return render(request=request, context=context, template_name='backend/pagamento.html')
 
+# Dado o id do pagamento, o salva no respectivo carrinho
+def vincula_pagamento_pedido(request, id_pagamento):
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return HttpResponse("USUARIO NAO LOGADOOOOOO")
+
+    usuario.carrinho.id_pagamento = id_pagamento
+    usuario.carrinho.save()
+
 
 # Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
 def meu_carrinho(request):
@@ -691,6 +708,8 @@ def meu_carrinho(request):
             return JsonResponse({'error': e.code})
 
     valor_frete = get_valor_frete()
+    usuario.carrinho.total_frete = valor_frete['valor']
+    usuario.carrinho.save()
     context = {
         'produtos': produtos,
         'valor_frete': valor_frete
@@ -716,10 +735,11 @@ def adciona_carrinho(request):
     #import pdb;pdb.set_trace()
 
     try:
-        Produtos.objects.get(id_produto=id_produto)
+        produto = Produtos.objects.get(id_produto=id_produto)
         produto_no_carrinho = Produtos_no_Carrinho()
-        produto_no_carrinho.produto = Produtos.objects.get(id_produto=id_produto)
+        produto_no_carrinho.produto = produto
         produto_no_carrinho.quantidade = 1
+        produto_no_carrinho.valor_unitario = -1 # ARRUMAR AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
         produto_no_carrinho.carrinho = usuario.carrinho
         produto_no_carrinho.save()
     except:
@@ -729,10 +749,9 @@ def adciona_carrinho(request):
         produto_no_carrinho = Produtos_no_Carrinho()
         produto_no_carrinho.produto = produto
         produto_no_carrinho.quantidade = 1
+        produto_no_carrinho.valor_unitario = -1 # ARRUMAR AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
         produto_no_carrinho.carrinho = usuario.carrinho
         produto_no_carrinho.save()
-
-    context = {}
 
     return home(request)
 
@@ -742,11 +761,18 @@ def remove_carrinho(request):
     usuario = Usuario.objects.get(email=request.session['usuario'])
     id_produto = request.POST.get("id_produto")
 
-    for produto_no_carrinho in usuario.carrinho.produdos_no_carrinho_set.all():
-        if (produto_no_carrinho.produto.id_produto == id_produto):
-            produto_no_carrinho.delete()
+    try:
+        produto = usuario.carrinho.produto_no_carrinho.get(produto=Produtos.objects.get(id_produto=id_produto))
+        produto.delete()
+        return meu_carrinho(request)
+    except:
+        return HttpResponse("Produto nao existe no carrinho")
 
-    return meu_carrinho(request)
+    #for produto_no_carrinho in usuario.carrinho.produdos_no_carrinho_set.all():
+    #    if (produto_no_carrinho.produto.id_produto == id_produto):
+    #        produto_no_carrinho.delete()
+
+    #return meu_carrinho(request)
 
 
 

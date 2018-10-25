@@ -10,7 +10,10 @@ class Produtos(models.Model):
         return str(self.id_produto)
 
 class Carrinho(models.Model):
-    total = models.IntegerField(default=0)
+    total_carrinho = models.FloatField(default=0)
+    total_frete = models.FloatField(default=0)
+    id_pagamento = models.IntegerField(default=-1)
+    id_logistica = models.IntegerField(default=-1)
 
     def __str__ (self):
         return "carrinho: " + str(self.pk)
@@ -29,11 +32,12 @@ class Pedidos(models.Model):
     carrinho = models.OneToOneField(Carrinho, on_delete=models.CASCADE, null=False)
 
     def __str__ (self):
-        return "Peido do usuario: " + str(self.usuario) + " com carrinho: " + str(self.carrinho)
+        return "Pedido do usuario: " + str(self.usuario) + " com carrinho: " + str(self.carrinho)
 
 class Produtos_no_Carrinho(models.Model):
     produto = models.ForeignKey(Produtos, on_delete=models.DO_NOTHING, null=False)
-    quantidade = models.IntegerField()
+    quantidade = models.IntegerField(default=1)
+    valor_unitario = models.FloatField(default=-1)
     carrinho = models.ForeignKey(Carrinho, on_delete=models.DO_NOTHING, null=False)
 
     def __str__ (self):
