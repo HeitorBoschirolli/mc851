@@ -61,7 +61,7 @@
                 <p>Insira as informações do seu cartão:</p>
             </div>
         </div>
-        <form action="/pagamento/resposta_pagamento/" method="POST" autocomplete="off">{% csrf_token %}
+        <form action="/pagamento_cartao/" method="POST" autocomplete="off">
             <div class="row">
                 <div class="col-md-12">
                     <div class="input-group">
@@ -89,7 +89,7 @@
 
                         <div style="margin: 5px; display:inline-block;">
                           <br/>
-                          <button type="submit"  style="width:100px; height:40px; " class="btn  btn-sm btn-warning" href="#">
+                          <button type="submit"  style="width:100px; height:40px; " class="btn  btn-sm btn-warning">
                               <i class="fa fa-credit-card"></i> Pagar</button>
                         </div>
 

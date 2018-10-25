@@ -146,10 +146,10 @@ class DadosCartao(forms.Form):
             attrs={
                 'type': 'text',
                 'class': 'form-control',
-                'pattern': '[0-9][0-9][0-9][0-9] [0-9][0-9][0-9][0-9] [0-9][0-9][0-9][0-9] [0-9][0-9][0-9][0-9]',
-                'placeholder': "Exemplo: 1234 5678 9102 3456",
+                'pattern': '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]',
+                'placeholder': "Exemplo: 1234567811023456",
                 'required': True,
-                'title': "Exemplo: 1234 5678 9102 3456",
+                'title': "Exemplo: 1234567891023456",
             },
         )
     )
@@ -170,12 +170,11 @@ class DadosCartao(forms.Form):
     )
 
 
-    data_vencimento_cartao = forms.CharField(
+    data_vencimento_cartao = forms.DateField(
         label="Data de Vencimento",
-        max_length=100,
         widget=forms.TextInput(
             attrs={
-                'type': 'month',
+                'type': 'date',
                 'class': 'form-control',
                 'min': '2018-08',
                 'required': True

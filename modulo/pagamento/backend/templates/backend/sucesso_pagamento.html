@@ -1,0 +1,28 @@
+
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Pagamento</title>
+{% endblock %}
+{% block style %}
+<style>
+    .alert .icon{margin-right:10px}.alert .close{color:#000;opacity:.2;filter:alpha(opacity=20)}.alert .close:hover{opacity:.5;filter:alpha(opacity=50)}.alert a{color:#fff;text-decoration:underline}.alert-success{border-color:#008d4c}.alert-danger,.alert-error{border-color:#d73925}.alert-warning{border-color:#e08e0b}.alert-info{border-color:#00acd6}
+</style>
+{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+
+
+
+<div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h4>
+            <i class="icon fa fa-check"></i> Parabéns!</h4>
+            Seu pagamento foi efetuado com sucesso!
+            <!-- <p>O valor total da sua compra é R${{pagamento.pedido.valor|floatformat:2}}</p>
+            Cartão: {{pagamento.cartao.num_cartao}} -->
+    </div>
+
+
+{% endblock %}

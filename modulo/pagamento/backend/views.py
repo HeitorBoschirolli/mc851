@@ -515,22 +515,41 @@ def pagamento_cartao(request):
     #Recupera os dados do pagamento para enviar para a api de pagamento
     # forms_pagamento = Pagamento(data=request.POST)
 
+    forms_cartao = DadosCartao(data=request.POST)
+
     #URL para api de pagamento
     url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
 
     # Variaveis de teste
+    # data = {
+    #     "cpf_comprador": "12356712345",
+    #     "valor_compra": "10.20",
+    #     "cnpj_site": "12345678992735",
+    #     "data_emissao_pedido": "2/10/2018",
+    #     "numero_cartao": "1234123412341111",
+    #     "nome_cartao": "SINDAO",
+    #     "cvv_cartao": "123",
+    #     "data_vencimento_cartao": "2/10/2025",
+    #     "credito": "1",
+    #     "num_parcelas": "2"
+    # }
+
+    print(forms_cartao['data_vencimento_cartao'].data)
     data = {
         "cpf_comprador": "12356712345",
         "valor_compra": "10.20",
         "cnpj_site": "12345678992735",
         "data_emissao_pedido": "2/10/2018",
-        "numero_cartao": "1234123412341111",
-        "nome_cartao": "SINDAO",
-        "cvv_cartao": "123",
+        "numero_cartao": str(forms_cartao['numero_cartao'].data),
+        "nome_cartao": str(forms_cartao['nome_cartao'].data),
+        "cvv_cartao": str(forms_cartao['cvv'].data),
         "data_vencimento_cartao": "2/10/2025",
         "credito": "1",
         "num_parcelas": "2"
     }
+    print(data)
+
+
 
     data = json.dumps(data)
 
@@ -541,8 +560,10 @@ def pagamento_cartao(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-
-        return JsonResponse(resposta)
+        if resposta['pagamento'] == 1:
+            return render(request, 'backend/sucesso_pagamento.html')
+        else:
+            return render(request, 'backend/falha_pagamento.html')
 
     except Exception as e:
         return JsonResponse({'error': e.code})
@@ -557,7 +578,7 @@ def pagamento_boleto(request):
     #URL para api de pagamento
     url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
 
-    # Variaveis de teste
+    # Variaveis de testebackend/pagamento.html
     data = {
         "cpf_comprador": "12356712345",
         "valor_compra":"10.20",
