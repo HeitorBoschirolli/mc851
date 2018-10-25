@@ -325,7 +325,7 @@ def resultado_login(request):
 def logout(request):
     request.session['usuario'] = ''
 
-    return render(request=request, template_name='backend/home.html')
+    return home(request)
 
 
 def minha_conta(request):
@@ -734,11 +734,7 @@ def adciona_carrinho(request):
 
     context = {}
 
-    return render(
-        request=request,
-        template_name='backend/home.html',
-        context=context
-    )
+    return home(request)
 
 # Remove um produto do carrinho
 def remove_carrinho(request):
