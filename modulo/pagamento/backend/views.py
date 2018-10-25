@@ -10,14 +10,33 @@ import urllib2
 import json
 import base64
 from model_forms import *
+import random
 
 url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
-    _ = get_produtos(request)
 
-    return render(request, 'backend/home.html')
+    #Pega todos os produtos da lista de produtos
+    all_products = get_produtos(request)
+
+    #Pega o tamanho da lista de produtos
+    tam = len(all_products)
+
+    #Seleciona tres produtos que nao sejam repetidos
+    index = random.sample(range(1, tam), 3)
+
+    #Armazena as listas de produtos que serao mostrados na home
+    produtos = []
+    produtos.append(all_products[index[0]])
+    produtos.append(all_products[index[1]])
+    produtos.append(all_products[index[2]])
+
+    context = {
+        'produtos': produtos
+    }
+
+    return render(request, 'backend/home.html', context=context)
 
 
 def recuperar(request):
