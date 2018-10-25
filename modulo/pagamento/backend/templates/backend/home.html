@@ -39,8 +39,8 @@
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
-          <div class="card h-100">
-              <img class="card-img-top h-60" src={{ produtos.0.images.0.url }} alt="Card image cap"/>
+          <div class="card h-100" style="background-size: cover;">
+            <div style="background-image: url({{ produtos.0.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div>
             <div class="card-body">
               <h5 class="card-title">{{ produtos.0.description }}</h5>
               <p class="card-text">R${{ produtos.0.value }}</p>
@@ -52,7 +52,7 @@
         </div>
         <div class="col-md-4">
           <div class="card h-100">
-            <img class="card-img-top h-60" src={{ produtos.1.images.0.url }} alt="Card image cap">
+            <div style="background-image: url({{ produtos.1.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div>
             <div class="card-body">
               <h5 class="card-title">{{ produtos.1.description }}</h5>
               <p class="card-text">R${{ produtos.1.value }}</p>
@@ -64,7 +64,7 @@
         </div>
         <div class="col-md-4">
           <div class="card h-100">
-            <img class="card-img-top h-60" src={{ produtos.2.images.0.url }} alt="Card image cap">
+            <div style="background-image: url({{ produtos.2.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div>
             <div class="card-body">
               <h5 class="card-title">{{ produtos.2.description }} </h5>
               <p class="card-text">R${{ produtos.2.value }}</p>
