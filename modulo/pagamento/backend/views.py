@@ -581,6 +581,7 @@ def pagamento_cartao(request):
 
         if resposta['pagamento'] == 1:
             vincula_pagamento_pedido(request, resposta['pk_pedido'])
+            transforma_carrinho_em_pedido(request)
             return render(request, 'backend/sucesso_pagamento_cartao.html')
         else:
             return render(request, 'backend/falha_pagamento_cartao.html')
@@ -619,6 +620,7 @@ def pagamento_boleto(request):
         resposta = json.loads(serializade_data)
         if resposta['status']:
             vincula_pagamento_pedido(request, resposta['pk_pedido'])
+            transforma_carrinho_em_pedido(request)
             context = {
                 'numero_boleto': resposta['num_boleto']
             }
@@ -670,6 +672,12 @@ def pagamento(request):
 
     return render(request=request, context=context, template_name='backend/pagamento.html')
 
+
+'''---------------------------------------------------------------------------------------------------------'''
+'''-------------------------------------FUNÇÕES DO CARRINHO & PEDIDOS---------------------------------------'''
+'''---------------------------------------------------------------------------------------------------------'''
+
+
 # Dado o id do pagamento, o salva no respectivo carrinho
 def vincula_pagamento_pedido(request, id_pagamento):
 
@@ -681,6 +689,90 @@ def vincula_pagamento_pedido(request, id_pagamento):
     usuario.carrinho.id_pagamento = id_pagamento
     usuario.carrinho.save()
 
+# Em um pagamento com sucesso, transforma o carrinho em um pedido e gera um novo carrinho para o usuario
+def transforma_carrinho_em_pedido(request):
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return HttpResponse("USUARIO NAO LOGADOOOOOO")
+
+    pedido = Pedidos()
+    pedido.usuario = usuario
+    pedido.carrinho = usuario.carrinho
+    pedido.save()
+
+    usuario.carrinho = None
+    novo_carrinho = Carrinho()
+    novo_carrinho.save()
+    usuario.carrinho = novo_carrinho
+    usuario.save()
+
+#Retorna para o front todos os pedidos de um cliente
+def meus_pedidos (request):
+    usuario = Usuario.objects.get(email=request.session['usuario'])
+
+    pedidos = []
+
+    url_produtos = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
+    url_pagamento = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
+
+    for pedido in usuario.pedidos_set.all():
+        dados_pedido = {}
+        dados_pedido['total_carrinho'] = (pedido.carrinho.total_carrinho)
+        dados_pedido['total_frete'] = (pedido.carrinho.total_frete)
+
+        data = {
+            "pk_pagamento": str(pedido.carrinho.id_pagamento)
+        }
+        data = json.dumps(data)
+        request2 = urllib2.Request(url=url_pagamento, data=data, headers={'Content-Type': 'application/json'})
+        try:
+            serializade_data = urllib2.urlopen(request2).read()
+            resposta = json.loads(serializade_data)
+        except Exception as e:
+            return HttpResponse ("Pk de um pedido não encontrado no módulo de pagamento")
+
+        dados_pedido['data'] = resposta['data_emissao_pedido']
+
+        produtos=[]
+        for produto_no_carrinho in pedido.carrinho.produtos_no_carrinho_set.all():
+            url_pedido_atual = url_produtos + str(produto_no_carrinho.produto.id_produto)
+
+            request2 = urllib2.Request(url=url_pedido_atual)
+
+            # Adiciona ao request o login de autorizacao
+            basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+            request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+            #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+            try:
+                serializade_data = urllib2.urlopen(request2).read()
+                dados_produto = json.loads(serializade_data)
+            except Exception as e:
+                return JsonResponse({'error': e.code})
+
+            new_dados = {
+                'name': dados_produto['name'],
+                'description': dados_produto['description'],
+                'value': produto_no_carrinho.valor_unitario,
+                'quantity': produto_no_carrinho.quantidade,
+            }
+
+            produtos.append(new_dados)
+
+        dados_pedido['produtos'] = produtos
+
+        pedidos.append(dados_pedido)
+
+    context = {
+        'pedidos': pedidos
+    }
+
+    return render (
+        request=request,
+        template_name='backend/meus_pedidos.html',
+        context=context
+    )
 
 # Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
 def meu_carrinho(request):

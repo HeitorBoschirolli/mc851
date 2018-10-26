@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^buscar_produto', views.buscar_produto, name='buscar_produto'),
     # URL para pagamento (quando clica em pagar em "Meu Carrinho")
     url(r'^pagamento/$', views.pagamento, name='pagamento'),
+    # URL para ver todos pedidos feitos por um usuario
+    url(r'^meus_pedidos', views.meus_pedidos, name='meus_pedidos'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
