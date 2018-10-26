@@ -448,37 +448,37 @@ def cadastra_endereco (request):
 
     endereco = DadosEndereco(data=request.POST)
 
-    url = url + endereco['cep'].value()
-
-    request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
-
-    try:
-        # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
-        serializade_data = urllib2.urlopen(request2).read()
-        resposta = json.loads(serializade_data)
-
-        data = {
-            'tokenSessao': usuario.sessionToken,
-            'cep': endereco['cep'].value(),
-            'rua': resposta['Endereco'][0]['logradouro'],
-            'numeroCasa':  endereco['numero_casa'].value(),
-            'complemento': endereco['complemento'].value(),
-            'bairro': resposta['Endereco'][0]['bairro'],
-            'cidade': resposta['Endereco'][0]['cidade'],
-            'estado': resposta['Endereco'][0]['estado'],
-        }
-
-    except:
-        endereco = DadosEndereco()
-        context = {
-            'endereco': endereco,
-            'cep_failed': True
-        }
-        return render(
-            request,
-            template_name="backend/endereco_cep.html",
-            context=context
-        )
+    # url = url + endereco['cep'].value()
+    # 
+    # request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
+    #
+    # try:
+    #     # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
+    #     serializade_data = urllib2.urlopen(request2).read()
+    #     resposta = json.loads(serializade_data)
+    #
+    #     data = {
+    #         'tokenSessao': usuario.sessionToken,
+    #         'cep': endereco['cep'].value(),
+    #         'rua': resposta['Endereco'][0]['logradouro'],
+    #         'numeroCasa':  endereco['numero_casa'].value(),
+    #         'complemento': endereco['complemento'].value(),
+    #         'bairro': resposta['Endereco'][0]['bairro'],
+    #         'cidade': resposta['Endereco'][0]['cidade'],
+    #         'estado': resposta['Endereco'][0]['estado'],
+    #     }
+    #
+    # except:
+    #     endereco = DadosEndereco()
+    #     context = {
+    #         'endereco': endereco,
+    #         'cep_failed': True
+    #     }
+    #     return render(
+    #         request,
+    #         template_name="backend/endereco_cep.html",
+    #         context=context
+    #     )
 
     data = {
         'tokenSessao': usuario.sessionToken,
