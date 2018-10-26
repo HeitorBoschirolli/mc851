@@ -138,6 +138,20 @@ class DadosCartao(forms.Form):
         )
     )
 
+    cpf = forms.CharField(
+        label="CPF",
+        max_length=11,
+        widget=forms.TextInput(
+            attrs={
+                'type': 'text',
+                'class': 'form-control',
+                'placeholder': "Apenas números",
+                'required': True,
+                'title': "Exemplo: 12345678945",
+            },
+        )
+    )
+
 
     numero_cartao = forms.CharField(
         label="Número do Cartão",
@@ -170,13 +184,36 @@ class DadosCartao(forms.Form):
     )
 
 
-    data_vencimento_cartao = forms.DateField(
+    data_vencimento_cartao = forms.CharField(
         label="Data de Vencimento",
         widget=forms.TextInput(
             attrs={
-                'type': 'date',
+                'placeholder': "MM/YYYY",
                 'class': 'form-control',
-                'min': '2018-08',
+                'required': True,
+                'pattern': '[0-9]{2}/[0-9]{4}',
+            },
+        ),
+    )
+
+    opcao_pagamento = forms.ChoiceField(
+        label="Opção:",
+        choices=[[1, 'Crédito'], [0,'Débito']],
+        widget=forms.Select(
+            attrs={
+                'id': 'id_opcao_pagamento',
+                'class': 'form-control',
+                'required': True
+            },
+        )
+    )
+
+    num_parcelas = forms.ChoiceField(
+        label="N. Parcelas:",
+        choices=[[1, '1x'], [2,'2x'],[3,'3x'],[4,'4x'],[5,'5x'],[6,'6x'],],
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
                 'required': True
             },
         )

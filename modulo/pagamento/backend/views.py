@@ -553,20 +553,26 @@ def pagamento_cartao(request):
     #     "num_parcelas": "2"
     # }
 
-    print(forms_cartao['data_vencimento_cartao'].data)
+    now = datetime.now().date()
+
+    valor_compra = request.POST.get('valor_total')
+    cnpj = request.POST.get('cnpj')
+    credito = request.POST.get('credito')
+    data_vencimento = request.POST.get('data_vencimento_cartao')
+    data_vencimento = "1/" + data_vencimento
+
     data = {
-        "cpf_comprador": "12356712345",
-        "valor_compra": "10.20",
-        "cnpj_site": "12345678992735",
-        "data_emissao_pedido": "2/10/2018",
+        "cpf_comprador": str(forms_cartao['cpf'].data),
+        "valor_compra": valor_compra,
+        "cnpj_site": cnpj,
+        "data_emissao_pedido": now.strftime("%d/%m/%Y"),
         "numero_cartao": str(forms_cartao['numero_cartao'].data),
         "nome_cartao": str(forms_cartao['nome_cartao'].data),
         "cvv_cartao": str(forms_cartao['cvv'].data),
-        "data_vencimento_cartao": "2/10/2025",
-        "credito": "1",
-        "num_parcelas": "2"
+        "data_vencimento_cartao": data_vencimento,
+        "credito": str(credito),
+        "num_parcelas": str(forms_cartao['num_parcelas'].data),
     }
-    print(data)
 
 
 
@@ -600,15 +606,45 @@ def pagamento_boleto(request):
     url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
 
     # Variaveis de testebackend/pagamento.html
+    now = datetime.now().date()
+
+    valor_compra = request.POST.get('valor_total')
+    cnpj = request.POST.get('cnpj')
+    credito = request.POST.get('credito')
+    cpf = request.POST.get('cpf', '99999999999')
+
+    # data = {
+    #     "cpf_comprador": "12356712345",
+    #     "valor_compra":"10.20",
+    #     "cnpj_site":"12345678992735",
+    #     "banco_gerador_boleto":"Itau",
+    #     "data_vencimento_boleto":"04/10/2018",
+    #     "endereco_fisico_site":"Rua Sindo",
+    #     "data_emissao_pedido": "25/06/2018"
+    # }
+    date = (now+timedelta(days=10)).strftime("%d/%m/%Y")
+    import pdb;pdb.set_trace()
     data = {
-        "cpf_comprador": "12356712345",
-        "valor_compra":"10.20",
-        "cnpj_site":"12345678992735",
+        "cpf_comprador": cpf,
+        "valor_compra": valor_compra,
+        "cnpj_site": cnpj,
         "banco_gerador_boleto":"Itau",
-        "data_vencimento_boleto":"04/10/2018",
+        "data_vencimento_boleto": str(date),
         "endereco_fisico_site":"Rua Sindo",
-        "data_emissao_pedido": "25/06/2018"
+        "data_emissao_pedido": now
     }
+        # data = {
+        #     "cpf_comprador": "12356712345",
+        #     "valor_compra": valor_compra,
+        #     "cnpj_site": cnpj,
+        #     "data_emissao_pedido": now.strftime("%d/%m/%Y"),
+        #     "numero_cartao": str(forms_cartao['numero_cartao'].data),
+        #     "nome_cartao": str(forms_cartao['nome_cartao'].data),
+        #     "cvv_cartao": str(forms_cartao['cvv'].data),
+        #     "data_vencimento_cartao": data_vencimento,
+        #     "credito": str(credito),
+        #     "num_parcelas": str(forms_cartao['num_parcelas'].data),
+        # }
 
     data = json.dumps(data)
 
