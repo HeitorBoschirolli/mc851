@@ -175,7 +175,6 @@ def cadastra_cliente(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
-
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -187,7 +186,7 @@ def cadastra_cliente(request):
         usuario.email = str(form_cliente['email'].value())
         usuario.cpf = str(form_cliente['cpf'].value())
         usuario.sessionToken = ''
-        carrinho = Carrinho(total = 0)
+        carrinho = Carrinho(total_carrinho = 0)
         carrinho.save()
         usuario.carrinho = carrinho
         usuario.save()
@@ -330,8 +329,94 @@ def logout(request):
 
 def minha_conta(request):
 
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/users/'
+    url = url + str(usuario.cpf)
+
+
+    data = {
+        "tokenSessao": str(usuario.sessionToken)
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e})
+
+
     context = {
-        }
+        "email": resposta['email'],
+        "nome": resposta['nome'],
+        "dataDeNascimento": resposta['dataDeNascimento'],
+        "telefone": resposta['telefone'],
+    }
+
+    return render(
+        request=request,
+        template_name='backend/minha_conta.html',
+        context=context
+    )
+
+def alterar_dados_cadastrais(request):
+    form_cliente = DadosCliente()
+
+    context = {
+        'cliente': form_cliente
+    }
+
+    return render (request=request, context=context, template_name="backend/alterar_dados_cadastrais.html")
+
+def altera_dados (request):
+    form_cliente = DadosCliente(data=request.POST)
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/'
+    url = url + str(usuario.cpf) +"/update"
+
+
+    data = {
+        "tokenSessao": str(usuario.sessionToken),
+        "nome": form_cliente['nome_cliente'].value(),
+        "dataDeNascimento": form_cliente['data_nascimento'].value(),
+        "telefone": form_cliente['telefone'].value(),
+    }
+
+    data = json.dumps(data)
+
+    opener = urllib2.build_opener(urllib2.HTTPHandler)
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2.get_method = lambda: 'PUT'
+    url = opener.open(request2)
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+        return HttpResponse(str(resposta))
+        #return minha_conta(request)
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+
+    context = {
+        "email": resposta['email'],
+        "nome": resposta['nome'],
+        "dataDeNascimento": resposta['dataDeNascimento'],
+        "telefone": resposta['telefone'],
+    }
 
     return render(
         request=request,
@@ -684,7 +769,7 @@ def vincula_pagamento_pedido(request, id_pagamento):
     try:
         usuario = Usuario.objects.get(email=request.session['usuario'])
     except:
-        return HttpResponse("USUARIO NAO LOGADOOOOOO")
+        return dados_cliente(request)
 
     usuario.carrinho.id_pagamento = id_pagamento
     usuario.carrinho.save()
@@ -709,7 +794,10 @@ def transforma_carrinho_em_pedido(request):
 
 #Retorna para o front todos os pedidos de um cliente
 def meus_pedidos (request):
-    usuario = Usuario.objects.get(email=request.session['usuario'])
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
     pedidos = []
 
@@ -776,7 +864,10 @@ def meus_pedidos (request):
 
 # Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
 def meu_carrinho(request):
-    usuario = Usuario.objects.get(email=request.session['usuario'])
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
     produtos = []
 
@@ -822,7 +913,7 @@ def adciona_carrinho(request):
     try:
         usuario = Usuario.objects.get(email=request.session['usuario'])
     except:
-        return HttpResponse("USUARIO NAO LOGADOOOOOO")
+        return dados_cliente(request)
 
     #import pdb;pdb.set_trace()
 
@@ -849,8 +940,11 @@ def adciona_carrinho(request):
 
 # Remove um produto do carrinho
 def remove_carrinho(request):
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
-    usuario = Usuario.objects.get(email=request.session['usuario'])
     id_produto = request.POST.get("id_produto")
 
     try:

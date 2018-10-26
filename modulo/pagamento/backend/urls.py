@@ -41,6 +41,11 @@ urlpatterns = [
     # Recuperar senha
     url(r'^recuperar', views.recuperar, name='recuperar'),
 
+    # Alterar dados cadastrais
+    url(r'^alterar_dados_cadastrais', views.alterar_dados_cadastrais, name='alterar_dados_cadastrais'),
+
+    url(r'^altera_dados', views.altera_dados, name='altera_dados'),
+
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE ENDERECO---------------------------------------------#
