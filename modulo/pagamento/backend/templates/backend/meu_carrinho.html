@@ -27,7 +27,13 @@
                   {{ produto.description|safe }}
                   <br><br>
                   <strong>R$<span class="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong>
-                  <input hidden value="{{ produto.quantityInStock|safe }}" class="quantidade_estoque">
+                  <input hidden value="slafj" class="lksdfj"> <br/>
+                  <form action="/adciona_carrinho/" method="POST">
+                    <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
+                    <button type="submit" class="btn btn-danger">
+                        Remover
+                    </button>
+                  </form>
                 </td>
 
                 <td>
@@ -40,7 +46,6 @@
                   <strong>Valor total</strong>
                   <br/>
                   R$<span class="valor_total">2000</span>
-
                 </td>
             </tr>
             {% endfor%}
