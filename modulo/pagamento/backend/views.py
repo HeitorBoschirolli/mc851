@@ -945,18 +945,11 @@ def remove_carrinho(request):
 
     id_produto = request.POST.get("id_produto")
 
-    try:
-        produto = usuario.carrinho.produto_no_carrinho.get(produto=Produtos.objects.get(id_produto=id_produto))
-        produto.delete()
-        return meu_carrinho(request)
-    except:
-        return HttpResponse("Produto nao existe no carrinho")
+    for produto_no_carrinho in usuario.carrinho.produtos_no_carrinho_set.all():
+        if (produto_no_carrinho.produto.id_produto == id_produto):
+            produto_no_carrinho.delete()
 
-    #for produto_no_carrinho in usuario.carrinho.produdos_no_carrinho_set.all():
-    #    if (produto_no_carrinho.produto.id_produto == id_produto):
-    #        produto_no_carrinho.delete()
-
-    #return meu_carrinho(request)
+    return meu_carrinho(request)
 
 
 

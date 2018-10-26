@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^meu_carrinho', views.meu_carrinho, name='meu_carrinho'),
     #adciona item ao carrinho
     url(r'^adciona_carrinho', views.adciona_carrinho, name='adciona_carrinho'),
+    #remove item ao carrinho
+    url(r'^remove_carrinho', views.remove_carrinho, name='remove_carrinho'),
     #procura produto (search)
     url(r'^buscar_produto', views.buscar_produto, name='buscar_produto'),
     # URL para pagamento (quando clica em pagar em "Meu Carrinho")
