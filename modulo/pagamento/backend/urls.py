@@ -57,6 +57,10 @@ urlpatterns = [
     url(r'^endereco_cliente', views.endereco_cliente, name='endereco_cliente'),
     #Faz uma requisicao do endereco pelo cep, na api de Enderecos
     url(r'^endereco_cep', views.endereco_cep, name='endereco_por_cep_api'),
+    #Insere novo endereço para aquele cliente
+    url(r'^insere_endereco', views.insere_endereco, name='insere_endereco'),
+    #Cadastra junto a api de cliente aquele endereço
+    url(r'^cadastra_endereco', views.cadastra_endereco, name='cadastra_endereco'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE PRODUTOS---------------------------------------------#

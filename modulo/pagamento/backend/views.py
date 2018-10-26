@@ -398,7 +398,7 @@ def altera_dados (request):
     data = json.dumps(data)
 
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    request2.get_method = lambda: 'PUT' 
+    request2.get_method = lambda: 'PUT'
 
     try:
         serializade_data = urllib2.urlopen(request2).read()
@@ -421,6 +421,91 @@ def altera_dados (request):
         template_name='backend/minha_conta.html',
         context=context
     )
+
+def insere_endereco(request):
+    endereco = DadosEndereco()
+
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
+    context = {
+        'endereco': endereco,
+        'cep_failed': False
+    }
+
+    return render(
+        request=request,
+        template_name='backend/insere_endereco.html',
+        context=context
+    )
+
+def cadastra_endereco (request):
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://wsendereco.tk/api/enderecos/cep/'
+
+    endereco = DadosEndereco(data=request.POST)
+
+    url = url + endereco['cep'].value()
+
+    request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
+
+    try:
+        # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        data = {
+            'tokenSessao': usuario.sessionToken,
+            'cep': endereco['cep'].value(),
+            'rua': resposta['Endereco'][0]['logradouro'],
+            'numeroCasa':  endereco['numero_casa'].value(),
+            'complemento': endereco['complemento'].value(),
+            'bairro': resposta['Endereco'][0]['bairro'],
+            'cidade': resposta['Endereco'][0]['cidade'],
+            'estado': resposta['Endereco'][0]['estado'],
+        }
+
+    except:
+        endereco = DadosEndereco()
+        context = {
+            'endereco': endereco,
+            'cep_failed': True
+        }
+        return render(
+            request,
+            template_name="backend/endereco_cep.html",
+            context=context
+        )
+
+    data = {
+        'tokenSessao': usuario.sessionToken,
+        'cep': endereco['cep'].value(),
+        'rua': "rua teste",
+        'numeroCasa':  endereco['numero_casa'].value(),
+        'complemento': endereco['complemento'].value(),
+        'bairro': "bairro testebackend",
+        'cidade': "cidade testebackend",
+        'estado': "Estado SP teste",
+    }
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/addresses/'
+    url = url + str(usuario.cpf) +"/add"
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+        return minha_conta(request)
+    except Exception as e:
+        return JsonResponse({'error': e})
+
+
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''

@@ -1,0 +1,45 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Endereço Cep</title>
+{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+
+    <div class="container col-md-4">
+        <h1 class="display-4 text-center">Adcione um Endereço</h1>
+        <p class="text-center">Complete os campos abaixo para inserir um endereço novo</p>
+    </div>
+
+    <div class="container-fluid col-md-4">
+
+        <form action="/cadastra_endereco" method="POST" autocomplete="off">
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                 {{endereco.cep.label}}
+                <br/> {{endereco.cep}}
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-6">
+                  {{endereco.numero_casa.label}}
+                <br/> {{endereco.numero_casa}}
+              </div>
+              <div class="form-group col-md-6">
+                  {{endereco.complemento.label}}
+                <br/> {{endereco.complemento}}
+              </div>
+          </div>
+            <div class="form-group row justify-content-md-center">
+                <button type="submit" class="btn btn-primary">Cadastrar Endereço</button>
+            </div>
+        </form>
+        {% if cep_failed %}
+            <br/>
+            <p class="alert alert-danger">CEP inválido</p>
+        {% endif %}
+        <div>
+    </div>
+
+{% endblock %}
