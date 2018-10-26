@@ -1,0 +1,40 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Cadastro Cliente</title>
+{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+
+    <div class="container col-md-4">
+        <h1 class="display-4 text-center">Altere Seus Dados</h1>
+        <p class="text-center">Preencha o formulário abaixo, caso não deseje alterar um campo, o preencha com o valor mostrado na pagina da minha conta</p>
+    </div>
+
+    <div class="container-fluid col-md-4">
+
+        <form action="/altera_dados" method="POST" autocomplete="off">
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                 {{cliente.nome_cliente.label}}
+                <br/> {{cliente.nome_cliente}}
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-6">
+                  {{cliente.data_nascimento.label}}
+                <br/> {{cliente.data_nascimento}}
+              </div>
+              <div class="form-group col-md-6">
+                    {{cliente.telefone.label}}
+                <br/> {{cliente.telefone}}
+              </div>
+          </div>
+            <div class="form-group row justify-content-md-center">
+                <button type="submit" class="btn btn-primary">Alterar Meus Dados</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

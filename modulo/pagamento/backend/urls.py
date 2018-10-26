@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^meu_carrinho', views.meu_carrinho, name='meu_carrinho'),
     #adciona item ao carrinho
     url(r'^adciona_carrinho', views.adciona_carrinho, name='adciona_carrinho'),
+    #remove item ao carrinho
+    url(r'^remove_carrinho', views.remove_carrinho, name='remove_carrinho'),
     #procura produto (search)
     url(r'^buscar_produto', views.buscar_produto, name='buscar_produto'),
     # URL para pagamento (quando clica em pagar em "Meu Carrinho")
@@ -41,6 +43,11 @@ urlpatterns = [
     # Recuperar senha
     url(r'^recuperar', views.recuperar, name='recuperar'),
 
+    # Alterar dados cadastrais
+    url(r'^alterar_dados_cadastrais', views.alterar_dados_cadastrais, name='alterar_dados_cadastrais'),
+
+    url(r'^altera_dados', views.altera_dados, name='altera_dados'),
+
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE ENDERECO---------------------------------------------#
@@ -50,6 +57,10 @@ urlpatterns = [
     url(r'^endereco_cliente', views.endereco_cliente, name='endereco_cliente'),
     #Faz uma requisicao do endereco pelo cep, na api de Enderecos
     url(r'^endereco_cep', views.endereco_cep, name='endereco_por_cep_api'),
+    #Insere novo endereço para aquele cliente
+    url(r'^insere_endereco', views.insere_endereco, name='insere_endereco'),
+    #Cadastra junto a api de cliente aquele endereço
+    url(r'^cadastra_endereco', views.cadastra_endereco, name='cadastra_endereco'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE PRODUTOS---------------------------------------------#

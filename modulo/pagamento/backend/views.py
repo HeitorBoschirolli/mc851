@@ -175,7 +175,6 @@ def cadastra_cliente(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
-
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -187,7 +186,7 @@ def cadastra_cliente(request):
         usuario.email = str(form_cliente['email'].value())
         usuario.cpf = str(form_cliente['cpf'].value())
         usuario.sessionToken = ''
-        carrinho = Carrinho(total = 0)
+        carrinho = Carrinho(total_carrinho = 0)
         carrinho.save()
         usuario.carrinho = carrinho
         usuario.save()
@@ -330,14 +329,183 @@ def logout(request):
 
 def minha_conta(request):
 
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/users/'
+    url = url + str(usuario.cpf)
+
+
+    data = {
+        "tokenSessao": str(usuario.sessionToken)
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e})
+
+
     context = {
-        }
+        "email": resposta['email'],
+        "nome": resposta['nome'],
+        "dataDeNascimento": resposta['dataDeNascimento'],
+        "telefone": resposta['telefone'],
+    }
 
     return render(
         request=request,
         template_name='backend/minha_conta.html',
         context=context
     )
+
+def alterar_dados_cadastrais(request):
+    form_cliente = DadosCliente()
+
+    context = {
+        'cliente': form_cliente
+    }
+
+    return render (request=request, context=context, template_name="backend/alterar_dados_cadastrais.html")
+
+def altera_dados (request):
+    form_cliente = DadosCliente(data=request.POST)
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/users/'
+    url = url + str(usuario.cpf) +"/update"
+
+
+
+    data = {
+        "tokenSessao": str(usuario.sessionToken),
+        "nome": form_cliente['nome_cliente'].value(),
+        "dataDeNascimento": form_cliente['data_nascimento'].value(),
+        "telefone": form_cliente['telefone'].value(),
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2.get_method = lambda: 'PUT'
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+        return minha_conta(request)
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+
+    context = {
+        "email": resposta['email'],
+        "nome": resposta['nome'],
+        "dataDeNascimento": resposta['dataDeNascimento'],
+        "telefone": resposta['telefone'],
+    }
+
+    return render(
+        request=request,
+        template_name='backend/minha_conta.html',
+        context=context
+    )
+
+def insere_endereco(request):
+    endereco = DadosEndereco()
+
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
+    context = {
+        'endereco': endereco,
+        'cep_failed': False
+    }
+
+    return render(
+        request=request,
+        template_name='backend/insere_endereco.html',
+        context=context
+    )
+
+def cadastra_endereco (request):
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://wsendereco.tk/api/enderecos/cep/'
+
+    endereco = DadosEndereco(data=request.POST)
+
+    # url = url + endereco['cep'].value()
+    # 
+    # request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
+    #
+    # try:
+    #     # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
+    #     serializade_data = urllib2.urlopen(request2).read()
+    #     resposta = json.loads(serializade_data)
+    #
+    #     data = {
+    #         'tokenSessao': usuario.sessionToken,
+    #         'cep': endereco['cep'].value(),
+    #         'rua': resposta['Endereco'][0]['logradouro'],
+    #         'numeroCasa':  endereco['numero_casa'].value(),
+    #         'complemento': endereco['complemento'].value(),
+    #         'bairro': resposta['Endereco'][0]['bairro'],
+    #         'cidade': resposta['Endereco'][0]['cidade'],
+    #         'estado': resposta['Endereco'][0]['estado'],
+    #     }
+    #
+    # except:
+    #     endereco = DadosEndereco()
+    #     context = {
+    #         'endereco': endereco,
+    #         'cep_failed': True
+    #     }
+    #     return render(
+    #         request,
+    #         template_name="backend/endereco_cep.html",
+    #         context=context
+    #     )
+
+    data = {
+        'tokenSessao': usuario.sessionToken,
+        'cep': endereco['cep'].value(),
+        'rua': "rua teste",
+        'numeroCasa':  endereco['numero_casa'].value(),
+        'complemento': endereco['complemento'].value(),
+        'bairro': "bairro testebackend",
+        'cidade': "cidade testebackend",
+        'estado': "Estado SP teste",
+    }
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/addresses/'
+    url = url + str(usuario.cpf) +"/add"
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+        return minha_conta(request)
+    except Exception as e:
+        return JsonResponse({'error': e})
+
+
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
@@ -720,7 +888,7 @@ def vincula_pagamento_pedido(request, id_pagamento):
     try:
         usuario = Usuario.objects.get(email=request.session['usuario'])
     except:
-        return HttpResponse("USUARIO NAO LOGADOOOOOO")
+        return dados_cliente(request)
 
     usuario.carrinho.id_pagamento = id_pagamento
     usuario.carrinho.save()
@@ -745,7 +913,10 @@ def transforma_carrinho_em_pedido(request):
 
 #Retorna para o front todos os pedidos de um cliente
 def meus_pedidos (request):
-    usuario = Usuario.objects.get(email=request.session['usuario'])
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
     pedidos = []
 
@@ -812,7 +983,10 @@ def meus_pedidos (request):
 
 # Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
 def meu_carrinho(request):
-    usuario = Usuario.objects.get(email=request.session['usuario'])
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
     produtos = []
 
@@ -858,7 +1032,7 @@ def adciona_carrinho(request):
     try:
         usuario = Usuario.objects.get(email=request.session['usuario'])
     except:
-        return HttpResponse("USUARIO NAO LOGADOOOOOO")
+        return dados_cliente(request)
 
     #import pdb;pdb.set_trace()
 
@@ -885,22 +1059,18 @@ def adciona_carrinho(request):
 
 # Remove um produto do carrinho
 def remove_carrinho(request):
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
-    usuario = Usuario.objects.get(email=request.session['usuario'])
     id_produto = request.POST.get("id_produto")
 
-    try:
-        produto = usuario.carrinho.produto_no_carrinho.get(produto=Produtos.objects.get(id_produto=id_produto))
-        produto.delete()
-        return meu_carrinho(request)
-    except:
-        return HttpResponse("Produto nao existe no carrinho")
+    for produto_no_carrinho in usuario.carrinho.produtos_no_carrinho_set.all():
+        if (produto_no_carrinho.produto.id_produto == id_produto):
+            produto_no_carrinho.delete()
 
-    #for produto_no_carrinho in usuario.carrinho.produdos_no_carrinho_set.all():
-    #    if (produto_no_carrinho.produto.id_produto == id_produto):
-    #        produto_no_carrinho.delete()
-
-    #return meu_carrinho(request)
+    return meu_carrinho(request)
 
 
 
