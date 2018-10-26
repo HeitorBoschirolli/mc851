@@ -28,7 +28,7 @@
                   <br><br>
                   <strong>R$<span class="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong>
                   <input hidden value="slafj" class="lksdfj"> <br/>
-                  <form action="/adciona_carrinho/" method="POST">
+                  <form action="/remove_carrinho/" method="POST">
                     <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
                     <button type="submit" class="btn btn-danger">
                         Remover
