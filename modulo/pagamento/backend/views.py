@@ -349,22 +349,33 @@ def minha_conta(request):
     try:
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
+
+        ano = resposta['dataDeNascimento'][0:4]
+        mes = resposta['dataDeNascimento'][5:7]
+        dia = resposta['dataDeNascimento'][8:10]
+
+        data = dia + '/' + mes + '/' + ano
+
+        context = {
+            "email": resposta['email'],
+            "nome": resposta['nome'],
+            "dataDeNascimento": data,
+            "telefone": resposta['telefone'],
+            "rua": "Rua Cabeça da Minha Rola",
+            "numero": 7,
+            "bairro": "Bardana",
+            "cidade": "Heitor",
+            "estado": "São Paulo"
+        }
+
+        return render(
+            request=request,
+            template_name='backend/minha_conta.html',
+            context=context
+        )
+
     except Exception as e:
         return JsonResponse({'error': e})
-
-
-    context = {
-        "email": resposta['email'],
-        "nome": resposta['nome'],
-        "dataDeNascimento": resposta['dataDeNascimento'],
-        "telefone": resposta['telefone'],
-    }
-
-    return render(
-        request=request,
-        template_name='backend/minha_conta.html',
-        context=context
-    )
 
 def alterar_dados_cadastrais(request):
     form_cliente = DadosCliente()
@@ -398,7 +409,7 @@ def altera_dados (request):
     data = json.dumps(data)
 
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    request2.get_method = lambda: 'PUT' 
+    request2.get_method = lambda: 'PUT'
 
     try:
         serializade_data = urllib2.urlopen(request2).read()
