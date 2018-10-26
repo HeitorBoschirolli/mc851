@@ -44,10 +44,15 @@
             <div class="card-body">
               <h5 class="card-title">{{ produtos.0.description }}</h5>
               <p class="card-text">R${{ produtos.0.value }}</p>
-              <p class="card-text">
-                <small class="text-muted">Ver mais detalhes</small>
-              </p>
             </div>
+            <form action="/adciona_carrinho/" method="POST">
+                <input hidden value="{{produtos.0.id}}" name="id_produto" id="id_produto">
+                 <div class="text-center"> 
+                  <button type="submit" class="btn btn-warning" style="margin-bottom:1px">
+                    <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
+                  </button>
+                </div>
+              </form>
           </div>
         </div>
         <div class="col-md-4">
@@ -56,10 +61,15 @@
             <div class="card-body">
               <h5 class="card-title">{{ produtos.1.description }}</h5>
               <p class="card-text">R${{ produtos.1.value }}</p>
-              <p class="card-text">
-                <small class="text-muted">Ver mais detalhes</small>
-              </p>
             </div>
+            <form action="/adciona_carrinho/" method="POST">
+                <input hidden value="{{produtos.1.id}}" name="id_produto" id="id_produto">
+                 <div class="text-center"> 
+                  <button type="submit" class="btn btn-warning" style="margin-bottom:1px">
+                    <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
+                  </button>
+                </div>
+              </form>
           </div>
         </div>
         <div class="col-md-4">
@@ -68,10 +78,15 @@
             <div class="card-body">
               <h5 class="card-title">{{ produtos.2.description }} </h5>
               <p class="card-text">R${{ produtos.2.value }}</p>
-              <p class="card-text">
-                <small class="text-muted">Ver mais detalhes</small>
-              </p>
             </div>
+            <form action="/adciona_carrinho/" method="POST">
+                <input hidden value="{{produtos.2.id}}" name="id_produto" id="id_produto">
+                 <div class="text-center"> 
+                  <button type="submit" class="btn btn-warning"style="margin-bottom:1px">
+                    <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
+                  </button>
+                </div>
+              </form>
           </div>
         </div>
       </div>
