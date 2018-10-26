@@ -383,8 +383,9 @@ def altera_dados (request):
     except:
         return dados_cliente(request)
 
-    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/'
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/users/'
     url = url + str(usuario.cpf) +"/update"
+
 
 
     data = {
@@ -396,16 +397,13 @@ def altera_dados (request):
 
     data = json.dumps(data)
 
-    opener = urllib2.build_opener(urllib2.HTTPHandler)
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    request2.get_method = lambda: 'PUT'
-    url = opener.open(request2)
+    request2.get_method = lambda: 'PUT' 
 
     try:
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
-        return HttpResponse(str(resposta))
-        #return minha_conta(request)
+        return minha_conta(request)
     except Exception as e:
 
         return JsonResponse({'error': e})
