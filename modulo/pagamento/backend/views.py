@@ -364,6 +364,7 @@ def minha_conta(request):
     except Exception as e:
         return JsonResponse({'error': e})
 
+    # date = datetime.strptime(resposta['dataDeNascimento'], '%Y-%m-%d')
     print (resposta_enderecos)
 
     context = {
@@ -373,6 +374,8 @@ def minha_conta(request):
         "telefone": resposta_dados['telefone'],
         "enderecos": resposta_enderecos,
     }
+
+    # import pdb; pdb.set_trace()
 
     return render(
         request=request,
