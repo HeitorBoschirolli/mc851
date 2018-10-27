@@ -1125,6 +1125,34 @@ def adciona_carrinho(request):
         produto_no_carrinho.carrinho = usuario.carrinho
         produto_no_carrinho.save()
 
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
+    url = url + str(id_produto)
+
+    request2 = urllib2.Request(url=url)
+    # Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+    #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        dados_produto = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e.code})
+
+    dados_produto['quantityInStock'] -= 1
+
+    data = json.dumps(dados_produto)
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2.get_method = lambda: 'PATCH'
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+    #Envia a requsicao ao modulo
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e})
+
     return home(request)
 
 # Remove um produto do carrinho
@@ -1153,10 +1181,40 @@ def altera_quantidade (request):
 
     #print(Produtos_no_Carrinho.objects.filter(produto__id_produto="7d4acdba-cc6f-4da4-a03b-ce9e7677a6ef", carrinho__usuario = usuario))
 
+
     for produto_no_carrinho_obj in usuario.carrinho.produtos_no_carrinho_set.all():
         if produto_no_carrinho_obj.produto.id_produto == id_produto:
+            dif = int(quantidade) - produto_no_carrinho_obj.quantidade
             produto_no_carrinho_obj.quantidade = quantidade
             produto_no_carrinho_obj.save()
+
+            url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
+            url = url + str(id_produto)
+
+            request2 = urllib2.Request(url=url)
+            # Adiciona ao request o login de autorizacao
+            basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+            request2.add_header("Authorization", "Basic %s" % basic_auth)
+            #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+            try:
+                serializade_data = urllib2.urlopen(request2).read()
+                dados_produto = json.loads(serializade_data)
+            except Exception as e:
+                return JsonResponse({'error': e.code})
+
+            dados_produto['quantityInStock'] -= dif
+
+            data = json.dumps(dados_produto)
+            request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+            request2.get_method = lambda: 'PATCH'
+            basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+            request2.add_header("Authorization", "Basic %s" % basic_auth)
+            #Envia a requsicao ao modulo
+            try:
+                serializade_data = urllib2.urlopen(request2).read()
+                resposta = json.loads(serializade_data)
+            except Exception as e:
+                return JsonResponse({'error': e})
 
     resposta = {
         "sucesso": 1
