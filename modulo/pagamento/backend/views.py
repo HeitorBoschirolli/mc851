@@ -365,7 +365,6 @@ def minha_conta(request):
         return JsonResponse({'error': e})
 
     # date = datetime.strptime(resposta['dataDeNascimento'], '%Y-%m-%d')
-    print (resposta_enderecos)
 
     context = {
         "email": resposta_dados['email'],
