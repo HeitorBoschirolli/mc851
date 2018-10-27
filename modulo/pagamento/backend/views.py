@@ -778,26 +778,20 @@ def pagamento_cartao(request):
     #     "num_parcelas": "2"
     # }
 
-    now = datetime.now().date()
-
-    valor_compra = request.POST.get('valor_total')
-    cnpj = request.POST.get('cnpj')
-    credito = request.POST.get('credito')
-    data_vencimento = request.POST.get('data_vencimento_cartao')
-    data_vencimento = "1/" + data_vencimento
-
+    print(forms_cartao['data_vencimento_cartao'].data)
     data = {
-        "cpf_comprador": str(forms_cartao['cpf'].data),
-        "valor_compra": valor_compra,
-        "cnpj_site": cnpj,
-        "data_emissao_pedido": now.strftime("%d/%m/%Y"),
+        "cpf_comprador": "12356712345",
+        "valor_compra": "10.20",
+        "cnpj_site": "12345678992735",
+        "data_emissao_pedido": "2/10/2018",
         "numero_cartao": str(forms_cartao['numero_cartao'].data),
         "nome_cartao": str(forms_cartao['nome_cartao'].data),
         "cvv_cartao": str(forms_cartao['cvv'].data),
-        "data_vencimento_cartao": data_vencimento,
-        "credito": str(credito),
-        "num_parcelas": str(forms_cartao['num_parcelas'].data),
+        "data_vencimento_cartao": "2/10/2025",
+        "credito": "1",
+        "num_parcelas": "2"
     }
+    print(data)
 
 
 
@@ -831,45 +825,15 @@ def pagamento_boleto(request):
     url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
 
     # Variaveis de testebackend/pagamento.html
-    now = datetime.now().date()
-
-    valor_compra = request.POST.get('valor_total')
-    cnpj = request.POST.get('cnpj')
-    credito = request.POST.get('credito')
-    cpf = request.POST.get('cpf', '99999999999')
-
-    # data = {
-    #     "cpf_comprador": "12356712345",
-    #     "valor_compra":"10.20",
-    #     "cnpj_site":"12345678992735",
-    #     "banco_gerador_boleto":"Itau",
-    #     "data_vencimento_boleto":"04/10/2018",
-    #     "endereco_fisico_site":"Rua Sindo",
-    #     "data_emissao_pedido": "25/06/2018"
-    # }
-    date = (now+timedelta(days=10)).strftime("%d/%m/%Y")
-    import pdb;pdb.set_trace()
     data = {
-        "cpf_comprador": cpf,
-        "valor_compra": valor_compra,
-        "cnpj_site": cnpj,
+        "cpf_comprador": "12356712345",
+        "valor_compra":"10.20",
+        "cnpj_site":"12345678992735",
         "banco_gerador_boleto":"Itau",
-        "data_vencimento_boleto": str(date),
+        "data_vencimento_boleto":"04/10/2018",
         "endereco_fisico_site":"Rua Sindo",
-        "data_emissao_pedido": now
+        "data_emissao_pedido": "25/06/2018"
     }
-        # data = {
-        #     "cpf_comprador": "12356712345",
-        #     "valor_compra": valor_compra,
-        #     "cnpj_site": cnpj,
-        #     "data_emissao_pedido": now.strftime("%d/%m/%Y"),
-        #     "numero_cartao": str(forms_cartao['numero_cartao'].data),
-        #     "nome_cartao": str(forms_cartao['nome_cartao'].data),
-        #     "cvv_cartao": str(forms_cartao['cvv'].data),
-        #     "data_vencimento_cartao": data_vencimento,
-        #     "credito": str(credito),
-        #     "num_parcelas": str(forms_cartao['num_parcelas'].data),
-        # }
 
     data = json.dumps(data)
 
@@ -1129,7 +1093,27 @@ def remove_carrinho(request):
 
     return meu_carrinho(request)
 
+def altera_quantidade (request):
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
+    id_produto = request.POST.get("id_produto")
+    quantidade = request.POST.get("quantidade")
+
+    #print(Produtos_no_Carrinho.objects.filter(produto__id_produto="7d4acdba-cc6f-4da4-a03b-ce9e7677a6ef", carrinho__usuario = usuario))
+
+    for produto_no_carrinho_obj in usuario.carrinho.produtos_no_carrinho_set.all():
+        if produto_no_carrinho_obj.produto.id_produto == id_produto:
+            produto_no_carrinho_obj.quantidade = quantidade
+            produto_no_carrinho_obj.save()
+
+    resposta = {
+        "sucesso": 1
+    }
+
+    return JsonResponse(resposta)
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''--------------------------------------------API DE LOGISTICA---------------------------------------------'''
