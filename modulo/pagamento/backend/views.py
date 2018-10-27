@@ -1073,7 +1073,10 @@ def meu_carrinho(request):
         try:
             serializade_data = urllib2.urlopen(request2).read()
             dados_produto = json.loads(serializade_data)
+            dados_produto['quantidade_carrinho'] = produto_no_carrinho.quantidade
             produtos.append(dados_produto)
+            produto_no_carrinho.valor_unitario = dados_produto['value']
+            produto_no_carrinho.save()
         except Exception as e:
             return JsonResponse({'error': e.code})
 
@@ -1103,14 +1106,12 @@ def adciona_carrinho(request):
     except:
         return dados_cliente(request)
 
-    #import pdb;pdb.set_trace()
-
     try:
         produto = Produtos.objects.get(id_produto=id_produto)
         produto_no_carrinho = Produtos_no_Carrinho()
         produto_no_carrinho.produto = produto
         produto_no_carrinho.quantidade = 1
-        produto_no_carrinho.valor_unitario = -1 # ARRUMAR AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        produto_no_carrinho.valor_unitario = -1
         produto_no_carrinho.carrinho = usuario.carrinho
         produto_no_carrinho.save()
     except:
@@ -1120,7 +1121,7 @@ def adciona_carrinho(request):
         produto_no_carrinho = Produtos_no_Carrinho()
         produto_no_carrinho.produto = produto
         produto_no_carrinho.quantidade = 1
-        produto_no_carrinho.valor_unitario = -1 # ARRUMAR AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        produto_no_carrinho.valor_unitario = -1
         produto_no_carrinho.carrinho = usuario.carrinho
         produto_no_carrinho.save()
 
