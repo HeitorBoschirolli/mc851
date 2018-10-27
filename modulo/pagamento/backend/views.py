@@ -11,6 +11,7 @@ import json
 import base64
 from model_forms import *
 import random
+import ast
 
 url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
@@ -348,17 +349,30 @@ def minha_conta(request):
 
     try:
         serializade_data = urllib2.urlopen(request2).read()
-        resposta = json.loads(serializade_data)
+        resposta_dados = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e})
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/users/'
+    url = url + str(usuario.cpf) + "/addresses"
+
+    request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta_enderecos = json.loads(serializade_data)
     except Exception as e:
         return JsonResponse({'error': e})
 
     # date = datetime.strptime(resposta['dataDeNascimento'], '%Y-%m-%d')
+    print (resposta_enderecos)
 
     context = {
-        "email": resposta['email'],
-        "nome": resposta['nome'],
-        "dataDeNascimento": resposta['dataDeNascimento'],
-        "telefone": resposta['telefone'],
+        "email": resposta_dados['email'],
+        "nome": resposta_dados['nome'],
+        "dataDeNascimento": resposta_dados['dataDeNascimento'],
+        "telefone": resposta_dados['telefone'],
+        "enderecos": resposta_enderecos,
     }
 
     # import pdb; pdb.set_trace()
@@ -509,6 +523,49 @@ def cadastra_endereco (request):
         return JsonResponse({'error': e})
 
 
+def apagar_conta (request):
+
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
+    context = {
+        "senha_incorreta": False,
+    }
+    return render (request=request, context=context, template_name="backend/excluir_usuario.html")
+
+
+def remover_usuario(request):
+
+    senha = request.POST.get("senha")
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/delete'
+
+    data = {
+        "tokenSessao": str(usuario.sessionToken),
+        "email": str(usuario.email),
+        "senha": senha,
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+        if "Conta" in resposta['message']:
+            usuario.delete()
+            return logout(request)
+        else:
+            context = {
+                "senha_incorreta": True,
+            }
+            return render (request=request, context=context, template_name="backend/excluir_usuario.html")
+    except Exception as e:
+        return JsonResponse({'error': e})
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
@@ -724,26 +781,20 @@ def pagamento_cartao(request):
     #     "num_parcelas": "2"
     # }
 
-    now = datetime.now().date()
-
-    valor_compra = request.POST.get('valor_total')
-    cnpj = request.POST.get('cnpj')
-    credito = request.POST.get('credito')
-    data_vencimento = request.POST.get('data_vencimento_cartao')
-    data_vencimento = "1/" + data_vencimento
-
+    print(forms_cartao['data_vencimento_cartao'].data)
     data = {
-        "cpf_comprador": str(forms_cartao['cpf'].data),
-        "valor_compra": valor_compra,
-        "cnpj_site": cnpj,
-        "data_emissao_pedido": now.strftime("%d/%m/%Y"),
+        "cpf_comprador": "12356712345",
+        "valor_compra": "10.20",
+        "cnpj_site": "12345678992735",
+        "data_emissao_pedido": "2/10/2018",
         "numero_cartao": str(forms_cartao['numero_cartao'].data),
         "nome_cartao": str(forms_cartao['nome_cartao'].data),
         "cvv_cartao": str(forms_cartao['cvv'].data),
-        "data_vencimento_cartao": data_vencimento,
-        "credito": str(credito),
-        "num_parcelas": str(forms_cartao['num_parcelas'].data),
+        "data_vencimento_cartao": "2/10/2025",
+        "credito": "1",
+        "num_parcelas": "2"
     }
+    print(data)
 
 
 
@@ -765,6 +816,7 @@ def pagamento_cartao(request):
 
     except Exception as e:
         return JsonResponse({'error': e.code})
+
 
 
 #Realiza um pagamento por boleto
@@ -794,7 +846,7 @@ def pagamento_boleto(request):
     #     "data_emissao_pedido": "25/06/2018"
     # }
     date = (now+timedelta(days=10)).strftime("%d/%m/%Y")
-    import pdb;pdb.set_trace()
+
     data = {
         "cpf_comprador": cpf,
         "valor_compra": valor_compra,
@@ -802,7 +854,7 @@ def pagamento_boleto(request):
         "banco_gerador_boleto":"Itau",
         "data_vencimento_boleto": str(date),
         "endereco_fisico_site":"Rua Sindo",
-        "data_emissao_pedido": now
+        "data_emissao_pedido": now.strftime("%d/%m/%Y")
     }
         # data = {
         #     "cpf_comprador": "12356712345",
@@ -869,15 +921,29 @@ def consulta_pagamento(request):
 
         return JsonResponse({'error': e.code})
 
+# Chama a página de pagamento
 def pagamento(request):
     form_cartao = DadosCartao(data=request.POST)
     valor_total = request.POST.get('valor_total_form', 0)
+
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+        cpf_usuario = usuario.cpf
+    except:
+        return dados_cliente(request)
+
+
+    score = get_score(cpf_usuario)['score']
+
     context = {
         'form_cartao': form_cartao,
         'valor_total': valor_total,
+        'score': score,
     }
 
     return render(request=request, context=context, template_name='backend/pagamento.html')
+
 
 
 '''---------------------------------------------------------------------------------------------------------'''
@@ -1075,7 +1141,27 @@ def remove_carrinho(request):
 
     return meu_carrinho(request)
 
+def altera_quantidade (request):
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
+    id_produto = request.POST.get("id_produto")
+    quantidade = request.POST.get("quantidade")
+
+    #print(Produtos_no_Carrinho.objects.filter(produto__id_produto="7d4acdba-cc6f-4da4-a03b-ce9e7677a6ef", carrinho__usuario = usuario))
+
+    for produto_no_carrinho_obj in usuario.carrinho.produtos_no_carrinho_set.all():
+        if produto_no_carrinho_obj.produto.id_produto == id_produto:
+            produto_no_carrinho_obj.quantidade = quantidade
+            produto_no_carrinho_obj.save()
+
+    resposta = {
+        "sucesso": 1
+    }
+
+    return JsonResponse(resposta)
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''--------------------------------------------API DE LOGISTICA---------------------------------------------'''
@@ -1114,11 +1200,12 @@ def get_valor_frete(cep="01001001"):
 '''---------------------------------------------------------------------------------------------------------'''
 
 #Funcao que pega o score de um cliente na api de credito
-def get_score(request):
+def get_score(cpf):
 
     #Pega o cpf do cliente passado no momento do pagamento
     #cpf = request.POST.get('cpf')
-    cpf=str("20314520369")
+    if not cpf:
+        cpf=str("20314520369")
     # URL para acesso da api de credito
     url = 'http://ec2-54-233-234-42.sa-east-1.compute.amazonaws.com:3000/api/v1/score/' + cpf
 
@@ -1128,7 +1215,8 @@ def get_score(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return JsonResponse(resposta)
+        #return JsonResponse(resposta)
+        return resposta
 
     except Exception as e:
 

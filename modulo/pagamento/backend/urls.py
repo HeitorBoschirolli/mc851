@@ -46,7 +46,14 @@ urlpatterns = [
     # Alterar dados cadastrais
     url(r'^alterar_dados_cadastrais', views.alterar_dados_cadastrais, name='alterar_dados_cadastrais'),
 
+    #Executa a ação de alterar os dados
     url(r'^altera_dados', views.altera_dados, name='altera_dados'),
+
+    #Pagina que pede senha para excluir usuario
+    url(r'^apagar_conta', views.apagar_conta, name='apagar_conta'),
+
+    #Executa a ação de alterar os dados
+    url(r'^remover_usuario', views.remover_usuario, name='remover_usuario'),
 
 
     #---------------------------------------------------------------------------------------------------------#
