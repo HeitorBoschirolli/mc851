@@ -30,6 +30,7 @@
                   <input hidden value="slafj" class="lksdfj"> <br/>
                   <form action="/remove_carrinho/" method="POST">
                     <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
+                    <input hidden value="{{produto.quantityInStock}}" class="quantidade_estoque">
                     <button type="submit" class="btn btn-danger">
                         Remover
                     </button>
@@ -86,7 +87,6 @@
 
   // Atualiza quantidade (requisição AJAX para API de produtos)
   function atualiza_quantidade(element) {
-    alert(element.value);
     quantidade = $('.produto').length;
     qnt_estoque = $('.quantidade_estoque');
     unidades = $('.unidades');
@@ -103,7 +103,7 @@
   function atualiza_banco(element) {
     // Envia atualização para p BD
     $.ajax({
-        url: '/ajax/validate_username/',
+        url: '/altera_quantidade/',
         method: 'POST',
         data: {
           'id_produto': element.id,
@@ -111,9 +111,7 @@
         },
         dataType: 'json',
         success: function (data) {
-          if (data.is_taken) {
-            alert("A user with this username already exists.");
-          }
+          console.log("Quantidade atualizada no BD")
         }
       });
   }
