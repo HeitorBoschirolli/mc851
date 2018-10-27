@@ -352,6 +352,7 @@ def minha_conta(request):
     except Exception as e:
         return JsonResponse({'error': e})
 
+    # date = datetime.strptime(resposta['dataDeNascimento'], '%Y-%m-%d')
 
     context = {
         "email": resposta['email'],
@@ -359,6 +360,8 @@ def minha_conta(request):
         "dataDeNascimento": resposta['dataDeNascimento'],
         "telefone": resposta['telefone'],
     }
+
+    # import pdb; pdb.set_trace()
 
     return render(
         request=request,
@@ -449,7 +452,7 @@ def cadastra_endereco (request):
     endereco = DadosEndereco(data=request.POST)
 
     # url = url + endereco['cep'].value()
-    # 
+    #
     # request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
     #
     # try:
