@@ -711,7 +711,7 @@ def adciona_carrinho(request):
     try:
         usuario = Usuario.objects.get(email=request.session['usuario'])
     except:
-        return HttpResponse("USUARIO NAO LOGADOOOOOO")
+        return render(request=request, template_name='backend/usuario_nao_logado.html')
 
     #import pdb;pdb.set_trace()
 
