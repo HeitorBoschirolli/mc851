@@ -39,7 +39,8 @@
                 <td>
                   <form style="margin: 15px;" action="/meu_carrinho/">
                     Quantidade:
-                    <input type="number" name="quantity" onkeypress="atualiza_quantidade()" onclick="atualiza_quantidade()" class="unidades" min="0" max="100" step="1" value="1">
+                    <input type="number" id="{{produto.id}}" name="quantity" class="unidades" min="0" max="100" step="1" value="1"
+                                                          onkeypress="atualiza_quantidade(this)" onclick="atualiza_quantidade(this)">
                   </form>
                 </td>
                 <td>
@@ -84,7 +85,8 @@
   atualiza_valor_total();
 
   // Atualiza quantidade (requisição AJAX para API de produtos)
-  function atualiza_quantidade() {
+  function atualiza_quantidade(element) {
+    alert(element.value);
     quantidade = $('.produto').length;
     qnt_estoque = $('.quantidade_estoque');
     unidades = $('.unidades');
@@ -94,8 +96,26 @@
         alert("Limite Excedido")
       }
     }
-
+    atualiza_banco(element);
     atualiza_valor();
+  }
+
+  function atualiza_banco(element) {
+    // Envia atualização para p BD
+    $.ajax({
+        url: '/ajax/validate_username/',
+        method: 'POST',
+        data: {
+          'id_produto': element.id,
+          'quantidade': element.value,
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert("A user with this username already exists.");
+          }
+        }
+      });
   }
 
   // Atualiza os valores totais dos produtos individualmente
@@ -120,6 +140,8 @@
     valor_final = valor_final + parseFloat($('#valor_frete').html());
     $('#valor_total_pedido').html(valor_final.toFixed(2));
     $('#valor_total_form').val(valor_final);
+
+    return;
   }
 
 </script>

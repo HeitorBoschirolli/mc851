@@ -27,6 +27,7 @@
             <div class="col-12">
                 <p>Seja bem-vindo {{pagamento.cliente.nome}}</p>
                 <p>O valor total da sua compra é R${{valor_total|floatformat:2}}</p>
+                <p>O seu score é {{score}}</p>
             </div>
         </div>
         <br/>
@@ -36,8 +37,10 @@
                 <h3>Opções de Pagamento</h3>
             </div>
             <select id="id_opcao_pagamento" class="form-control">
-              <option value="1">Cŕedito</option>
               <option value="0">Débito</option>
+              {% if score > 400 %}
+              <option value="1">Cŕedito</option>
+              {% endif %}
               <option value="-1">Boleto</option>
             </select>
         </div>
@@ -229,8 +232,8 @@
 {% block scripts %}
 <script>
 $( document ).ready(function() {
-  $('#form_cartao_credito').show();
-  $('#form_cartao_debito').hide();
+  $('#form_cartao_credito').hide();
+  $('#form_cartao_debito').show();
   $('#form_cartao_boleto').hide();
 });
 

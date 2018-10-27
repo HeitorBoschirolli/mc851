@@ -815,6 +815,7 @@ def pagamento_cartao(request):
         return JsonResponse({'error': e.code})
 
 
+
 #Realiza um pagamento por boleto
 def pagamento_boleto(request):
 
@@ -825,15 +826,45 @@ def pagamento_boleto(request):
     url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
 
     # Variaveis de testebackend/pagamento.html
+    now = datetime.now().date()
+
+    valor_compra = request.POST.get('valor_total')
+    cnpj = request.POST.get('cnpj')
+    credito = request.POST.get('credito')
+    cpf = request.POST.get('cpf', '99999999999')
+
+    # data = {
+    #     "cpf_comprador": "12356712345",
+    #     "valor_compra":"10.20",
+    #     "cnpj_site":"12345678992735",
+    #     "banco_gerador_boleto":"Itau",
+    #     "data_vencimento_boleto":"04/10/2018",
+    #     "endereco_fisico_site":"Rua Sindo",
+    #     "data_emissao_pedido": "25/06/2018"
+    # }
+    date = (now+timedelta(days=10)).strftime("%d/%m/%Y")
+
     data = {
-        "cpf_comprador": "12356712345",
-        "valor_compra":"10.20",
-        "cnpj_site":"12345678992735",
+        "cpf_comprador": cpf,
+        "valor_compra": valor_compra,
+        "cnpj_site": cnpj,
         "banco_gerador_boleto":"Itau",
-        "data_vencimento_boleto":"04/10/2018",
+        "data_vencimento_boleto": str(date),
         "endereco_fisico_site":"Rua Sindo",
-        "data_emissao_pedido": "25/06/2018"
+        "data_emissao_pedido": now.strftime("%d/%m/%Y")
     }
+        # data = {
+        #     "cpf_comprador": "12356712345",
+        #     "valor_compra": valor_compra,
+        #     "cnpj_site": cnpj,
+        #     "data_emissao_pedido": now.strftime("%d/%m/%Y"),
+        #     "numero_cartao": str(forms_cartao['numero_cartao'].data),
+        #     "nome_cartao": str(forms_cartao['nome_cartao'].data),
+        #     "cvv_cartao": str(forms_cartao['cvv'].data),
+        #     "data_vencimento_cartao": data_vencimento,
+        #     "credito": str(credito),
+        #     "num_parcelas": str(forms_cartao['num_parcelas'].data),
+        # }
 
     data = json.dumps(data)
 
@@ -887,15 +918,29 @@ def consulta_pagamento(request):
 
         return JsonResponse({'error': e.code})
 
+# Chama a página de pagamento
 def pagamento(request):
     form_cartao = DadosCartao(data=request.POST)
     valor_total = request.POST.get('valor_total_form', 0)
+
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+        cpf_usuario = usuario.cpf
+    except:
+        return dados_cliente(request)
+
+
+    score = get_score(cpf_usuario)['score']
+
     context = {
         'form_cartao': form_cartao,
         'valor_total': valor_total,
+        'score': score,
     }
 
     return render(request=request, context=context, template_name='backend/pagamento.html')
+
 
 
 '''---------------------------------------------------------------------------------------------------------'''
@@ -1152,11 +1197,12 @@ def get_valor_frete(cep="01001001"):
 '''---------------------------------------------------------------------------------------------------------'''
 
 #Funcao que pega o score de um cliente na api de credito
-def get_score(request):
+def get_score(cpf):
 
     #Pega o cpf do cliente passado no momento do pagamento
     #cpf = request.POST.get('cpf')
-    cpf=str("20314520369")
+    if not cpf:
+        cpf=str("20314520369")
     # URL para acesso da api de credito
     url = 'http://ec2-54-233-234-42.sa-east-1.compute.amazonaws.com:3000/api/v1/score/' + cpf
 
@@ -1166,7 +1212,8 @@ def get_score(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return JsonResponse(resposta)
+        #return JsonResponse(resposta)
+        return resposta
 
     except Exception as e:
 
