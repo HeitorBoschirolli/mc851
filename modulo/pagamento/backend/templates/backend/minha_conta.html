@@ -15,6 +15,7 @@
     </ul>
 
     <div class="tab-content" id="tabs">
+
       <div class="tab-pane" id="dados_cadastrais">
         <div class="py-5 text-center" style="padding-top:0px !important;">
           <img class="d-block mx-auto mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
@@ -23,10 +24,10 @@
         </div>
         <div class="col-md-8 order-md-1 mx-auto">
 
-          <form class="needs-validation" novalidate="" action="/resultado_login" method="POST">
+          <form action="/altera_dados" method="POST" autocomplete="off">
             <div class="mb-3">
-              <label for="firstName"><strong>Nome</strong></label>
-              <input type="text" class="form-control" id="nome" placeholder="" value={{nome}} required="">
+              <label for="nome"><strong>Nome</strong></label>
+              <input type="text" class="form-control" id="nome" name="nome" value={{nome}} required="">
               <div class="invalid-feedback">
                 Valid first name is required.
               </div>
@@ -34,23 +35,23 @@
 
             <div class="mb-3">
               <label for="email"><strong>Email</strong></label>
-              <input type="email" class="form-control" id="email" placeholder="you@example.com" value={{email}} readonly>
+              <input type="email" class="form-control" id="email" value={{email}} readonly>
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
               </div>
             </div>
 
             <div class="mb-3">
-              <label for="address"><strong>Data de Nascimento</strong></label>
-              <input type="text" class="form-control" id="date" required="" value=>
+              <label for="data_nascimento"><strong>Data de Nascimento</strong></label>
+              <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required="" value={{dataDeNascimento}}>
               <div class="invalid-feedback">
-                Please enter your shipping address.
+                Please enter your shipping addressn.
               </div>
             </div>
 
             <div class="mb-3">
-              <label for="address2"><strong>Telefone</strong></label>
-              <input type="text" class="form-control" id="telefone" value={{telefone}}>
+              <label for="telefone"><strong>Telefone</strong></label>
+              <input type="tel" maxlength="9" minlength="9" class="form-control" id="telefone" name="telefone" value={{telefone}}>
             </div>
 
             <hr class="mb-4">

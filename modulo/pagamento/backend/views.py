@@ -368,13 +368,16 @@ def minha_conta(request):
 
     lista_pedidos = meus_pedidos(request)
 
+    form_cliente = DadosCliente()
+
     context = {
         "email": resposta_dados['email'],
         "nome": resposta_dados['nome'],
         "dataDeNascimento": resposta_dados['dataDeNascimento'],
         "telefone": resposta_dados['telefone'],
         "enderecos": resposta_enderecos,
-        "lista_pedidos": lista_pedidos
+        "lista_pedidos": lista_pedidos,
+        "form_cliente": form_cliente
     }
 
     # import pdb; pdb.set_trace()
@@ -395,7 +398,6 @@ def alterar_dados_cadastrais(request):
     return render (request=request, context=context, template_name="backend/alterar_dados_cadastrais.html")
 
 def altera_dados (request):
-    form_cliente = DadosCliente(data=request.POST)
 
     try:
         usuario = Usuario.objects.get(email=request.session['usuario'])
@@ -406,12 +408,11 @@ def altera_dados (request):
     url = url + str(usuario.cpf) +"/update"
 
 
-
     data = {
         "tokenSessao": str(usuario.sessionToken),
-        "nome": form_cliente['nome_cliente'].value(),
-        "dataDeNascimento": form_cliente['data_nascimento'].value(),
-        "telefone": form_cliente['telefone'].value(),
+        "nome": request.POST.get('nome'),
+        "dataDeNascimento": request.POST.get('data_nascimento'),
+        "telefone": request.POST.get('telefone'),
     }
 
     data = json.dumps(data)
@@ -423,23 +424,11 @@ def altera_dados (request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
         return minha_conta(request)
+
     except Exception as e:
 
         return JsonResponse({'error': e})
 
-
-    context = {
-        "email": resposta['email'],
-        "nome": resposta['nome'],
-        "dataDeNascimento": resposta['dataDeNascimento'],
-        "telefone": resposta['telefone'],
-    }
-
-    return render(
-        request=request,
-        template_name='backend/minha_conta.html',
-        context=context
-    )
 
 def insere_endereco(request):
     endereco = DadosEndereco()
@@ -457,6 +446,9 @@ def insere_endereco(request):
     )
 
 def cadastra_endereco (request):
+
+    import pdb
+    pdb.set_trace()
 
     try:
         usuario = Usuario.objects.get(email=request.session['usuario'])
@@ -501,7 +493,7 @@ def cadastra_endereco (request):
 
     data = {
         'tokenSessao': usuario.sessionToken,
-        'cep': endereco['cep'].value(),
+        'cep': request.POST.get('cep'),
         'rua': "rua teste",
         'numeroCasa':  endereco['numero_casa'].value(),
         'complemento': endereco['complemento'].value(),

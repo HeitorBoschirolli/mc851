@@ -91,11 +91,14 @@ class DadosProduto(forms.Form):
 
 class DadosEndereco(forms.Form):
     id = forms.IntegerField(label="Id do Endereco")
-    cep = forms.CharField(label="CEP", max_length=8, widget=forms.TextInput(
+    cep = forms.CharField(label="CEP", min_length=8, max_length=8, widget=forms.TextInput(
         attrs={
             'type': 'text',
             'class': 'form-control',
-            'placeholder': 'Exemplo: 00000001'
+            'placeholder': 'Exemplo: 00000001',
+            'minlenght': '8',
+            'maxlenght': '8'
+
         }
     ))
     logradouro = forms.CharField(label="Logradouro", max_length=100)
