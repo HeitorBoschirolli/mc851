@@ -366,12 +366,15 @@ def minha_conta(request):
 
     # date = datetime.strptime(resposta['dataDeNascimento'], '%Y-%m-%d')
 
+    lista_pedidos = meus_pedidos(request)
+
     context = {
         "email": resposta_dados['email'],
         "nome": resposta_dados['nome'],
         "dataDeNascimento": resposta_dados['dataDeNascimento'],
         "telefone": resposta_dados['telefone'],
         "enderecos": resposta_enderecos,
+        "lista_pedidos": lista_pedidos
     }
 
     # import pdb; pdb.set_trace()
@@ -1039,15 +1042,17 @@ def meus_pedidos (request):
 
         pedidos.append(dados_pedido)
 
-    context = {
-        'pedidos': pedidos
-    }
+    return pedidos
 
-    return render (
-        request=request,
-        template_name='backend/meus_pedidos.html',
-        context=context
-    )
+    # context = {
+    #     'pedidos': pedidos
+    # }
+
+    # return render (
+    #     request=request,
+    #     template_name='backend/meus_pedidos.html',
+    #     context=context
+    # )
 
 # Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
 def meu_carrinho(request):
