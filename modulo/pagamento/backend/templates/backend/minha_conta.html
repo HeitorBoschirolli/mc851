@@ -5,7 +5,157 @@
 {% endblock %}
 
 {% block content %}
-{% load staticfiles %}
 
-Minha Conta
+  <div class="container">
+
+    <ul class="nav nav-tabs" style="padding-top:50px !important ;">
+        <li class="nav-item"><a class="nav-link" href="#dados_cadastrais" data-toggle="tab">Dados Cadastrais</a></li>
+        <li class="nav-item"><a class="nav-link" href="#dados_de_endereco" data-toggle="tab">Dados de Endereço</a></li>
+        <li class="nav-item"><a class="nav-link" href="#historico_de_compras" data-toggle="tab">Histórico de Compras</a></li>
+    </ul>
+
+    <div class="tab-content" id="tabs">
+      <div class="tab-pane" id="dados_cadastrais">
+        <div class="py-5 text-center" style="padding-top:0px !important;">
+          <img class="d-block mx-auto mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+          <h1>Dados do Cliente</h1>
+          <p class="lead">Abaixo encontram-se os dados do Cliente.</p>
+        </div>
+        <div class="col-md-8 order-md-1 mx-auto">
+
+          <form class="needs-validation" novalidate="" action="/resultado_login" method="POST">
+            <div class="mb-3">
+              <label for="firstName"><strong>Nome</strong></label>
+              <input type="text" class="form-control" id="nome" placeholder="" value={{nome}} required="">
+              <div class="invalid-feedback">
+                Valid first name is required.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email"><strong>Email</strong></label>
+              <input type="email" class="form-control" id="email" placeholder="you@example.com" value={{email}} readonly>
+              <div class="invalid-feedback">
+                Please enter a valid email address for shipping updates.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address"><strong>Data de Nascimento</strong></label>
+              <input type="text" class="form-control" id="date" required="" value=>
+              <div class="invalid-feedback">
+                Please enter your shipping address.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address2"><strong>Telefone</strong></label>
+              <input type="text" class="form-control" id="telefone" value={{telefone}}>
+            </div>
+
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Alterar Dados</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="dados_de_endereco">
+        <br>
+        {% for endereco in enderecos %}
+
+          <div class="card border-primary col-md-12">
+            <div class="card-body">
+              <h2 class="card-title">{{endereco.rua}}</h2>
+              <p class="card-text"><strong>Estado: </strong>{{endereco.estado}}</p>
+              <p class="card-text"><strong>Cidade: </strong>{{endereco.cidade}}</p>
+              <p class="card-text"><strong>Bairro: </strong>{{endereco.bairro}}</p>
+              <p class="card-text"><strong>Rua: </strong>{{endereco.rua}}</p>
+              <p class="card-text"><strong>CEP: </strong>{{endereco.cep}}</p>
+              <p class="card-text"><strong>Número: </strong>{{endereco.numeroCasa}}</p>
+              <p class="card-text"><strong>Complemento: </strong>{{endereco.complemento}}</p>
+              <p class="card-text"><strong>Referência: </strong>{{endereco.referencia}}</p>
+            </div>
+          </div>
+          <br>
+        {% endfor %}
+      </div>
+
+      <div class="tab-pane" id="historico_de_compras">
+        <br>
+        {% for pedido in lista_pedidos %}
+
+          <div class="card border-primary col-md-12">
+            <div class="card-body">
+
+              <h2 class="card-title">{{pedido.data}}</h2>
+
+              {% for produto in pedido.produtos %}
+
+                <hr class="border-primary">
+
+                <p class="card-text"><strong>Nome: </strong>{{produto.name}}</p>
+                <p class="card-text"><strong>Descrição: </strong>{{produto.description}}</p>
+                <p class="card-text"><strong>Quantidade: </strong>{{produto.quantity}}</p>
+                <p class="card-text"><strong>Valor: </strong>{{produto.value}}</p>
+
+              {% endfor %}
+
+              <hr class="border-primary">
+              <p class="card-text"><strong>Valor Total: </strong>{{pedido.total_carrinho}}</p>
+
+            </div>
+          </div>
+          <br>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+
+  <a href="/insere_endereco">Insere Endereço</a>
+  <a href="/alterar_dados_cadastrais">Alterar Dados Cadastrais</a>
+  <a href="/meus_pedidos">Meus Pedidos</a>
+  <a href="/apagar_conta">Apagar minha Conta</a>
+
+  <!-- Bootstrap core JavaScript-->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+  <script src="../../assets/js/vendor/holder.min.js"></script>
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      activaTab('dados_cadastrais');
+    });
+
+    function activaTab(tab){
+      $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+      // $('.nav-tabs a[href="#bbb"').tab('show');
+    };
+
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+      'use strict';
+
+      window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+  </script>
+
 {% endblock %}

@@ -27,20 +27,27 @@
                   {{ produto.description|safe }}
                   <br><br>
                   <strong>R$<span class="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong>
-                  <input hidden value="{{ produto.quantityInStock|safe }}" class="quantidade_estoque">
+                  <input hidden value="slafj" class="lksdfj"> <br/>
+                  <form action="/remove_carrinho/" method="POST">
+                    <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
+                    <input hidden value="{{produto.quantityInStock}}" class="quantidade_estoque">
+                    <button type="submit" class="btn btn-danger">
+                        Remover
+                    </button>
+                  </form>
                 </td>
 
                 <td>
                   <form style="margin: 15px;" action="/meu_carrinho/">
                     Quantidade:
-                    <input type="number" name="quantity" onkeypress="atualiza_quantidade()" onclick="atualiza_quantidade()" class="unidades" min="0" max="100" step="1" value="1">
+                    <input type="number" id="{{produto.id}}" name="quantity" class="unidades" min="0" max="100" step="1" value="{{produto.quantidade_carrinho}}"
+                                                          onkeypress="atualiza_quantidade(this)" onclick="atualiza_quantidade(this)">
                   </form>
                 </td>
                 <td>
                   <strong>Valor total</strong>
                   <br/>
                   R$<span class="valor_total">2000</span>
-
                 </td>
             </tr>
             {% endfor%}
@@ -79,7 +86,7 @@
   atualiza_valor_total();
 
   // Atualiza quantidade (requisição AJAX para API de produtos)
-  function atualiza_quantidade() {
+  function atualiza_quantidade(element) {
     quantidade = $('.produto').length;
     qnt_estoque = $('.quantidade_estoque');
     unidades = $('.unidades');
@@ -89,8 +96,24 @@
         alert("Limite Excedido")
       }
     }
-
+    atualiza_banco(element);
     atualiza_valor();
+  }
+
+  function atualiza_banco(element) {
+    // Envia atualização para p BD
+    $.ajax({
+        url: '/altera_quantidade/',
+        method: 'POST',
+        data: {
+          'id_produto': element.id,
+          'quantidade': element.value,
+        },
+        dataType: 'json',
+        success: function (data) {
+          console.log("Quantidade atualizada no BD")
+        }
+      });
   }
 
   // Atualiza os valores totais dos produtos individualmente
@@ -115,6 +138,8 @@
     valor_final = valor_final + parseFloat($('#valor_frete').html());
     $('#valor_total_pedido').html(valor_final.toFixed(2));
     $('#valor_total_form').val(valor_final);
+
+    return;
   }
 
 </script>

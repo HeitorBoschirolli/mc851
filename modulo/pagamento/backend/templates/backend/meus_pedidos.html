@@ -1,0 +1,45 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Meus Pedidos</title>
+{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="container">
+          <h1>Meus Pedidos</h1>
+        </div>
+      </div>
+<div class="container">
+<table id="tabela_pedidos" class="" style="width:100%">
+
+        <tbody>
+            {% for pedido in pedidos %}
+                <td>
+                    <br/><br/><br/>
+                    <h2>Valor Total da Compra: {{pedido.total_carrinho}}</h2>
+                    <h2>Valor do Frete: {{pedido.total_frete}}</h2>
+                    <h2>Data da Compra: {{pedido.data}}</h2>
+                </td>
+
+                {% for produto in pedido.produtos %}
+                    <tr style="border-bottom: 1px solid black;" class="produto">
+                        <td>
+                          <h4>{{produto.name|safe}}</h4>
+                          <br>
+                          {{ produto.description|safe }}
+                          <br><br>
+                          <strong>Valor Unitário: R${{ produto.value|safe }}</strong>
+                          <br/>
+                          <h4>Quantidade: {{ produto.quantity|safe }}</h4>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            {% endfor%}
+        </tbody>
+    </table>
+ </div>
+{% endblock %}

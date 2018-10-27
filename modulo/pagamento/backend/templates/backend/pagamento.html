@@ -27,6 +27,7 @@
             <div class="col-12">
                 <p>Seja bem-vindo {{pagamento.cliente.nome}}</p>
                 <p>O valor total da sua compra é R${{valor_total|floatformat:2}}</p>
+                <p>O seu score é {{score}}</p>
             </div>
         </div>
         <br/>
@@ -35,9 +36,17 @@
             <div class="col-12">
                 <h3>Opções de Pagamento</h3>
             </div>
+            <select id="id_opcao_pagamento" class="form-control">
+              <option value="0">Débito</option>
+              {% if score > 400 %}
+              <option value="1">Cŕedito</option>
+              {% endif %}
+              <option value="-1">Boleto</option>
+            </select>
         </div>
         <br/>
 
+      <div id="form_cartao_credito">
         <div class="row box_op_pagamento">
             <div class="col-md-6">
                 <h4>Cartão de Crédito</h4>
@@ -50,7 +59,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-6">
                 <p style="color:DarkTurquoise">Adicione um Cartão</p>
@@ -69,6 +77,12 @@
                             {{form_cartao.nome_cartao.label}}
                             <br/> {{form_cartao.nome_cartao}}
                         </div>
+
+                        <div style="margin: 5px; display:inline-block;">
+                            {{form_cartao.cpf.label}}
+                            <br/> {{form_cartao.cpf}}
+                        </div>
+
                         <div style="margin: 5px; display:inline-block;">
                             {{form_cartao.numero_cartao.label}}
                             <br/> {{form_cartao.numero_cartao}}
@@ -83,20 +97,179 @@
                             <br/> {{form_cartao.data_vencimento_cartao}}
                         </div>
 
+                        <div id="parcelas">
+                          <div style="margin: 5px; display:inline-block;">
+                              {{form_cartao.num_parcelas.label}}
+                              <br/> {{form_cartao.num_parcelas}}
+                          </div>
+                        </div>
 
+                        <input hidden name="cnpj" value="12345678992735" />
                         <input hidden name="pk_pagamento" value="{{pagamento.pk}}" />
-                        <input hidden name="tipo_pagamento" value="1" />
+                        <input hidden name="credito" value="1" />
+                        <input hidden name="valor_total" value="{{valor_total|floatformat:2}}" />
+
 
                         <div style="margin: 5px; display:inline-block;">
                           <br/>
-                          <button type="submit"  style="width:100px; height:40px; " class="btn  btn-sm btn-warning">
+                          <button type="submit" style="width:100px; height:40px; " class="btn  btn-sm btn-warning">
                               <i class="fa fa-credit-card"></i> Pagar</button>
                         </div>
-
                     </div>
                 </div>
             </div>
         </form>
+      </div>
+        <!-- Cartão de Débito  -->
+        <div id="form_cartao_debito">
+          <div class="row box_op_pagamento">
+              <div class="col-md-6">
+                  <h4>Cartão de Débito</h4>
+              </div>
+              <div class="col-md-6">
+                  <div style="float: right; display: inline; height: 100%;">
+                      <img src="{% static "backend/icon_cyndello.jpeg" %}" class="bandeira" />
+                      <img src="{% static "backend/icon_master_card.png" %}" class="bandeira" />
+                      <img src="{% static "backend/icon_visa.png" %}" class="bandeira" />
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6">
+                  <p style="color:DarkTurquoise">Adicione um Cartão</p>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <p>Insira as informações do seu cartão:</p>
+              </div>
+          </div>
+          <form action="/pagamento_cartao/" method="POST" autocomplete="off">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="input-group">
+                          <div style="margin: 5px; display:inline-block;">
+                              {{form_cartao.nome_cartao.label}}
+                              <br/> {{form_cartao.nome_cartao}}
+                          </div>
+
+
+                          <div style="margin: 5px; display:inline-block;">
+                              {{form_cartao.cpf.label}}
+                              <br/> {{form_cartao.cpf}}
+                          </div>
+
+                          <div style="margin: 5px; display:inline-block;">
+                              {{form_cartao.numero_cartao.label}}
+                              <br/> {{form_cartao.numero_cartao}}
+                          </div>
+                          <div style="margin: 5px; display:inline-block;">
+                                  {{form_cartao.cvv.label}}
+                                  <br/> {{form_cartao.cvv}}
+                          </div>
+
+                          <div style="margin: 5px; display:inline-block;">
+                              {{form_cartao.data_vencimento_cartao.label}}
+                              <br/> {{form_cartao.data_vencimento_cartao}}
+                          </div>
+
+
+                          <input hidden name="cnpj" value="12345678992735" />
+                          <input hidden name="pk_pagamento" value="{{pagamento.pk}}" />
+                          <input hidden name="num_parcelas" value="1" />
+                          <input hidden name="credito" value="0" />
+                          <input hidden name="valor_total" value="{{valor_total|floatformat:2}}" />
+
+
+                          <div style="margin: 5px; display:inline-block;">
+                            <br/>
+                            <button type="submit" style="width:100px; height:40px; " class="btn  btn-sm btn-warning">
+                                <i class="fa fa-credit-card"></i> Pagar</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </form>
+        </div>
+      </br></br>
+      <form action="/pagamento_boleto/" method="POST" autocomplete="off" id="form_cartao_boleto">
+        <div>
+          <div class="row box_op_pagamento">
+              <div class="col-md-6">
+                  <h4>Boleto</h4>
+              </div>
+              <div class="col-md-6">
+                  <div style="float: right; display: inline; height: 100%;">
+                      <img src="{% static "backend/boleto.jpg" %}" class="bandeira" />
+                  </div>
+              </div>
+          </div>
+          <div class="row box_op_pagamento">
+            <div class="col-md-6">
+              <label>Insira seu CPF:</label>
+              <input name="cpf" class="form-control" maxlength="11" placeholder="Apenas números" type="text" required/>
+            </div>
+
+
+          <input hidden name="cnpj" value="12345678992735" />
+          <input hidden name="pk_pagamento" value="{{pagamento.pk}}" />
+          <input hidden name="credito" value="-1" />
+          <input hidden name="valor_total" value="{{valor_total|floatformat:2}}" />
+
+
+          <div style="margin: 5px; display:inline-block;">
+            <br/>
+            <button type="submit" style="width:150px; height:40px; " class="btn  btn-sm btn-warning">
+                <i class="fa fa-credit-card"></i> Gerar Boleto</button>
+          </div>
+        </div>
+        </div>
+      </form>
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+$( document ).ready(function() {
+  $('#form_cartao_credito').hide();
+  $('#form_cartao_debito').show();
+  $('#form_cartao_boleto').hide();
+});
+
+  // Função que mostra ou esconde o número de parcelas de acordo com a opção de pagamento
+  $('#id_opcao_pagamento').change(function () {
+    opcao = $("#id_opcao_pagamento").val()
+    if (opcao == 1) {
+      $('#form_cartao_credito').show();
+      $('#form_cartao_debito').hide();
+      $('#form_cartao_boleto').hide();
+    }
+    else if(opcao == 0) {
+      $('#form_cartao_credito').hide();
+      $('#form_cartao_debito').show();
+      $('#form_cartao_boleto').hide();
+
+      // $('#parcelas').hide();
+    }
+    else {
+      $('#form_cartao_credito').hide();
+      $('#form_cartao_debito').hide();
+      $('#form_cartao_boleto').show();
+    }
+})
+
+
+  function pagamento_cartao() {
+    $form = $('#form_cartao');
+
+    $form.append('<input hidden name="cnpj" value="12345678992735" />');
+    $form.append('<input hidden name="pk_pagamento" value="{{pagamento.pk}}" />');
+    $form.append('<input hidden name="valor_total" value="{{valor_total|floatformat:2}}" />');
+    $form.submit();
+  }
+
+</script>
+
 
 {% endblock %}
