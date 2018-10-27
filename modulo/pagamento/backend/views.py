@@ -1123,18 +1123,21 @@ def adciona_carrinho(request):
     except:
         return dados_cliente(request)
 
-    try:
-        produto = Produtos.objects.get(id_produto=id_produto)
-        produto_no_carrinho = Produtos_no_Carrinho()
-        produto_no_carrinho.produto = produto
-        produto_no_carrinho.quantidade = 1
-        produto_no_carrinho.valor_unitario = -1
-        produto_no_carrinho.carrinho = usuario.carrinho
-        produto_no_carrinho.save()
-    except:
-        produto = Produtos()
-        produto.id_produto = id_produto
-        produto.save()
+    flag = True
+    for produto_no_carrinho_obj in usuario.carrinho.produtos_no_carrinho_set.all():
+        if produto_no_carrinho_obj.produto.id_produto == id_produto:
+            produto_no_carrinho_obj.quantidade += 1
+            produto_no_carrinho_obj.save()
+            flag = False
+
+    if flag:
+        try:
+            produto = Produtos.objects.get(id_produto=id_produto)
+        except:
+            produto = Produtos()
+            produto.id_produto = id_produto
+            produto.save()
+
         produto_no_carrinho = Produtos_no_Carrinho()
         produto_no_carrinho.produto = produto
         produto_no_carrinho.quantidade = 1
