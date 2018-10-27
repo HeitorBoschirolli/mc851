@@ -9,13 +9,13 @@
   <div class="container">
 
     <ul class="nav nav-tabs" style="padding-top:50px !important ;">
-        <li class="nav-item"><a class="nav-link" href="#aaa" data-toggle="tab">Dados Cadastrais</a></li>
-        <li class="nav-item"><a class="nav-link" href="#bbb" data-toggle="tab">Dados de Endereço</a></li>
-        <li class="nav-item"><a class="nav-link" href="#ccc" data-toggle="tab">Histórico de Compras</a></li>
+        <li class="nav-item"><a class="nav-link" href="#dados_cadastrais" data-toggle="tab">Dados Cadastrais</a></li>
+        <li class="nav-item"><a class="nav-link" href="#dados_de_endereco" data-toggle="tab">Dados de Endereço</a></li>
+        <li class="nav-item"><a class="nav-link" href="#historico_de_compras" data-toggle="tab">Histórico de Compras</a></li>
     </ul>
 
     <div class="tab-content" id="tabs">
-      <div class="tab-pane" id="aaa">
+      <div class="tab-pane" id="dados_cadastrais">
         <div class="py-5 text-center" style="padding-top:0px !important;">
           <img class="d-block mx-auto mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
           <h1>Dados do Cliente</h1>
@@ -59,9 +59,55 @@
         </div>
       </div>
 
-      <div class="tab-pane" id="bbb">...Content2...</div>
+      <div class="tab-pane" id="dados_de_endereco">
+        <br>
+        {% for endereco in enderecos %}
 
-      <div class="tab-pane" id="ccc">...Content3...</div>
+          <div class="card border-primary col-md-12">
+            <div class="card-body">
+              <h2 class="card-title">{{endereco.rua}}</h2>
+              <p class="card-text"><strong>Estado: </strong>{{endereco.estado}}</p>
+              <p class="card-text"><strong>Cidade: </strong>{{endereco.cidade}}</p>
+              <p class="card-text"><strong>Bairro: </strong>{{endereco.bairro}}</p>
+              <p class="card-text"><strong>Rua: </strong>{{endereco.rua}}</p>
+              <p class="card-text"><strong>CEP: </strong>{{endereco.cep}}</p>
+              <p class="card-text"><strong>Número: </strong>{{endereco.numeroCasa}}</p>
+              <p class="card-text"><strong>Complemento: </strong>{{endereco.complemento}}</p>
+              <p class="card-text"><strong>Referência: </strong>{{endereco.referencia}}</p>
+            </div>
+          </div>
+          <br>
+        {% endfor %}
+      </div>
+
+      <div class="tab-pane" id="historico_de_compras">
+        <br>
+        {% for pedido in lista_pedidos %}
+
+          <div class="card border-primary col-md-12">
+            <div class="card-body">
+
+              <h2 class="card-title">{{pedido.data}}</h2>
+
+              {% for produto in pedido.produtos %}
+
+                <hr class="border-primary">
+
+                <p class="card-text"><strong>Nome: </strong>{{produto.name}}</p>
+                <p class="card-text"><strong>Descrição: </strong>{{produto.description}}</p>
+                <p class="card-text"><strong>Quantidade: </strong>{{produto.quantity}}</p>
+                <p class="card-text"><strong>Valor: </strong>{{produto.value}}</p>
+
+              {% endfor %}
+
+              <hr class="border-primary">
+              <p class="card-text"><strong>Valor Total: </strong>{{pedido.total_carrinho}}</p>
+
+            </div>
+          </div>
+          <br>
+        {% endfor %}
+      </div>
 
     </div>
   </div>
@@ -82,7 +128,7 @@
   <script type="text/javascript">
 
     $(document).ready(function() {
-      activaTab('aaa');
+      activaTab('dados_cadastrais');
     });
 
     function activaTab(tab){
