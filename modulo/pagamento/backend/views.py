@@ -11,6 +11,7 @@ import json
 import base64
 from model_forms import *
 import random
+import ast
 
 url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
@@ -348,16 +349,29 @@ def minha_conta(request):
 
     try:
         serializade_data = urllib2.urlopen(request2).read()
-        resposta = json.loads(serializade_data)
+        resposta_dados = json.loads(serializade_data)
     except Exception as e:
         return JsonResponse({'error': e})
 
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/users/'
+    url = url + str(usuario.cpf) + "/addresses"
+
+    request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta_enderecos = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e})
+
+    print (resposta_enderecos)
 
     context = {
-        "email": resposta['email'],
-        "nome": resposta['nome'],
-        "dataDeNascimento": resposta['dataDeNascimento'],
-        "telefone": resposta['telefone'],
+        "email": resposta_dados['email'],
+        "nome": resposta_dados['nome'],
+        "dataDeNascimento": resposta_dados['dataDeNascimento'],
+        "telefone": resposta_dados['telefone'],
+        "enderecos": resposta_enderecos,
     }
 
     return render(
@@ -449,7 +463,7 @@ def cadastra_endereco (request):
     endereco = DadosEndereco(data=request.POST)
 
     # url = url + endereco['cep'].value()
-    # 
+    #
     # request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
     #
     # try:
@@ -506,6 +520,49 @@ def cadastra_endereco (request):
         return JsonResponse({'error': e})
 
 
+def apagar_conta (request):
+
+    # Passa o forms como contexto para ser utilizado para obtencao de dados no html
+    context = {
+        "senha_incorreta": False,
+    }
+    return render (request=request, context=context, template_name="backend/excluir_usuario.html")
+
+
+def remover_usuario(request):
+
+    senha = request.POST.get("senha")
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/delete'
+
+    data = {
+        "tokenSessao": str(usuario.sessionToken),
+        "email": str(usuario.email),
+        "senha": senha,
+    }
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+        if "Conta" in resposta['message']:
+            usuario.delete()
+            return logout(request)
+        else:
+            context = {
+                "senha_incorreta": True,
+            }
+            return render (request=request, context=context, template_name="backend/excluir_usuario.html")
+    except Exception as e:
+        return JsonResponse({'error': e})
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''

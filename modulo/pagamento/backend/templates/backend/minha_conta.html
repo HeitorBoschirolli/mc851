@@ -82,12 +82,13 @@
                                                 <p>{{dataDeNascimento}}</p>
                                             </div>
                                         </div>
+                                        {% for endereco in enderecos %}
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label><strong>Estado</strong></label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>{{estado}}</p>
+                                                <p>{{endereco.estado}}</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -95,7 +96,7 @@
                                                 <label><strong>Cidade</strong></label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>{{cidade}}</p>
+                                                <p>{{endereco.cidade}}</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -103,7 +104,15 @@
                                                 <label><strong>Bairro</strong></label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>{{bairro}}</p>
+                                                <p>{{endereco.bairro}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><strong>CEP</strong></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{endereco.cep}}</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -111,7 +120,7 @@
                                                 <label><strong>Rua</strong></label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>{{rua}}</p>
+                                                <p>{{endereco.rua}}</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -119,9 +128,19 @@
                                                 <label><strong>Número</strong></label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>{{numero}}</p>
+                                                <p>{{endereco.numeroCasa}}</p>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label><strong>Complemento</strong></label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{endereco.complemento}}</p>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        {% endfor %}
                             </div>
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                         <div class="row">
@@ -179,4 +198,5 @@
         <a href="/insere_endereco">Insere Endereço</a>
         <a href="/alterar_dados_cadastrais">Alterar Dados Cadastrais</a>
         <a href="/meus_pedidos">Meus Pedidos</a>
+        <a href="/apagar_conta">Apagar minha Conta</a>
 {% endblock %}
