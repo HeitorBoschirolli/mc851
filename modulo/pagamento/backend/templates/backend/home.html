@@ -53,13 +53,13 @@
             <form action="/adciona_carrinho/" method="POST">
                 <input hidden value="{{produtos.0.id}}" name="id_produto" id="id_produto">
                  <div class="text-center">
+                  {% if produtos.0.quantityInStock == 0 %}
+                  <b style="red">Produto Indisponível</b>
+                  {% else %}
                   <button type="submit" class="btn btn-warning" style="margin-bottom:1px">
                     <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
                   </button>
                   <br><br>
-                  {% if produtos.0.quantityInStock == 0 %}
-                  <b style="red">Produto Indisponível</b>
-                  {% else %}
                   <p>Quantidade Estoque: {{produtos.0.quantityInStock}}</p>
                   {% endif %}
                 </div>
@@ -81,13 +81,13 @@
             <form action="/adciona_carrinho/" method="POST">
                 <input hidden value="{{produtos.1.id}}" name="id_produto" id="id_produto">
                  <div class="text-center">
+                  {% if produtos.1.quantityInStock == 0 %}
+                  <b style="red">Produto Indisponível</b>
+                  {% else %}
                   <button type="submit" class="btn btn-warning" style="margin-bottom:1px">
                     <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
                   </button>
                   <br><br>
-                  {% if produtos.1.quantityInStock == 0 %}
-                  <b style="red">Produto Indisponível</b>
-                  {% else %}
                   <p>Quantidade Estoque: {{produtos.1.quantityInStock}}</p>
                   {%endif%}
                 </div>
@@ -111,13 +111,13 @@
             <form action="/adciona_carrinho/" method="POST">
                 <input hidden value="{{produtos.2.id}}" name="id_produto" id="id_produto">
                  <div class="text-center">
+                  {% if produtos.2.quantityInStock == 0 %}
+                  <b style="red">Produto Indisponível</b>
+                  {% else %}
                   <button type="submit" class="btn btn-warning"style="margin-bottom:1px">
                     <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
                   </button>
                   <br><br>
-                  {% if produtos.2.quantityInStock == 0 %}
-                  <b style="red">Produto Indisponível</b>
-                  {% else %}
                   <p>Quantidade Estoque: {{produtos.2.quantityInStock}}</p>
                   {% endif %}
                 </div>

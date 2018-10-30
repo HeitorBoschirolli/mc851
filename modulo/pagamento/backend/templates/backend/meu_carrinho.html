@@ -92,7 +92,7 @@ margin: -50px 0px 0px -50px;
 
                 <td>
                   <form style="margin: 15px;" action="/meu_carrinho/">
-                    <h6>Quantidade({{produto.quantityInStock}}):</h6>
+                    <h6>Quantidade({{produto.quantityInStock|add:produto.quantidade_carrinho}}):</h6>
                     <input type="number" id="{{produto.id}}" name="quantity" class="unidades" min="0" max="100" step="1" value="{{produto.quantidade_carrinho}}"
                                                           onclick="atualiza_quantidade(this)">
                   </form>
@@ -147,6 +147,8 @@ margin: -50px 0px 0px -50px;
     qnt_estoque = $('.quantidade_estoque');
     unidades = $('.unidades');
     for(i = 0; i < quantidade; i++) {
+      console.log(qnt_estoque[i].value);
+      console.log(unidades[i].value);
       if (parseInt(qnt_estoque[i].value) < parseInt(unidades[i].value)) {
         unidades[i].value = qnt_estoque[i].value
         alert("Limite Excedido")
