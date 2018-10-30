@@ -34,7 +34,7 @@ def home(request):
     if len(all_products) >= 3:
         #Pega o tamanho da lista de produtos
         tam = len(all_products)
-        index = random.sample(range(1, tam), 3)
+        index = random.sample(range(0, tam), 3)
         produtos.append(all_products[index[0]])
         produtos.append(all_products[index[1]])
         produtos.append(all_products[index[2]])
