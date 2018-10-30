@@ -1108,7 +1108,7 @@ def meu_carrinho(request):
     valor_frete = get_valor_frete()
     usuario.carrinho.total_frete = valor_frete['valor']
     usuario.carrinho.save()
-
+    # import pdb;pdb.set_trace()
     context = {
         'produtos': produtos,
         'valor_frete': valor_frete
