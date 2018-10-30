@@ -16,27 +16,36 @@
 <table id="tabela_produtos" class="" style="width:100%">
       <tbody>
         {% for produto in produtos %}
-          <tr style="border-bottom: 1px solid black;">
-              <td >
-                <img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src={{ produto.images.0.url }} alt="Imagem de eletrodomésticos" />
-              </td>
-              <td>
-                <h4>{{ produto.name|safe }}</h4>
-                <br>
-                {{ produto.description|safe }}
-                <br><br>
-                <strong>R${{ produto.value|safe }}</strong>
-              </td>
+          {% if produto.availableToSell %}
+            <tr style="border-bottom: 1px solid black;">
+                <td >
+                  <img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src={{ produto.images.0.url }} alt="Imagem de eletrodomésticos" />
+                </td>
+                <td>
+                  <h4>{{ produto.name|safe }}</h4>
+                  <br>
+                  {{ produto.description|safe }}
+                  <br><br>
+                  {% if produto.onSale %}
+                  <small style="text-decoration: line-through;">R${{ produto.value|safe }}</small></br>
+                  <strong>R${{ produto.promotionalValue|safe }}</strong>
+                  {% else %}
+                    <strong>R${{ produto.value|safe }}</strong>
+                  {% endif %}
+                </td>
 
-              <td>
-                <form action="/adciona_carrinho/" method="POST">
-                  <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
-                  <button type="submit" class="btn btn-warning">
-                      <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
-                  </button>
-                </form>
-              </td>
-          </tr>
+                <td>
+                  <form action="/adciona_carrinho/" method="POST">
+                    <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
+                    <button type="submit" class="btn btn-warning">
+                        <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
+                    </button>
+                    <br><br>
+                    <p>Quantidade Estoque: {{produto.quantityInStock}}</p>
+                  </form>
+                </td>
+            </tr>
+            {% endif %}
           {% endfor%}
       </tbody>
   </table>
