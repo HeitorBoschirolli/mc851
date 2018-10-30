@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^meus_pedidos', views.meus_pedidos, name='meus_pedidos'),
     # URL para atualizar o meu carrinho no banco de dados
     url(r'^altera_quantidade', views.altera_quantidade, name='meus_pedidos'),
+
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
     #---------------------------------------------------------------------------------------------------------#

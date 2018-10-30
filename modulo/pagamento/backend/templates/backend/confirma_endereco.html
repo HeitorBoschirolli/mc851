@@ -20,7 +20,21 @@
         inicio: {{inicio}} <br/>
         fim: {{fim}} <br/>
         <a href="endereco_cliente" class="btn btn-primary"> Voltar </a>
-        <a href="dados_cliente" class="btn btn-primary"> Avançar </a>
+
+         <form action="/adciona_carrinho/" method="POST">
+             <input hidden value={{bairro}} name="bairro" id="bairro">
+             <input hidden value={{cidade}} name="cidade" id="cidade">
+             <input hidden value={{inicio}} name="inicio" id="inicio">
+             <input hidden value={{logradouro}} name="logradouro" id="logradouro">
+             <input hidden value={{longitude}} name="longitude" id="longitude">
+             <input hidden value={{cep}} name="cep" id="cep">
+             <input hidden value={{latitude}} name="latitude" id="latitude">
+             <input hidden value={{estado}} name="estado" id="estado">
+             <input hidden value={{fim}} name="fim" id="fim">
+             <button type="submit" class="btn btn-warning">
+                Avançar
+             </button>
+         </form>
     </div>
 
 {% endblock %}

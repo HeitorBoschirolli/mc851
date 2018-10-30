@@ -146,16 +146,28 @@ def cadastra_cliente(request):
 
     url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/register'
 
+    #Informacoes do cliente
+    email = request.POST.get('email')
+    senha = request.POST.get('senha')
+    cpf = request.POST.get('cpf')
+    nome = request.POST.get('nome')
+    dataDeNascimento = request.POST.get('data_nascimento')
+    telefone = request.POST.get('telefone')
+    cep = request.POST.get('cep')
+    complemento = request.POST.get('complemento')
+    num_casa = request.POST.get('num_casa')
+
     data = {
-        "email": form_cliente['email'].value(),
-        "senha": form_cliente['senha'].value(),
-        "cpf": form_cliente['cpf'].value(),
-        "nome": form_cliente['nome_cliente'].value(),
-        "dataDeNascimento": form_cliente['data_nascimento'].value(),
-        "telefone": form_cliente['telefone'].value(),
+        "email": email,
+        "senha": senha,
+        "cpf": cpf,
+        "nome": nome,
+        "dataDeNascimento": dataDeNascimento,
+        "telefone": telefone,
         "idGrupo": 5
     }
 
+    #Verifica se o email ja esta cadastrado no banco do site
     filtro = Usuario.objects.filter(email=data['email'])
     if (filtro.count() > 0):
         cliente = DadosCliente()
@@ -165,10 +177,7 @@ def cadastra_cliente(request):
             'cadastro': True,
         }
 
-        return render(
-            request=request,
-            template_name='backend/cadastro_cliente.html',
-            context=context
+        return render(request=request,template_name='backend/cadastro_cliente.html',context=context
         )
 
     data = json.dumps(data)
@@ -179,10 +188,7 @@ def cadastra_cliente(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        context = {
-            'registerToken': resposta['registerToken'],
-        }
-
+        #Cadastra o cliente no banco de dados do site
         usuario = Usuario()
         usuario.email = str(form_cliente['email'].value())
         usuario.cpf = str(form_cliente['cpf'].value())
@@ -192,12 +198,88 @@ def cadastra_cliente(request):
         usuario.carrinho = carrinho
         usuario.save()
 
-        # return render(
-        #     request=request,
-        #     template_name='backend/confirma_cadastro.html',
-        #     context=context
-        # )
-        return confirma_cadastro(request)
+        #Confirma cadastro do cliente
+
+        # Url da api de clientes para confirmar o cadastramento do usuario
+        url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/confirm'
+
+        # Monta o JSON com o registerToken para que a API de clientes confirme o cadastramento do usuario
+        data = { 'registerToken': resposta['registerToken'] }
+        data = json.dumps(data)
+
+        request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+        try:
+            serializade_data = urllib2.urlopen(request2).read()
+            resposta = json.loads(serializade_data)
+
+            #Realiza o login do cliente para cadastrar o endereco
+
+            url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/login'
+
+            data = {"email": email, "senha": senha}
+
+            data = json.dumps(data)
+
+            request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+            serializade_data = urllib2.urlopen(request2).read()
+            resposta = json.loads(serializade_data)
+            tokenSessao = resposta['sessionToken']
+
+            #Pega o endereco na API de enderecos
+
+            # URL com o endereco da api para fazer a requisicao
+            url = 'http://wsendereco.tk/api/enderecos/cep/' + str(cep)
+
+            request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
+
+            try:
+
+                serializade_data = urllib2.urlopen(request2).read()
+                resposta = json.loads(serializade_data)
+
+                #Cadastra o endereco na api de clientes
+                url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/addresses/'
+                url = url + str(cpf) + '/add'
+
+                data = {
+                    'tokenSessao': tokenSessao,
+                    'bairro': resposta['Endereco'][0]['bairro'],
+                    'cidade': resposta['Endereco'][0]['cidade'],
+                    'rua': resposta['Endereco'][0]['logradouro'],
+                    'cep': resposta['Endereco'][0]['cep'],
+                    'estado': resposta['Endereco'][0]['estado'],
+                    'numeroCasa': num_casa,
+                    'complemento': complemento
+                }
+
+                data = json.dumps(data)
+
+                request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+                try:
+                    serializade_data = urllib2.urlopen(request2).read()
+                    resposta = json.loads(serializade_data)
+
+                    return render(request=request, template_name='backend/cadastro_cliente_confirmado.html')
+
+                except Exception as e:
+                    return JsonResponse({'error': e})
+
+
+            except:
+                endereco = DadosEndereco()
+                context = {
+                    'endereco': endereco,
+                    'cep_failed': True
+                }
+                return render(request,template_name="backend/endereco_cep.html",context=context)
+
+        except Exception as e:
+
+            return JsonResponse({'error': e})
+
 
     except:
         cliente = DadosCliente()
@@ -207,11 +289,8 @@ def cadastra_cliente(request):
             'cadastro': False,
         }
 
-        return render(
-            request=request,
-            template_name='backend/cadastro_cliente.html',
-            context=context
-        )
+        return render(request=request,template_name='backend/cadastro_cliente.html',context=context)
+
 # Confirma o cadastro de um cliente
 def confirma_cadastro(request):
 
@@ -238,10 +317,12 @@ def confirma_cadastro(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return render(
-            request=request,
-            template_name='backend/cadastro_cliente_confirmado.html'
-        )
+        # return render(
+        #     request=request,
+        #     template_name='backend/cadastro_cliente_confirmado.html'
+        # )
+
+        return endereco_cliente(request)
 
     except Exception as e:
 
