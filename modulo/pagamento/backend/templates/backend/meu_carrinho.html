@@ -4,6 +4,53 @@
 <title>Meu Carrinho</title>
 {% endblock %}
 
+{% block style %}
+<style>
+
+.loading-gif {
+position: absolute;
+top: 50%;
+left: 50%;
+margin: -50px 0px 0px -50px;
+}
+
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  z-index:1002;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.overlay {
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color:#fff;
+    opacity:0.8;
+    z-index:1001;
+}
+</style>
+
+{% endblock %}
+
 {% block content %}
 {% load staticfiles %}
 <!-- Main jumbotron for a primary marketing message or call to action -->
@@ -26,7 +73,13 @@
                   <br>
                   {{ produto.description|safe }}
                   <br><br>
-                  <strong>R$<span class="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong>
+                  {% if produto.onSale %}
+                    <small style="text-decoration: line-through;">R${{ produto.value|safe }}</small></br>
+                    <strong>R$<span class="valor_unitario">{{ produto.promotionalValue|safe }}</span></strong>
+                  {% else %}
+                    <strong>R$<span class="valor_unitario">{{ produto.value|safe }}</strong>
+                  {% endif %}
+                  <!-- <strong>R$<span class="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong> -->
                   <input hidden value="slafj" class="lksdfj"> <br/>
                   <form action="/remove_carrinho/" method="POST">
                     <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
@@ -39,10 +92,11 @@
 
                 <td>
                   <form style="margin: 15px;" action="/meu_carrinho/">
-                    Quantidade:
+                    <h6>Quantidade({{produto.quantityInStock|add:produto.quantidade_carrinho}}):</h6>
                     <input type="number" id="{{produto.id}}" name="quantity" class="unidades" min="0" max="100" step="1" value="{{produto.quantidade_carrinho}}"
-                                                          onkeypress="atualiza_quantidade(this)" onclick="atualiza_quantidade(this)">
+                                                          onclick="atualiza_quantidade(this)">
                   </form>
+
                 </td>
                 <td>
                   <strong>Valor total</strong>
@@ -72,6 +126,8 @@
      <br/>
   </form>
 </div>
+<div class="loader loading-gif" style="display: none" id="id_loader"></div>
+<div class="overlay" style="display: none"></div>
 {% endblock %}
 
 {% block scripts %}
@@ -91,6 +147,8 @@
     qnt_estoque = $('.quantidade_estoque');
     unidades = $('.unidades');
     for(i = 0; i < quantidade; i++) {
+      console.log(qnt_estoque[i].value);
+      console.log(unidades[i].value);
       if (parseInt(qnt_estoque[i].value) < parseInt(unidades[i].value)) {
         unidades[i].value = qnt_estoque[i].value
         alert("Limite Excedido")
@@ -98,10 +156,14 @@
     }
     atualiza_banco(element);
     atualiza_valor();
+
   }
 
   function atualiza_banco(element) {
     // Envia atualização para p BD
+    $('#id_loader').css('display', 'block');
+    $(".unidades").prop( "disabled", true );
+    $(".overlay, .overlay-message").css('display', 'block');
     $.ajax({
         url: '/altera_quantidade/',
         method: 'POST',
@@ -111,7 +173,10 @@
         },
         dataType: 'json',
         success: function (data) {
-          console.log("Quantidade atualizada no BD")
+          console.log("Quantidade atualizada no BD");
+          $('#id_loader').css('display', 'none')
+          $(".unidades").prop( "disabled", false );
+          $(".overlay, .overlay-message").css('display', 'none')
         }
       });
   }
@@ -121,10 +186,10 @@
     quantidade = $('.produto').length;
     valor = $('.valor_unitario');
     unidades = $('.unidades');
-    valor_total = $('.valor_total')
+    valor_total = $('.valor_total');
     for(i = 0; i < quantidade; i++) {
         valor_total_produto = parseFloat(valor[i].innerHTML)*unidades[i].value;
-        valor_total[i].textContent = valor_total_produto.toFixed(2)
+        valor_total[i].textContent = valor_total_produto.toFixed(2);
     }
     atualiza_valor_total();
   }

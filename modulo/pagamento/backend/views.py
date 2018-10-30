@@ -19,19 +19,40 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 def home(request):
 
     #Pega todos os produtos da lista de produtos
-    all_products = get_produtos(request)
-
-    #Pega o tamanho da lista de produtos
-    tam = len(all_products)
-
-    #Seleciona tres produtos que nao sejam repetidos
-    index = random.sample(range(1, tam), 3)
+    save_all_products = get_produtos(request)
+    all_products = save_all_products
+    new_produtos = []
+    for produto in all_products:
+        if produto['onSale']:
+            new_produtos.append(produto)
+    all_products = new_produtos
 
     #Armazena as listas de produtos que serao mostrados na home
     produtos = []
-    produtos.append(all_products[index[0]])
-    produtos.append(all_products[index[1]])
-    produtos.append(all_products[index[2]])
+
+    #Seleciona tres produtos que nao sejam repetidos
+    if len(all_products) >= 3:
+        #Pega o tamanho da lista de produtos
+        tam = len(all_products)
+        index = random.sample(range(0, tam), 3)
+        produtos.append(all_products[index[0]])
+        produtos.append(all_products[index[1]])
+        produtos.append(all_products[index[2]])
+    elif len(all_products) == 2:
+        produtos = all_products
+        produtos.append(all_products[0])
+    elif len(all_products) == 1:
+        produtos = all_products
+        produtos.append(all_products[0])
+        produtos.append(all_products[0])
+    else:
+        #Pega o tamanho da lista de produtos
+        tam = len(save_all_products)
+        index = random.sample(range(1, tam), 3)
+        produtos.append(save_all_products[index[0]])
+        produtos.append(save_all_products[index[1]])
+        produtos.append(save_all_products[index[2]])
+
 
     context = {
         'produtos': produtos
@@ -665,12 +686,6 @@ def get_produtos(request, pagina='0'):
 
         #Lista com os produtos retornados
         produtos = resposta['content']
-        new_produtos = []
-        for produto in produtos:
-            if produto['quantityInStock'] > 0:
-                new_produtos.append(produto)
-        produtos = new_produtos
-
 
         # Cria as categorias existentes dos produtos retornados e salva na session
         categorias_dict = {}
@@ -1081,6 +1096,7 @@ def meus_pedidos (request):
 
     for pedido in usuario.pedidos_set.all():
         dados_pedido = {}
+        dados_pedido['codigo_pedido'] = pedido.carrinho.id_pagamento
         dados_pedido['total_carrinho'] = (pedido.carrinho.total_carrinho)
         dados_pedido['total_frete'] = (pedido.carrinho.total_frete)
 
@@ -1095,7 +1111,7 @@ def meus_pedidos (request):
         except Exception as e:
             return HttpResponse ("Pk de um pedido não encontrado no módulo de pagamento")
 
-        dados_pedido['data'] = resposta['data_emissao_pedido']
+        dados_pedido['dados_pagamento'] = resposta
 
         produtos=[]
         for produto_no_carrinho in pedido.carrinho.produtos_no_carrinho_set.all():
@@ -1173,7 +1189,7 @@ def meu_carrinho(request):
     valor_frete = get_valor_frete()
     usuario.carrinho.total_frete = valor_frete['valor']
     usuario.carrinho.save()
-
+    # import pdb;pdb.set_trace()
     context = {
         'produtos': produtos,
         'valor_frete': valor_frete
