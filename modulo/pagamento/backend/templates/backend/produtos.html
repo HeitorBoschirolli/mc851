@@ -37,11 +37,15 @@
                 <td>
                   <form action="/adciona_carrinho/" method="POST">
                     <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
+                    {% if produto.quantityInStock == 0 %}
+                    <b style="red">Produto Indisponível</b>
+                    {% else %}
                     <button type="submit" class="btn btn-warning">
                         <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
                     </button>
                     <br><br>
                     <p>Quantidade Estoque: {{produto.quantityInStock}}</p>
+                    {% endif%}
                   </form>
                 </td>
             </tr>
