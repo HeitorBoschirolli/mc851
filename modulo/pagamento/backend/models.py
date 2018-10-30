@@ -3,6 +3,13 @@ from __future__ import unicode_literals
 from django.db import models
 
 # Create your models here.
+
+class Acesso_API (models.Model):
+    API = models.CharField(max_length=100)
+    id_API = models.CharField (max_length=500)
+    data_acesso = models.DateField ()
+
+
 class Produtos(models.Model):
     id_produto = models.CharField(max_length=100, default='-1')
 
@@ -22,6 +29,7 @@ class Usuario(models.Model):
     email = models.CharField(max_length=150)
     cpf = models.CharField(max_length=15)
     sessionToken = models.CharField(max_length=300)
+    admin = models.BooleanField(default=False)
     carrinho = models.OneToOneField(Carrinho, on_delete=models.CASCADE, null=True)
 
     def __str__ (self):
