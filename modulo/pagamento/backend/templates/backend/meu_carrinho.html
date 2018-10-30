@@ -75,9 +75,9 @@ margin: -50px 0px 0px -50px;
                   <br><br>
                   {% if produto.onSale %}
                     <small style="text-decoration: line-through;">R${{ produto.value|safe }}</small></br>
-                    <strong>R${{ produto.promotionalValue|safe }}</strong>
+                    <strong>R$<span class="valor_unitario">{{ produto.promotionalValue|safe }}</span></strong>
                   {% else %}
-                    <strong>R${{ produto.value|safe }}</strong>
+                    <strong>R$<span class="valor_unitario">{{ produto.value|safe }}</strong>
                   {% endif %}
                   <!-- <strong>R$<span class="valor_unitario" value="{{ produto.value|safe }}">{{ produto.value|safe }}</span></strong> -->
                   <input hidden value="slafj" class="lksdfj"> <br/>
@@ -94,7 +94,7 @@ margin: -50px 0px 0px -50px;
                   <form style="margin: 15px;" action="/meu_carrinho/">
                     <h6>Quantidade({{produto.quantityInStock}}):</h6>
                     <input type="number" id="{{produto.id}}" name="quantity" class="unidades" min="0" max="100" step="1" value="{{produto.quantidade_carrinho}}"
-                                                          onkeypress="atualiza_quantidade(this)" onclick="atualiza_quantidade(this)">
+                                                          onclick="atualiza_quantidade(this)">
                   </form>
 
                 </td>
@@ -137,13 +137,9 @@ margin: -50px 0px 0px -50px;
     $('#tabela_produtos').DataTable();
     atualiza_valor();
     atualiza_valor_total();
-    $('#id_loader').hide();
-    $(".overlay, .overlay-message").hide();
 } );
   atualiza_valor();
   atualiza_valor_total();
-  $('#id_loader').hide();
-  $(".overlay, .overlay-message").hide();
 
   // Atualiza quantidade (requisição AJAX para API de produtos)
   function atualiza_quantidade(element) {
@@ -159,7 +155,6 @@ margin: -50px 0px 0px -50px;
     atualiza_banco(element);
     atualiza_valor();
 
-    return false;
   }
 
   function atualiza_banco(element) {
@@ -189,10 +184,10 @@ margin: -50px 0px 0px -50px;
     quantidade = $('.produto').length;
     valor = $('.valor_unitario');
     unidades = $('.unidades');
-    valor_total = $('.valor_total')
+    valor_total = $('.valor_total');
     for(i = 0; i < quantidade; i++) {
         valor_total_produto = parseFloat(valor[i].innerHTML)*unidades[i].value;
-        valor_total[i].textContent = valor_total_produto.toFixed(2)
+        valor_total[i].textContent = valor_total_produto.toFixed(2);
     }
     atualiza_valor_total();
   }

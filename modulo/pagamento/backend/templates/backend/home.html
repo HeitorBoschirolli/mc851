@@ -57,7 +57,11 @@
                     <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
                   </button>
                   <br><br>
+                  {% if produtos.0.quantityInStock == 0 %}
+                  <b style="red">Produto Indisponível</b>
+                  {% else %}
                   <p>Quantidade Estoque: {{produtos.0.quantityInStock}}</p>
+                  {% endif %}
                 </div>
               </form>
           </div>
@@ -81,7 +85,11 @@
                     <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
                   </button>
                   <br><br>
+                  {% if produtos.1.quantityInStock == 0 %}
+                  <b style="red">Produto Indisponível</b>
+                  {% else %}
                   <p>Quantidade Estoque: {{produtos.1.quantityInStock}}</p>
+                  {%endif%}
                 </div>
               </form>
           </div>
@@ -107,7 +115,11 @@
                     <span class="fa fa-shopping-cart"></span> Adicionar no carrinho
                   </button>
                   <br><br>
+                  {% if produtos.2.quantityInStock == 0 %}
+                  <b style="red">Produto Indisponível</b>
+                  {% else %}
                   <p>Quantidade Estoque: {{produtos.2.quantityInStock}}</p>
+                  {% endif %}
                 </div>
               </form>
           </div>
