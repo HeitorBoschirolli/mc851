@@ -26,6 +26,18 @@ urlpatterns = [
     url(r'^meus_pedidos', views.meus_pedidos, name='meus_pedidos'),
     # URL para atualizar o meu carrinho no banco de dados
     url(r'^altera_quantidade', views.altera_quantidade, name='meus_pedidos'),
+    # URL para checar os acessos as API's
+    url(r'^acesso_apis', views.acesso_apis, name='acesso_apis'),
+    # URL para mostrar todos produtos para alteração
+    url(r'^mostra_todos_produtos', views.mostra_todos_produtos, name='mostra_todos_produtos'),
+    # URL para inserir dados do produto que será alterado
+    url(r'^altera_produto', views.altera_produto, name='altera_produto'),
+    # URL para alterar na API os dados do produto
+    url(r'^altera_dados_produto', views.altera_dados_produto, name='altera_dados_produto'),
+    # URL para mostar form para cadastrar produto
+    url(r'^cadastrar_produto', views.cadastrar_produto, name='cadastrar_produto'),
+    # URL para cadastrar o produto na api de fato
+    url(r'^cadastra_produto_api', views.cadastra_produto_api, name='cadastra_produto_api'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#

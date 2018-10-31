@@ -6,8 +6,11 @@ from django.db import models
 
 class Acesso_API (models.Model):
     API = models.CharField(max_length=100)
-    id_API = models.CharField (max_length=500)
     data_acesso = models.DateField ()
+    descricao = models.CharField (max_length=500, null=True)
+
+    def __str__ (self):
+        return str(self.API) + ": " + str(self.descricao) + " - " + str(self.data_acesso)
 
 
 class Produtos(models.Model):

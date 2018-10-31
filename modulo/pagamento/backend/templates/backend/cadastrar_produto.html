@@ -1,0 +1,110 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Cadastrar Produto</title>
+{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+
+    <div class="container col-md-4">
+        <h1 class="display-4 text-center">Cadastrar Produto</h1>
+        <p class="text-center">Insira os Seguintes dados para Cadastrar o produto</p>
+    </div>
+
+
+    <form action="/cadastra_produto_api" method="POST" autocomplete="off">
+    <div class="container-fluid col-md-4">
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="name">Nome</label>
+                  <input type="text" class="form-control" name="name" id="name" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="description">Descrição</label>
+                  <input type="text" class="form-control" name="description" id="description" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="weight">Peso (até 2 casas decimais)</label>
+                  <input type="number" step=".01" class="form-control" name="weight" id="weight" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="category">Categoria</label>
+                  <input type="text" class="form-control" name="category" id="category" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="type">Tipo</label>
+                  <input type="text" class="form-control" name="type" id="type"  required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="manufacturer">Fabricante</label>
+                  <input type="text" class="form-control" name="manufacturer" id="manufacturer" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="quantityInStock">Quantidade em Estoque</label>
+                  <input type="number" class="form-control" name="quantityInStock" id="quantityInStock" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="value">Valor</label>
+                  <input type="number" step=".01" class="form-control" name="value" id="value" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="promotionalValue">Valor Promocional</label>
+                  <input type="number" step=".01" class="form-control" name="promotionalValue" id="promotionalValue" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="availableToSell">Disponível para Venda (True ou False)</label>
+                  <input type="text" class="form-control" name="availableToSell" id="availableToSell" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="onSale">Promoção (True ou False)</label>
+                  <input type="text" class="form-control" name="onSale" id="onSale" required="">
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <label for="images">Link para Imagem</label>
+                  <input type="text" class="form-control" name="images" id="images" required="">
+              </div>
+          </div>
+
+            <div class="form-group row justify-content-md-center">
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}

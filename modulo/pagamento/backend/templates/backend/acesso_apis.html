@@ -1,0 +1,144 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Acesso a APIS</title>
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+
+    <ul class="nav nav-tabs" style="padding-top:50px !important ;">
+        <li class="nav-item"><a class="nav-link" href="#clientes" data-toggle="tab">Clientes</a></li>
+        <li class="nav-item"><a class="nav-link" href="#endereco" data-toggle="tab">Endereço</a></li>
+        <li class="nav-item"><a class="nav-link" href="#produtos" data-toggle="tab">Produtos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#pagamento" data-toggle="tab">Pagamento</a></li>
+        <li class="nav-item"><a class="nav-link" href="#logistica" data-toggle="tab">Logística</a></li>
+        <li class="nav-item"><a class="nav-link" href="#credito" data-toggle="tab">Crédito</a></li>
+    </ul>
+
+    <div class="tab-content" id="tabs">
+
+      <div class="tab-pane" id="clientes">
+          <br>
+          {% for cliente in clientes %}
+            <div class="card border-primary col-md-12">
+              <div class="card-body">
+                <p class="card-text"><strong>Data de Acesso: </strong>{{cliente.data_acesso}}</p>
+                <p class="card-text"><strong>Descrição: </strong>{{cliente.descricao}}</p>
+              </div>
+            </div>
+            <br>
+          {% endfor %}
+      </div>
+
+      <div class="tab-pane" id="endereco">
+          <br>
+          {% for endereco in enderecos %}
+            <div class="card border-primary col-md-12">
+              <div class="card-body">
+                <p class="card-text"><strong>Data de Acesso: </strong>{{endereco.data_acesso}}</p>
+                <p class="card-text"><strong>Descrição: </strong>{{endereco.descricao}}</p>
+              </div>
+            </div>
+            <br>
+          {% endfor %}
+      </div>
+
+      <div class="tab-pane" id="produtos">
+          <br>
+          {% for produto in produtos %}
+            <div class="card border-primary col-md-12">
+              <div class="card-body">
+                <p class="card-text"><strong>Data de Acesso: </strong>{{produto.data_acesso}}</p>
+                <p class="card-text"><strong>Descrição: </strong>{{produto.descricao}}</p>
+              </div>
+            </div>
+            <br>
+          {% endfor %}
+      </div>
+
+      <div class="tab-pane" id="pagamento">
+          <br>
+          {% for pagamento in pagamentos %}
+            <div class="card border-primary col-md-12">
+              <div class="card-body">
+                <p class="card-text"><strong>Data de Acesso: </strong>{{pagamento.data_acesso}}</p>
+                <p class="card-text"><strong>Descrição: </strong>{{pagamento.descricao}}</p>
+              </div>
+            </div>
+            <br>
+          {% endfor %}
+      </div>
+
+      <div class="tab-pane" id="logistica">
+          <br>
+          {% for logistica in logisticas %}
+            <div class="card border-primary col-md-12">
+              <div class="card-body">
+                <p class="card-text"><strong>Data de Acesso: </strong>{{logistica.data_acesso}}</p>
+                <p class="card-text"><strong>Descrição: </strong>{{logistica.descricao}}</p>
+              </div>
+            </div>
+            <br>
+          {% endfor %}
+      </div>
+
+      <div class="tab-pane" id="credito">
+          <br>
+          {% for credito in creditos %}
+            <div class="card border-primary col-md-12">
+              <div class="card-body">
+                <p class="card-text"><strong>Data de Acesso: </strong>{{credito.data_acesso}}</p>
+                <p class="card-text"><strong>Descrição: </strong>{{credito.descricao}}</p>
+              </div>
+            </div>
+            <br>
+          {% endfor %}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+  <script src="../../assets/js/vendor/popper.min.js"></script>
+  <script src="../../dist/js/bootstrap.min.js"></script>
+  <script src="../../assets/js/vendor/holder.min.js"></script>
+
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      activaTab('clientes');
+    });
+
+    function activaTab(tab){
+      $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+      // $('.nav-tabs a[href="#bbb"').tab('show');
+    };
+
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+      'use strict';
+
+      window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+          form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      }, false);
+    })();
+  </script>
+
+{% endblock %}

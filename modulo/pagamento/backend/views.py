@@ -2,6 +2,7 @@
 
 from django.shortcuts import render
 from datetime import *
+from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .models import *
@@ -102,6 +103,13 @@ def endereco_cep(request):
 
     try:
         # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "endereco"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Buscando Endereco Dado CEP"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -206,6 +214,13 @@ def cadastra_cliente(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Cadastro de Cliente"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -231,6 +246,13 @@ def cadastra_cliente(request):
         request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
         try:
+
+            acesso_api = Acesso_API()
+            acesso_api.API = "clientes"
+            acesso_api.data_acesso = timezone.now()
+            acesso_api.descricao = "Confirmando Cadastro"
+            acesso_api.save()
+
             serializade_data = urllib2.urlopen(request2).read()
             resposta = json.loads(serializade_data)
 
@@ -244,6 +266,12 @@ def cadastra_cliente(request):
 
             request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
+            acesso_api = Acesso_API()
+            acesso_api.API = "clientes"
+            acesso_api.data_acesso = timezone.now()
+            acesso_api.descricao = "Realizando Login"
+            acesso_api.save()
+
             serializade_data = urllib2.urlopen(request2).read()
             resposta = json.loads(serializade_data)
             tokenSessao = resposta['sessionToken']
@@ -256,6 +284,12 @@ def cadastra_cliente(request):
             request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
 
             try:
+
+                acesso_api = Acesso_API()
+                acesso_api.API = "endereco"
+                acesso_api.data_acesso = timezone.now()
+                acesso_api.descricao = "Buscando Endereco Dado CEP"
+                acesso_api.save()
 
                 serializade_data = urllib2.urlopen(request2).read()
                 resposta = json.loads(serializade_data)
@@ -280,6 +314,13 @@ def cadastra_cliente(request):
                 request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
                 try:
+
+                    acesso_api = Acesso_API()
+                    acesso_api.API = "clientes"
+                    acesso_api.data_acesso = timezone.now()
+                    acesso_api.descricao = "Cadastrando Endereco do Usuario"
+                    acesso_api.save()
+
                     serializade_data = urllib2.urlopen(request2).read()
                     resposta = json.loads(serializade_data)
 
@@ -335,6 +376,13 @@ def confirma_cadastro(request):
     )
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Confirmando Cadastro"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -390,6 +438,13 @@ def resultado_login(request):
     )
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Realizando Login"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -402,6 +457,10 @@ def resultado_login(request):
 
         usuario = Usuario.objects.get(email=str(form_cliente['email'].value()))
         usuario.sessionToken = resposta['sessionToken']
+        if usuario.admin:
+            request.session['admin'] = True
+        else:
+            request.session['admin'] = False
         usuario.save()
 
         return render(
@@ -426,6 +485,7 @@ def resultado_login(request):
 
 def logout(request):
     request.session['usuario'] = ''
+    request.session['admin'] = False
 
     return home(request)
 
@@ -450,6 +510,13 @@ def minha_conta(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Recupera Dados do Usuario"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta_dados = json.loads(serializade_data)
     except Exception as e:
@@ -461,6 +528,13 @@ def minha_conta(request):
     request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Recupera Enderecos do Usuario"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta_enderecos = json.loads(serializade_data)
     except Exception as e:
@@ -481,8 +555,6 @@ def minha_conta(request):
         "lista_pedidos": lista_pedidos,
         "form_cliente": form_cliente
     }
-
-    # import pdb; pdb.set_trace()
 
     return render(
         request=request,
@@ -523,6 +595,13 @@ def altera_dados (request):
     request2.get_method = lambda: 'PUT'
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Atualiza Dados do Usuario"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
         return minha_conta(request)
@@ -549,9 +628,6 @@ def insere_endereco(request):
 
 def cadastra_endereco (request):
 
-    import pdb
-    pdb.set_trace()
-
     try:
         usuario = Usuario.objects.get(email=request.session['usuario'])
     except:
@@ -561,12 +637,19 @@ def cadastra_endereco (request):
 
     endereco = DadosEndereco(data=request.POST)
 
-    # url = url + endereco['cep'].value()
-    #
-    # request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
-    #
+    url = url + endereco['cep'].value()
+
+    request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
+
     # try:
     #     # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
+    #
+    #     acesso_api = Acesso_API()
+    #     acesso_api.API = "endereco"
+    #     acesso_api.data_acesso = timezone.now()
+    #     acesso_api.descricao = "Buscando Endereco Dado CEP"
+    #     acesso_api.save()
+    #
     #     serializade_data = urllib2.urlopen(request2).read()
     #     resposta = json.loads(serializade_data)
     #
@@ -612,6 +695,13 @@ def cadastra_endereco (request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Cadastrando Endereco do Usuario"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
         return minha_conta(request)
@@ -650,6 +740,13 @@ def remover_usuario(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Excluindo Cliente"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
         if "Conta" in resposta['message']:
@@ -679,6 +776,11 @@ def get_produtos(request, pagina='0'):
     request2.add_header("Authorization", "Basic %s" % basic_auth)
 
     try:
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Buscando Todos Produtos"
+        acesso_api.save()
 
         # Realiza o request e obtem os dados retornados
         serializade_data = urllib2.urlopen(request2).read()
@@ -810,6 +912,13 @@ def att_produto(request):
 
     #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Obtendo Dados do Produto"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         dados_produto = json.loads(serializade_data)
 
@@ -838,6 +947,13 @@ def att_produto(request):
 
     #Envia a requsicao ao modulo
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Atualizando Produto"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -899,6 +1015,12 @@ def pagamento_cartao(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "pagamento"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Compra por Cartao"
+        acesso_api.save()
 
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
@@ -971,6 +1093,12 @@ def pagamento_boleto(request):
 
     try:
 
+        acesso_api = Acesso_API()
+        acesso_api.API = "pagamento"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Compra por Boleto"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
         if resposta['status']:
@@ -1006,6 +1134,12 @@ def consulta_pagamento(request):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "pagamento"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Busca Dados do Pagamento"
+        acesso_api.save()
 
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
@@ -1106,6 +1240,13 @@ def meus_pedidos (request):
         data = json.dumps(data)
         request2 = urllib2.Request(url=url_pagamento, data=data, headers={'Content-Type': 'application/json'})
         try:
+
+            acesso_api = Acesso_API()
+            acesso_api.API = "pagamento"
+            acesso_api.data_acesso = timezone.now()
+            acesso_api.descricao = "Busca Dados do Pagamento"
+            acesso_api.save()
+
             serializade_data = urllib2.urlopen(request2).read()
             resposta = json.loads(serializade_data)
         except Exception as e:
@@ -1125,6 +1266,13 @@ def meus_pedidos (request):
 
             #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
             try:
+
+                acesso_api = Acesso_API()
+                acesso_api.API = "produtos"
+                acesso_api.data_acesso = timezone.now()
+                acesso_api.descricao = "Obtendo Dados do Produto"
+                acesso_api.save()
+
                 serializade_data = urllib2.urlopen(request2).read()
                 dados_produto = json.loads(serializade_data)
             except Exception as e:
@@ -1142,6 +1290,8 @@ def meus_pedidos (request):
         dados_pedido['produtos'] = produtos
 
         pedidos.append(dados_pedido)
+
+    pedidos = list(reversed(pedidos))
 
     return pedidos
 
@@ -1177,6 +1327,13 @@ def meu_carrinho(request):
 
         #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
         try:
+
+            acesso_api = Acesso_API()
+            acesso_api.API = "produtos"
+            acesso_api.data_acesso = timezone.now()
+            acesso_api.descricao = "Obtendo Dados do Produto"
+            acesso_api.save()
+
             serializade_data = urllib2.urlopen(request2).read()
             dados_produto = json.loads(serializade_data)
             dados_produto['quantidade_carrinho'] = produto_no_carrinho.quantidade
@@ -1189,7 +1346,6 @@ def meu_carrinho(request):
     valor_frete = get_valor_frete()
     usuario.carrinho.total_frete = valor_frete['valor']
     usuario.carrinho.save()
-    # import pdb;pdb.set_trace()
     context = {
         'produtos': produtos,
         'valor_frete': valor_frete
@@ -1243,6 +1399,13 @@ def adciona_carrinho(request):
     request2.add_header("Authorization", "Basic %s" % basic_auth)
     #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Obtendo Dados do Produto"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         dados_produto = json.loads(serializade_data)
     except Exception as e:
@@ -1257,12 +1420,19 @@ def adciona_carrinho(request):
     request2.add_header("Authorization", "Basic %s" % basic_auth)
     #Envia a requsicao ao modulo
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Atualizando Produto"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
     except Exception as e:
         return JsonResponse({'error': e})
 
-    return home(request)
+    return meu_carrinho(request)
 
 # Remove um produto do carrinho
 def remove_carrinho(request):
@@ -1285,6 +1455,13 @@ def remove_carrinho(request):
             request2.add_header("Authorization", "Basic %s" % basic_auth)
             #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
             try:
+
+                acesso_api = Acesso_API()
+                acesso_api.API = "produtos"
+                acesso_api.data_acesso = timezone.now()
+                acesso_api.descricao = "Obtendo Dados do Produto"
+                acesso_api.save()
+
                 serializade_data = urllib2.urlopen(request2).read()
                 dados_produto = json.loads(serializade_data)
             except Exception as e:
@@ -1299,6 +1476,13 @@ def remove_carrinho(request):
             request2.add_header("Authorization", "Basic %s" % basic_auth)
             #Envia a requsicao ao modulo
             try:
+
+                acesso_api = Acesso_API()
+                acesso_api.API = "produtos"
+                acesso_api.data_acesso = timezone.now()
+                acesso_api.descricao = "Atualizando Produto"
+                acesso_api.save()
+
                 serializade_data = urllib2.urlopen(request2).read()
                 resposta = json.loads(serializade_data)
             except Exception as e:
@@ -1335,6 +1519,13 @@ def altera_quantidade (request):
             request2.add_header("Authorization", "Basic %s" % basic_auth)
             #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
             try:
+
+                acesso_api = Acesso_API()
+                acesso_api.API = "produtos"
+                acesso_api.data_acesso = timezone.now()
+                acesso_api.descricao = "Obtendo Dados do Produto"
+                acesso_api.save()
+
                 serializade_data = urllib2.urlopen(request2).read()
                 dados_produto = json.loads(serializade_data)
             except Exception as e:
@@ -1349,6 +1540,13 @@ def altera_quantidade (request):
             request2.add_header("Authorization", "Basic %s" % basic_auth)
             #Envia a requsicao ao modulo
             try:
+
+                acesso_api = Acesso_API()
+                acesso_api.API = "produtos"
+                acesso_api.data_acesso = timezone.now()
+                acesso_api.descricao = "Atualizando Produto"
+                acesso_api.save()
+
                 serializade_data = urllib2.urlopen(request2).read()
                 resposta = json.loads(serializade_data)
             except Exception as e:
@@ -1382,6 +1580,13 @@ def get_valor_frete(cep="01001001"):
     request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
 
     try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "logistica"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Calculo do Valor do Frete"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -1409,6 +1614,12 @@ def get_score(cpf):
     request2 = urllib2.Request(url=url)
 
     try:
+        acesso_api = Acesso_API()
+        acesso_api.API = "credito"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Obtem Score do Cliente"
+        acesso_api.save()
+
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
@@ -1418,3 +1629,250 @@ def get_score(cpf):
     except Exception as e:
 
         return JsonResponse({'error': e})
+
+'''---------------------------------------------------------------------------------------------------------'''
+'''-----------------------------------------------PAGINA ADM------------------------------------------------'''
+'''---------------------------------------------------------------------------------------------------------'''
+
+def acesso_apis(request):
+
+    clientes = []
+    enderecos = []
+    produtos = []
+    pagamentos = []
+    logisticas = []
+    creditos = []
+    for acesso in Acesso_API.objects.all():
+        data = {
+            "data_acesso": acesso.data_acesso,
+            "descricao": acesso.descricao,
+        }
+        if acesso.API == "endereco":
+            enderecos.append(data)
+        if acesso.API == "clientes":
+            clientes.append(data)
+        if acesso.API == "produtos":
+            produtos.append(data)
+        if acesso.API == "pagamento":
+            pagamentos.append(data)
+        if acesso.API == "logistica":
+            logisticas.append(data)
+        if acesso.API == "credito":
+            creditos.append(data)
+
+    context = {
+        "clientes": clientes,
+        "enderecos": enderecos,
+        "produtos": produtos,
+        "pagamentos": pagamentos,
+        "logisticas": logisticas,
+        "creditos":creditos,
+    }
+
+    return render (request = request, context=context, template_name="backend/acesso_apis.html")
+
+def mostra_todos_produtos(request):
+    produtos = get_produtos(request)
+
+    context = {
+        "produtos": produtos,
+    }
+
+    return render (request=request, context=context, template_name="backend/todos_produtos.html")
+
+def altera_produto(request):
+
+    id_produto = request.POST.get("id_produto")
+    print (id_produto)
+
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
+    url = url + str(id_produto)
+
+    request2 = urllib2.Request(url=url)
+    # Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+    #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+    try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Obtendo Dados do Produto"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        dados_produto = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e.code})
+
+    context = {
+        "produto": dados_produto,
+    }
+
+    return render (request=request, context=context, template_name="backend/altera_produto.html")
+
+def altera_dados_produto(request):
+
+    id_produto = request.POST.get("id_produto")
+
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
+    url = url + str(id_produto)
+
+    request2 = urllib2.Request(url=url)
+    # Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+    #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+    try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Obtendo Dados do Produto"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        dados_produto = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e.code})
+
+
+    dados_produto['name'] = request.POST.get("name")
+    dados_produto['description'] = request.POST.get("description")
+    dados_produto['weight'] = request.POST.get("weight")
+    dados_produto['category'] = request.POST.get("category")
+    dados_produto['type'] = request.POST.get("type")
+    dados_produto['manufacturer'] = request.POST.get("manufacturer")
+    dados_produto['quantityInStock'] = request.POST.get("quantityInStock")
+    dados_produto['value'] = request.POST.get("value")
+    dados_produto['promotionalValue'] = request.POST.get("promotionalValue")
+    dados_produto['availableToSell'] = request.POST.get("availableToSell")
+    dados_produto['onSale'] = request.POST.get("onSale")
+
+
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + str(id_produto)
+
+    data = json.dumps(dados_produto)
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    request2.get_method = lambda: 'PATCH'
+
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    #Envia a requsicao ao modulo
+    try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Atualizando Produto"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+
+    # url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + str(id_produto) + "/images"
+    #
+    # imagens = {
+    #     "imageUrls": [request.POST.get("images")]
+    # }
+    #
+    # data = json.dumps(imagens)
+    # request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    #
+    # basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    # request2.add_header("Authorization", "Basic %s" % basic_auth)
+    #
+    # #Envia a requsicao ao modulo
+    # try:
+    #
+    #     acesso_api = Acesso_API()
+    #     acesso_api.API = "produtos"
+    #     acesso_api.data_acesso = timezone.now()
+    #     acesso_api.descricao = "Altera Imagem Produto"
+    #     acesso_api.save()
+    #
+    #     serializade_data = urllib2.urlopen(request2).read()
+    #     resposta = json.loads(serializade_data)
+    #
+    # except Exception as e:
+    #
+    #     return JsonResponse({'error': e})
+
+    return mostra_todos_produtos(request)
+
+def cadastrar_produto(request):
+
+    return render (request=request, context={}, template_name="backend/cadastrar_produto.html")
+
+def cadastra_produto_api(request):
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
+
+    dados_produto = {}
+
+    dados_produto['name'] = request.POST.get("name")
+    dados_produto['description'] = request.POST.get("description")
+    dados_produto['weight'] = request.POST.get("weight")
+    dados_produto['category'] = request.POST.get("category")
+    dados_produto['type'] = request.POST.get("type")
+    dados_produto['manufacturer'] = request.POST.get("manufacturer")
+    dados_produto['quantityInStock'] = request.POST.get("quantityInStock")
+    dados_produto['value'] = request.POST.get("value")
+    dados_produto['promotionalValue'] = request.POST.get("promotionalValue")
+    dados_produto['availableToSell'] = request.POST.get("availableToSell")
+    dados_produto['onSale'] = request.POST.get("onSale")
+
+    data = json.dumps(dados_produto)
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    # Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+    #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+    try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Cadastrando Produto"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        dados_produto = json.loads(serializade_data)
+    except Exception as e:
+        return JsonResponse({'error': e.code})
+
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + str(dados_produto['id']) + "/images"
+
+    imagens = {
+        "imageUrls": [request.POST.get("images")]
+    }
+
+    data = json.dumps(imagens)
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    #Envia a requsicao ao modulo
+    try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Altera Imagem Produto"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+    except Exception as e:
+
+        return JsonResponse({'error': e})
+
+    return mostra_todos_produtos(request)

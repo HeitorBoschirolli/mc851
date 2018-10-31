@@ -41,6 +41,17 @@
             <a class="dropdown-item bg-secondary" href="/backend/produtos_celulares/0">Celulares</a> -->
           </div>
         </li>
+        {%if request.session.admin %}
+          <li class="nav-item">
+          <a class="nav-link" id="cadastrar_produto" href="/cadastrar_produto">Cadastrar Produto</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/mostra_todos_produtos" id="alterar_produto">Alterar Produto</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/acesso_apis" id="dados_apis">Dados APIs</a>
+        </li>
+        {%endif%}
         {%if request.session.usuario %}
           <li class="nav-item">
           <a class="nav-link" id="cadastro" href="/minha_conta">Minha Conta</a>
