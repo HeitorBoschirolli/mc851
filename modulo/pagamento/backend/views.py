@@ -938,22 +938,30 @@ def pagamento_cartao(request):
 
     forms_cartao = DadosCartao(data=request.POST)
 
+    valor_total = request.POST.get('valor_total')
+    credito = request.POST.get('credito')
+    cnpj = request.POST.get('cnpj')
+
     #URL para api de pagamento
     url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
 
+    if request.POST.get('num_parcelas_debito', 0):
+        num_parcelas = request.POST.get('num_parcelas_debito')
+    else:
+        num_parcelas = forms_cartao['num_parcelas'].data
+
     data = {
-        "cpf_comprador": "12356712345",
-        "valor_compra": "10.20",
-        "cnpj_site": "12345678992735",
+        "cpf_comprador": str(forms_cartao['cpf'].data),
+        "valor_compra": str(valor_total),
+        "cnpj_site": str(cnpj),
         "data_emissao_pedido": "2/10/2018",
         "numero_cartao": str(forms_cartao['numero_cartao'].data),
         "nome_cartao": str(forms_cartao['nome_cartao'].data),
         "cvv_cartao": str(forms_cartao['cvv'].data),
         "data_vencimento_cartao": "2/10/2025",
-        "credito": "1",
-        "num_parcelas": "2"
+        "credito": str(credito),
+        "num_parcelas": str(num_parcelas),
     }
-    print(data)
 
     data = json.dumps(data)
 
