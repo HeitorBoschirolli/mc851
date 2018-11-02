@@ -641,51 +641,30 @@ def cadastra_endereco (request):
 
     request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
 
-    # try:
-    #     # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
-    #
-    #     acesso_api = Acesso_API()
-    #     acesso_api.API = "endereco"
-    #     acesso_api.data_acesso = timezone.now()
-    #     acesso_api.descricao = "Buscando Endereco Dado CEP"
-    #     acesso_api.save()
-    #
-    #     serializade_data = urllib2.urlopen(request2).read()
-    #     resposta = json.loads(serializade_data)
-    #
-    #     data = {
-    #         'tokenSessao': usuario.sessionToken,
-    #         'cep': endereco['cep'].value(),
-    #         'rua': resposta['Endereco'][0]['logradouro'],
-    #         'numeroCasa':  endereco['numero_casa'].value(),
-    #         'complemento': endereco['complemento'].value(),
-    #         'bairro': resposta['Endereco'][0]['bairro'],
-    #         'cidade': resposta['Endereco'][0]['cidade'],
-    #         'estado': resposta['Endereco'][0]['estado'],
-    #     }
-    #
-    # except:
-    #     endereco = DadosEndereco()
-    #     context = {
-    #         'endereco': endereco,
-    #         'cep_failed': True
-    #     }
-    #     return render(
-    #         request,
-    #         template_name="backend/endereco_cep.html",
-    #         context=context
-    #     )
+    try:
+        # serializade_data = urllib2.urlopen(request2, data=json.dumps(data))
 
-    data = {
-        'tokenSessao': usuario.sessionToken,
-        'cep': request.POST.get('cep'),
-        'rua': "rua teste",
-        'numeroCasa':  endereco['numero_casa'].value(),
-        'complemento': endereco['complemento'].value(),
-        'bairro': "bairro testebackend",
-        'cidade': "cidade testebackend",
-        'estado': "Estado SP teste",
-    }
+        acesso_api = Acesso_API()
+        acesso_api.API = "endereco"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Buscando Endereco Dado CEP"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        data = {
+            'tokenSessao': usuario.sessionToken,
+            'cep': endereco['cep'].value(),
+            'rua': resposta['Endereco'][0]['logradouro'],
+            'numeroCasa':  endereco['numero_casa'].value(),
+            'complemento': endereco['complemento'].value(),
+            'bairro': resposta['Endereco'][0]['bairro'],
+            'cidade': resposta['Endereco'][0]['cidade'],
+            'estado': resposta['Endereco'][0]['estado'],
+        }
+    except Exception as e:
+        return JsonResponse({'error': e})
 
     url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/addresses/'
     url = url + str(usuario.cpf) +"/add"
@@ -802,23 +781,6 @@ def get_produtos(request, pagina='0'):
 
         request.session['categorias'] = categorias
 
-        #Adiciona os ids dos produtos no banco de dados
-        # for i in range(0, len(produtos)):
-
-        #     if(Produtos.objects.filter(id_produto=resposta['content'][i]['id']) == False):
-
-        #         p = Produtos()
-        #         p.id_produto = resposta['content'][i]['id']
-        #         p.save()
-
-        #JSON com a lista de produtos que sera
-        # context = {
-        #     #'produtos': produtos_filtrados,
-        #     'produtos': produtos,
-        # }
-
-        # return JsonResponse(context)
-        #return render(request=request, template_name='backend/produtos.html', context=context)
         return produtos
 
     except Exception as e:
@@ -979,21 +941,6 @@ def pagamento_cartao(request):
     #URL para api de pagamento
     url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
 
-    # Variaveis de teste
-    # data = {
-    #     "cpf_comprador": "12356712345",
-    #     "valor_compra": "10.20",
-    #     "cnpj_site": "12345678992735",
-    #     "data_emissao_pedido": "2/10/2018",
-    #     "numero_cartao": "1234123412341111",
-    #     "nome_cartao": "SINDAO",
-    #     "cvv_cartao": "123",
-    #     "data_vencimento_cartao": "2/10/2025",
-    #     "credito": "1",
-    #     "num_parcelas": "2"
-    # }
-
-    print(forms_cartao['data_vencimento_cartao'].data)
     data = {
         "cpf_comprador": "12356712345",
         "valor_compra": "10.20",
@@ -1007,8 +954,6 @@ def pagamento_cartao(request):
         "num_parcelas": "2"
     }
     print(data)
-
-
 
     data = json.dumps(data)
 
