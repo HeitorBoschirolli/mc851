@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+<title>Error</title>
+{% endblock %}
+
+{% block content %}
+{% load staticfiles %}
+
+<div class="container col-md-4">
+    <br/>
+    <p class="alert alert-danger">{{message}}</p>
+</div>
+
+ {% endblock %}
