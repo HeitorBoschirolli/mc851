@@ -970,30 +970,22 @@ def pagamento_cartao(request):
 
     forms_cartao = DadosCartao(data=request.POST)
 
-    valor_total = request.POST.get('valor_total')
-    credito = request.POST.get('credito')
-    cnpj = request.POST.get('cnpj')
-
     #URL para api de pagamento
     url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
 
-    if request.POST.get('num_parcelas_debito', 0):
-        num_parcelas = request.POST.get('num_parcelas_debito')
-    else:
-        num_parcelas = forms_cartao['num_parcelas'].data
-
     data = {
-        "cpf_comprador": str(forms_cartao['cpf'].data),
-        "valor_compra": str(valor_total),
-        "cnpj_site": str(cnpj),
+        "cpf_comprador": "12356712345",
+        "valor_compra": "10.20",
+        "cnpj_site": "12345678992735",
         "data_emissao_pedido": "2/10/2018",
         "numero_cartao": str(forms_cartao['numero_cartao'].data),
         "nome_cartao": str(forms_cartao['nome_cartao'].data),
         "cvv_cartao": str(forms_cartao['cvv'].data),
         "data_vencimento_cartao": "2/10/2025",
-        "credito": str(credito),
-        "num_parcelas": str(num_parcelas),
+        "credito": "1",
+        "num_parcelas": "2"
     }
+    print(data)
 
     data = json.dumps(data)
 
@@ -1307,7 +1299,10 @@ def meu_carrinho(request):
             dados_produto = json.loads(serializade_data)
             dados_produto['quantidade_carrinho'] = produto_no_carrinho.quantidade
             produtos.append(dados_produto)
-            produto_no_carrinho.valor_unitario = dados_produto['value']
+            if dados_produto['onSale']:
+                produto_no_carrinho.valor_unitario = dados_produto['promotionalValue']
+            else:
+                produto_no_carrinho.valor_unitario = dados_produto['value']
             produto_no_carrinho.save()
         except Exception as e:
             context = {
