@@ -1565,11 +1565,18 @@ def altera_quantidade (request):
 #Funcao que pega o valor de frete da api de logistica
 def get_valor_frete(request):
 
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
     #URL para acesso da api (VAI PRECISAR SER ALTERADA DEPOIS)
     url = 'https://shielded-caverns-17296.herokuapp.com/frete'
 
     #Pega o cep do cliente passado por um post, por meio do id 'cep'
     cep = request.POST.get('cep')
+    numero_residencia = request.POST.get('numero_residencia')
+    complemento = request.POST.get('complemento')
 
     data = {
         'CEP': cep
@@ -1589,6 +1596,11 @@ def get_valor_frete(request):
 
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
+
+        usuario.carrinho.cep = cep
+        usuario.carrinho.numero_residencia = numero_residencia
+        usuario.carrinho.complemento = complemento
+        usuario.carrinho.save()
 
         return JsonResponse(resposta)
 
