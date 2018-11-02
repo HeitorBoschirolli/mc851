@@ -45,7 +45,7 @@
               <label for="data_nascimento"><strong>Data de Nascimento</strong></label>
               <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required="" value={{dataDeNascimento}}>
               <div class="invalid-feedback">
-                Please enter your shipping addressn.
+                Please enter your shipping address.
               </div>
             </div>
 
@@ -88,7 +88,7 @@
           <div class="card border-primary col-md-12">
             <div class="card-body">
 
-              <h2 class="card-title">{{pedido.data}}</h2>
+              <h2 class="card-title">Código: {{pedido.codigo_pedido}}</h2>
 
               {% for produto in pedido.produtos %}
 
@@ -97,10 +97,30 @@
                 <p class="card-text"><strong>Quantidade: </strong>{{produto.quantity}}</p>
                 <p class="card-text"><strong>Valor: </strong>{{produto.value}}</p>
 
+
                 <hr class="border-primary">
               {% endfor %}
-
-              <p class="card-text"><strong>Valor Total: </strong>{{pedido.total_carrinho}}</p>
+              {% if pedido.dados_pagamento.status_pedido == 1 %}
+                <p class="card-text"><strong>Status pagamento: </strong> Aprovado</p>
+              {% endif %}
+              {% if pedido.dados_pagamento.status_pedido == 2 %}
+                <p class="card-text"><strong>Status pagamento: </strong> Aguardando pagamento</p>
+              {% endif %}
+              {% if pedido.dados_pagamento.status_pedido == 2 %}
+                <p class="card-text"><strong>Status pagamento: </strong> Pagamento não efetuado</p>
+              {% endif %}
+              {% if pedido.dados_pagamento.num_parcelas != None %}
+                <p class="card-text"><strong>Valor Frete: </strong>{{pedido.dados_pagamento.num_parcelas}}</p>
+              {% endif %}
+              {% if pedido.dados_pagamento.num_boleto != None %}
+                <p class="card-text"><strong>Forma pagamento: </strong>Boleto</p>
+                <p class="card-text"><strong>Número boleto: </strong>{{pedido.dados_pagamento.num_boleto}}</p>
+              {% endif %}
+              {% if pedido.dados_pagamento.num_cartao != None %}
+                <p class="card-text"><strong>Forma pagamento: </strong>Cartao</p>
+              {% endif %}
+              <p class="card-text"><strong>Valor Frete: </strong>{{pedido.total_frete}}</p>
+              <p class="card-text"><strong>Valor carrinho: </strong>{{pedido.total_carrinho}}</p>
 
             </div>
           </div>
