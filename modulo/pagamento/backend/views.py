@@ -19,7 +19,6 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
-
     #Pega todos os produtos da lista de produtos
     save_all_products = get_produtos(request)
     all_products = save_all_products
@@ -1344,12 +1343,13 @@ def meu_carrinho(request):
         except Exception as e:
             return JsonResponse({'error': e.code})
 
-    valor_frete = get_valor_frete()
-    usuario.carrinho.total_frete = valor_frete['valor']
-    usuario.carrinho.save()
+    # valor_frete = get_valor_frete()
+    #
+    # usuario.carrinho.total_frete = valor_frete['valor']
+    # usuario.carrinho.save()
     context = {
         'produtos': produtos,
-        'valor_frete': valor_frete
+        # 'valor_frete': valor_frete
     }
 
     return render (
@@ -1564,16 +1564,23 @@ def altera_quantidade (request):
 '''---------------------------------------------------------------------------------------------------------'''
 
 #Funcao que pega o valor de frete da api de logistica
-def get_valor_frete(cep="01001001"):
+def get_valor_frete(request):
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
 
     #URL para acesso da api (VAI PRECISAR SER ALTERADA DEPOIS)
-    url = 'https://frete-grupo06.herokuapp.com/search'
+    url = 'https://shielded-caverns-17296.herokuapp.com/frete'
 
     #Pega o cep do cliente passado por um post, por meio do id 'cep'
-    #cep = request.POST.get('cep')
+    cep = request.POST.get('cep')
+    numero_residencia = request.POST.get('numero_residencia')
+    complemento = request.POST.get('complemento')
 
     data = {
-        'codigo': cep
+        'CEP': cep
     }
 
     data = json.dumps(data)
@@ -1591,7 +1598,12 @@ def get_valor_frete(cep="01001001"):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return resposta
+        usuario.carrinho.cep = cep
+        usuario.carrinho.numero_residencia = numero_residencia
+        usuario.carrinho.complemento = complemento
+        usuario.carrinho.save()
+
+        return JsonResponse(resposta)
 
     except Exception as e:
 
@@ -1637,6 +1649,15 @@ def get_score(cpf):
 
 def acesso_apis(request):
 
+    data_inicio=request.POST.get("data_inicio")
+    data_final=request.POST.get("data_final")
+    if data_inicio != None:
+        data_final = datetime.strptime(data_final, "%Y-%m-%d").date()
+        data_inicio = datetime.strptime(data_inicio, "%Y-%m-%d").date()
+        flag = False
+    else:
+        flag = True
+
     clientes = []
     enderecos = []
     produtos = []
@@ -1644,22 +1665,23 @@ def acesso_apis(request):
     logisticas = []
     creditos = []
     for acesso in Acesso_API.objects.all():
-        data = {
-            "data_acesso": acesso.data_acesso,
-            "descricao": acesso.descricao,
-        }
-        if acesso.API == "endereco":
-            enderecos.append(data)
-        if acesso.API == "clientes":
-            clientes.append(data)
-        if acesso.API == "produtos":
-            produtos.append(data)
-        if acesso.API == "pagamento":
-            pagamentos.append(data)
-        if acesso.API == "logistica":
-            logisticas.append(data)
-        if acesso.API == "credito":
-            creditos.append(data)
+        if flag or (acesso.data_acesso >= data_inicio and acesso.data_acesso <= data_final):
+            data = {
+                "data_acesso": acesso.data_acesso,
+                "descricao": acesso.descricao,
+            }
+            if acesso.API == "endereco":
+                enderecos.append(data)
+            if acesso.API == "clientes":
+                clientes.append(data)
+            if acesso.API == "produtos":
+                produtos.append(data)
+            if acesso.API == "pagamento":
+                pagamentos.append(data)
+            if acesso.API == "logistica":
+                logisticas.append(data)
+            if acesso.API == "credito":
+                creditos.append(data)
 
     context = {
         "clientes": clientes,
