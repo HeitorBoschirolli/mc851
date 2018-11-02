@@ -1566,6 +1566,9 @@ def altera_quantidade (request):
 #Funcao que pega o valor de frete da api de logistica
 def get_valor_frete(request):
 
+    import pdb
+    pdb.set_trace()
+
     #URL para acesso da api (VAI PRECISAR SER ALTERADA DEPOIS)
     url = 'https://shielded-caverns-17296.herokuapp.com/frete'
 

@@ -109,10 +109,15 @@ margin: -50px 0px 0px -50px;
     </table>
  </div>
  <div class="container">
-     <div class="col-md-6" style="margin-left: 73.5%">
+     <div class="col-md-6" style="margin-left: 51.3%">
          <br>
-         <input style="display: inline; width: 40%" type="text"  maxlength="8" minlength="8" class="form-control" id="cep" name="cep" placeholder="Exemplo: 12345678">
-        <button class="btn" onClick="calcula_frete()">Teste</button>
+         <input type="text"  maxlength="8" minlength="8" class="form-control" id="cep" name="cep" placeholder="CEP: 12345678">
+         <br>
+         <input type="text" class="form-control" id="numero_residencia" name="numero_residencia" placeholder="Número Residência: 175">
+         <br>
+         <input type="text" class="form-control" id="complemento" name="complemento" placeholder="Complemento: Ap. 32">
+         <br>
+         <button class="btn" onClick="calcula_frete()">Calcular Frete</button>
      </div>
      <br>
      <p style="text-align: right;" >Valor Frete: R$<span id="valor_frete">0</span></p>
@@ -150,12 +155,16 @@ margin: -50px 0px 0px -50px;
   //Funcao que realiza uma requisicao na api de logistica e calcula o valor do frete
   function calcula_frete() {
     cep = document.getElementById('cep').value;
+    numero_residencia = document.getElementById('numero_residencia').value;
+    complemento = document.getElementById('complemento').value;
 
     $.ajax({
         url: '/get_valor_frete/',
         method: 'POST',
         data: {
-          "cep": String(cep)
+          "cep": String(cep),
+          "numero_residencia": String(numero_residencia),
+          "complemento": String(complemento)
         },
         dataType: 'json',
         success: function (data) {
