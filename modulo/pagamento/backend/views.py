@@ -18,8 +18,8 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
 #Renderiza a pagina inicial do site
 def home(request):
-
     #Pega todos os produtos da lista de produtos
+    import pdb;pdb.set_trace()
     save_all_products = get_produtos(request)
     all_products = save_all_products
     new_produtos = []
@@ -1636,6 +1636,15 @@ def get_score(cpf):
 
 def acesso_apis(request):
 
+    data_inicio=request.POST.get("data_inicio")
+    data_final=request.POST.get("data_final")
+    if data_inicio != None:
+        data_final = datetime.strptime(data_final, "%Y-%m-%d").date()
+        data_inicio = datetime.strptime(data_inicio, "%Y-%m-%d").date()
+        flag = False
+    else:
+        flag = True
+
     clientes = []
     enderecos = []
     produtos = []
@@ -1643,22 +1652,23 @@ def acesso_apis(request):
     logisticas = []
     creditos = []
     for acesso in Acesso_API.objects.all():
-        data = {
-            "data_acesso": acesso.data_acesso,
-            "descricao": acesso.descricao,
-        }
-        if acesso.API == "endereco":
-            enderecos.append(data)
-        if acesso.API == "clientes":
-            clientes.append(data)
-        if acesso.API == "produtos":
-            produtos.append(data)
-        if acesso.API == "pagamento":
-            pagamentos.append(data)
-        if acesso.API == "logistica":
-            logisticas.append(data)
-        if acesso.API == "credito":
-            creditos.append(data)
+        if flag or (acesso.data_acesso >= data_inicio and acesso.data_acesso <= data_final):
+            data = {
+                "data_acesso": acesso.data_acesso,
+                "descricao": acesso.descricao,
+            }
+            if acesso.API == "endereco":
+                enderecos.append(data)
+            if acesso.API == "clientes":
+                clientes.append(data)
+            if acesso.API == "produtos":
+                produtos.append(data)
+            if acesso.API == "pagamento":
+                pagamentos.append(data)
+            if acesso.API == "logistica":
+                logisticas.append(data)
+            if acesso.API == "credito":
+                creditos.append(data)
 
     context = {
         "clientes": clientes,

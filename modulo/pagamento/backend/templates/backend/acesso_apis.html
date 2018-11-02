@@ -7,6 +7,18 @@
 {% block content %}
 
   <div class="container">
+    <br/>
+    <form class="form-inline" action="/acesso_apis" method="POST" autocomplete="off">
+      <div class="form-group col-xs-3" style="margin-right:10px;">
+          <label for="data_inicio" style="margin-right: 10px;">Data Inicio:</label>
+          <input type="date" class="form-control" name="data_inicio" id="data_inicio" required="">
+      </div>
+      <div class="form-group col-xs-3" style="margin-right:10px;">
+          <label for="data_final" style="margin-right: 10px;">Data Final:</label>
+          <input type="date" class="form-control" name="data_final" id="data_final" required="">
+      </div>
+      <button type="submit" class="btn btn-warning">Go</button>
+  </form>
 
     <ul class="nav nav-tabs" style="padding-top:50px !important ;">
         <li class="nav-item"><a class="nav-link" href="#clientes" data-toggle="tab">Clientes</a></li>
