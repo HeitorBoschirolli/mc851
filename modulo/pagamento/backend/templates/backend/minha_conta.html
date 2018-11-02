@@ -92,16 +92,14 @@
 
               {% for produto in pedido.produtos %}
 
-                <hr class="border-primary">
-
                 <p class="card-text"><strong>Nome: </strong>{{produto.name}}</p>
                 <p class="card-text"><strong>Descrição: </strong>{{produto.description}}</p>
                 <p class="card-text"><strong>Quantidade: </strong>{{produto.quantity}}</p>
                 <p class="card-text"><strong>Valor: </strong>{{produto.value}}</p>
 
+                <hr class="border-primary">
               {% endfor %}
 
-              <hr class="border-primary">
               <p class="card-text"><strong>Valor Total: </strong>{{pedido.total_carrinho}}</p>
 
             </div>
