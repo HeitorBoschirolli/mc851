@@ -25,7 +25,7 @@ SECRET_KEY = ')-_%x4crxufmk+$b7m6rpv^lj2ln@!7klf*(kzz##z)o9ge8zr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mc851-pagamento.qieckpkezf.sa-east-1.elasticbeanstalk.com']
 
 
 # Application definition
