@@ -13,6 +13,7 @@ import base64
 from model_forms import *
 import random
 import ast
+from pdb import set_trace
 
 url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
@@ -284,7 +285,6 @@ def cadastra_cliente(request):
             request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
 
             try:
-
                 acesso_api = Acesso_API()
                 acesso_api.API = "endereco"
                 acesso_api.data_acesso = timezone.now()
@@ -543,7 +543,7 @@ def minha_conta(request):
     # date = datetime.strptime(resposta['dataDeNascimento'], '%Y-%m-%d')
 
     lista_pedidos = meus_pedidos(request)
-
+    
     form_cliente = DadosCliente()
 
     context = {
@@ -553,7 +553,8 @@ def minha_conta(request):
         "telefone": resposta_dados['telefone'],
         "enderecos": resposta_enderecos,
         "lista_pedidos": lista_pedidos,
-        "form_cliente": form_cliente
+        "form_cliente": form_cliente,
+        "lista_pedidios": lista_pedidos
     }
 
     return render(
