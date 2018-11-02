@@ -164,6 +164,8 @@ margin: -50px 0px 0px -50px;
       $form =   $('#form_pagamento')
       $form.submit();
     }
+    
+    $form.submit();
   }
 
   //Funcao que realiza uma requisicao na api de logistica e calcula o valor do frete
@@ -171,6 +173,9 @@ margin: -50px 0px 0px -50px;
     cep = document.getElementById('cep').value;
     numero_residencia = document.getElementById('numero_residencia').value;
     complemento = document.getElementById('complemento').value;
+
+    $('#id_loader').css('display', 'block');
+    $(".overlay, .overlay-message").css('display', 'block');
 
     $.ajax({
         url: '/get_valor_frete/',
@@ -184,6 +189,13 @@ margin: -50px 0px 0px -50px;
         success: function (data) {
             $('#valor_frete').html(data["sedexPrice"]);
             atualiza_valor_total();
+            $('#id_loader').css('display', 'none');
+            $(".overlay, .overlay-message").css('display', 'none');
+        },
+        error: function() {
+          $('#id_loader').css('display', 'none');
+          $(".overlay, .overlay-message").css('display', 'none');
+          alert("Erro");
         }
       });
 
@@ -195,8 +207,6 @@ margin: -50px 0px 0px -50px;
     qnt_estoque = $('.quantidade_estoque');
     unidades = $('.unidades');
     for(i = 0; i < quantidade; i++) {
-      console.log(qnt_estoque[i].value);
-      console.log(unidades[i].value);
       if (parseInt(qnt_estoque[i].value) < parseInt(unidades[i].value)) {
         unidades[i].value = qnt_estoque[i].value
         alert("Limite Excedido")
