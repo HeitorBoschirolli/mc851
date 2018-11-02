@@ -10,18 +10,18 @@
   <ol class="carousel-indicators">
     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    <!-- <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> -->
   </ol>
   <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img class="d-block w-100" src="{% static "backend/dog.jpeg" %}" alt="First slide">
+    <div style="height:260px;" class="carousel-item active">
+      <img style="max-width: 100%; max-height: 100%;" class="d-block w-100" src="https://truckwrecker.nz/wp-content/uploads/2015/11/sell-your-truck-banner1.jpg" alt="First slide">
     </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="{% static "backend/dog.jpeg" %}" alt="Second slide">
+    <div style="height:260px;" class="carousel-item">
+      <img style="max-width: 100%; max-height: 100%;" class="d-block w-100" src="https://www.elegantthemes.com/blog/wp-content/uploads/2015/12/Want-What-Youre-Selling-FT.png" alt="Second slide">
     </div>
-    <div class="carousel-item">
+    <!-- <div class="carousel-item">
       <img class="d-block w-100" src="{% static "backend/dog.jpeg" %}" alt="Third slide">
-    </div>
+    </div> -->
   </div>
   <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -44,8 +44,8 @@
             <div class="card-body">
               <h5 class="card-title">{{ produtos.0.description }}</h5>
               {% if produtos.0.onSale %}
-                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.0.promotionalValue }}</p>
-                <p class="card-text">R${{ produtos.0.value }}</p>
+                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.0.value }}</p>
+                <p class="card-text">R${{ produtos.0.promotionalValue }}</p>
               {% else %}
                 <p class="card-text">R${{ produtos.0.value }}</p>
               {% endif %}
@@ -72,8 +72,8 @@
             <div class="card-body">
               <h5 class="card-title">{{ produtos.1.description }}</h5>
               {% if produtos.1.onSale %}
-                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.1.promotionalValue }}</p>
-                <p class="card-text">R${{ produtos.1.value }}</p>
+                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.1.value }}</p>
+                <p class="card-text">R${{ produtos.1.promotionalValue }}</p>
               {% else %}
                 <p class="card-text">R${{ produtos.1.value }}</p>
               {% endif %}
@@ -101,8 +101,8 @@
               <h5 class="card-title">{{ produtos.2.description }} </h5>
 
               {% if produtos.2.onSale %}
-                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.2.promotionalValue }}</p>
-                <p class="card-text">R${{ produtos.2.value }}</p>
+                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.2.value }}</p>
+                <p class="card-text">R${{ produtos.2.promotionalValue }}</p>
               {% else %}
                 <p class="card-text">R${{ produtos.2.value }}</p>
               {% endif %}
