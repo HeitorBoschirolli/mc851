@@ -44,8 +44,8 @@
             <div class="card-body">
               <h5 class="card-title">{{ produtos.0.description }}</h5>
               {% if produtos.0.onSale %}
-                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.0.promotionalValue }}</p>
-                <p class="card-text">R${{ produtos.0.value }}</p>
+                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.0.value }}</p>
+                <p class="card-text">R${{ produtos.0.promotionalValue }}</p>
               {% else %}
                 <p class="card-text">R${{ produtos.0.value }}</p>
               {% endif %}
@@ -72,8 +72,8 @@
             <div class="card-body">
               <h5 class="card-title">{{ produtos.1.description }}</h5>
               {% if produtos.1.onSale %}
-                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.1.promotionalValue }}</p>
-                <p class="card-text">R${{ produtos.1.value }}</p>
+                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.1.value }}</p>
+                <p class="card-text">R${{ produtos.1.promotionalValue }}</p>
               {% else %}
                 <p class="card-text">R${{ produtos.1.value }}</p>
               {% endif %}
@@ -101,8 +101,8 @@
               <h5 class="card-title">{{ produtos.2.description }} </h5>
 
               {% if produtos.2.onSale %}
-                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.2.promotionalValue }}</p>
-                <p class="card-text">R${{ produtos.2.value }}</p>
+                <p class="card-text" style="text-decoration: line-through;">R${{ produtos.2.value }}</p>
+                <p class="card-text">R${{ produtos.2.promotionalValue }}</p>
               {% else %}
                 <p class="card-text">R${{ produtos.2.value }}</p>
               {% endif %}
