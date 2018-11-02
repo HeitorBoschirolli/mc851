@@ -1343,12 +1343,13 @@ def meu_carrinho(request):
         except Exception as e:
             return JsonResponse({'error': e.code})
 
-    valor_frete = get_valor_frete()
-    usuario.carrinho.total_frete = valor_frete['valor']
-    usuario.carrinho.save()
+    # valor_frete = get_valor_frete()
+    #
+    # usuario.carrinho.total_frete = valor_frete['valor']
+    # usuario.carrinho.save()
     context = {
         'produtos': produtos,
-        'valor_frete': valor_frete
+        # 'valor_frete': valor_frete
     }
 
     return render (
@@ -1563,16 +1564,16 @@ def altera_quantidade (request):
 '''---------------------------------------------------------------------------------------------------------'''
 
 #Funcao que pega o valor de frete da api de logistica
-def get_valor_frete(cep="01001001"):
+def get_valor_frete(request):
 
     #URL para acesso da api (VAI PRECISAR SER ALTERADA DEPOIS)
-    url = 'https://frete-grupo06.herokuapp.com/search'
+    url = 'https://shielded-caverns-17296.herokuapp.com/frete'
 
     #Pega o cep do cliente passado por um post, por meio do id 'cep'
-    #cep = request.POST.get('cep')
+    cep = request.POST.get('cep')
 
     data = {
-        'codigo': cep
+        'CEP': cep
     }
 
     data = json.dumps(data)
@@ -1590,7 +1591,7 @@ def get_valor_frete(cep="01001001"):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
 
-        return resposta
+        return JsonResponse(resposta)
 
     except Exception as e:
 

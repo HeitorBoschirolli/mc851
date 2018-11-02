@@ -109,10 +109,16 @@ margin: -50px 0px 0px -50px;
     </table>
  </div>
  <div class="container">
-   <p style="text-align: right;" >Valor Frete: R$<span id="valor_frete">{{valor_frete.valor|safe}}</span></p>
+     <div class="col-md-6" style="margin-left: 73.5%">
+         <br>
+         <input style="display: inline; width: 40%" type="text"  maxlength="8" minlength="8" class="form-control" id="cep" name="cep" placeholder="Exemplo: 12345678">
+        <button class="btn" onClick="calcula_frete()">Teste</button>
+     </div>
+     <br>
+     <p style="text-align: right;" >Valor Frete: R$<span id="valor_frete">0</span></p>
  </div>
 <div class="container">
-  <b style="text-align: right;" ><h3>Valor Total: R$<span id="valor_total_pedido"></span></h3></b>
+  <b style="text-align: right;" ><h3>Valor Total: R$<span id="valor_total_pedido">0</span></h3></b>
 </div>
 
 
@@ -140,6 +146,25 @@ margin: -50px 0px 0px -50px;
 } );
   atualiza_valor();
   atualiza_valor_total();
+
+  //Funcao que realiza uma requisicao na api de logistica e calcula o valor do frete
+  function calcula_frete() {
+    cep = document.getElementById('cep').value;
+
+    $.ajax({
+        url: '/get_valor_frete/',
+        method: 'POST',
+        data: {
+          "cep": String(cep)
+        },
+        dataType: 'json',
+        success: function (data) {
+            $('#valor_frete').html(data["sedexPrice"]);
+            atualiza_valor_total();
+        }
+      });
+
+  }
 
   // Atualiza quantidade (requisição AJAX para API de produtos)
   function atualiza_quantidade(element) {
@@ -206,6 +231,7 @@ margin: -50px 0px 0px -50px;
 
     return;
   }
+
 
 </script>
 
