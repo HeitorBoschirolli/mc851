@@ -19,7 +19,6 @@ url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 #Renderiza a pagina inicial do site
 def home(request):
     #Pega todos os produtos da lista de produtos
-    import pdb;pdb.set_trace()
     save_all_products = get_produtos(request)
     all_products = save_all_products
     new_produtos = []
@@ -1565,9 +1564,6 @@ def altera_quantidade (request):
 
 #Funcao que pega o valor de frete da api de logistica
 def get_valor_frete(request):
-
-    import pdb
-    pdb.set_trace()
 
     #URL para acesso da api (VAI PRECISAR SER ALTERADA DEPOIS)
     url = 'https://shielded-caverns-17296.herokuapp.com/frete'
