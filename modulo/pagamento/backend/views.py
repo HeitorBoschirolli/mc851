@@ -13,7 +13,6 @@ import base64
 from model_forms import *
 import random
 import ast
-from pdb import set_trace
 
 url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
@@ -284,6 +283,7 @@ def cadastra_cliente(request):
             request2 = urllib2.Request(url=url, headers={'Content-Type': 'application/json'})
 
             try:
+
                 acesso_api = Acesso_API()
                 acesso_api.API = "endereco"
                 acesso_api.data_acesso = timezone.now()
@@ -326,7 +326,10 @@ def cadastra_cliente(request):
                     return render(request=request, template_name='backend/cadastro_cliente_confirmado.html')
 
                 except Exception as e:
-                    return JsonResponse({'error': e})
+                    context = {
+                        "message": "Erro na API de Clientes"
+                    }
+                    return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 
             except:
@@ -338,8 +341,10 @@ def cadastra_cliente(request):
                 return render(request,template_name="backend/endereco_cep.html",context=context)
 
         except Exception as e:
-
-            return JsonResponse({'error': e})
+            context = {
+                "message": "Erro na API de Clientes"
+            }
+            return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 
     except:
@@ -393,8 +398,10 @@ def confirma_cadastro(request):
         return endereco_cliente(request)
 
     except Exception as e:
-
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Clientes"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 
 #Renderiza a pagina de login
@@ -519,7 +526,10 @@ def minha_conta(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta_dados = json.loads(serializade_data)
     except Exception as e:
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Clientes"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/users/'
     url = url + str(usuario.cpf) + "/addresses"
@@ -537,12 +547,15 @@ def minha_conta(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta_enderecos = json.loads(serializade_data)
     except Exception as e:
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Clientes"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     # date = datetime.strptime(resposta['dataDeNascimento'], '%Y-%m-%d')
 
     lista_pedidos = meus_pedidos(request)
-    
+
     form_cliente = DadosCliente()
     
     context = {
@@ -552,8 +565,7 @@ def minha_conta(request):
         "telefone": resposta_dados['telefone'],
         "enderecos": resposta_enderecos,
         "lista_pedidos": lista_pedidos,
-        "form_cliente": form_cliente,
-        "lista_pedidios": lista_pedidos
+        "form_cliente": form_cliente
     }
 
     return render(
@@ -607,8 +619,10 @@ def altera_dados (request):
         return minha_conta(request)
 
     except Exception as e:
-
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Clientes"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 
 def insere_endereco(request):
@@ -664,7 +678,10 @@ def cadastra_endereco (request):
             'estado': resposta['Endereco'][0]['estado'],
         }
     except Exception as e:
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Endereço"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/addresses/'
     url = url + str(usuario.cpf) +"/add"
@@ -685,7 +702,10 @@ def cadastra_endereco (request):
         resposta = json.loads(serializade_data)
         return minha_conta(request)
     except Exception as e:
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Clientes"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 
 def apagar_conta (request):
@@ -737,7 +757,10 @@ def remover_usuario(request):
             }
             return render (request=request, context=context, template_name="backend/excluir_usuario.html")
     except Exception as e:
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Clientes"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''---------------------------------------------API DE PRODUTOS---------------------------------------------'''
@@ -785,7 +808,10 @@ def get_produtos(request, pagina='0'):
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 def produtos(request, categoria, pagina):
 
@@ -886,7 +912,10 @@ def att_produto(request):
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     #Atualiza os dados que o admin quer que sejam atualizados
     for key in form_Produto.fields:
@@ -923,7 +952,10 @@ def att_produto(request):
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''--------------------------------------------API DE PAGAMENTO---------------------------------------------'''
@@ -939,7 +971,7 @@ def pagamento_cartao(request):
     forms_cartao = DadosCartao(data=request.POST)
 
     #URL para api de pagamento
-    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
+    url = 'http://mc851-pagamento.qieckpkezf.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
 
     data = {
         "cpf_comprador": "12356712345",
@@ -978,7 +1010,10 @@ def pagamento_cartao(request):
             return render(request, 'backend/falha_pagamento_cartao.html')
 
     except Exception as e:
-        return JsonResponse({'error': e.code})
+        context = {
+            "message": "Erro na API de Pagamento"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 
 
@@ -989,7 +1024,7 @@ def pagamento_boleto(request):
     # forms_pagamento = Pagamento(data=request.POST)
 
     #URL para api de pagamento
-    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
+    url = 'http://mc851-pagamento.qieckpkezf.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
 
     # Variaveis de testebackend/pagamento.html
     now = datetime.now().date()
@@ -999,15 +1034,6 @@ def pagamento_boleto(request):
     credito = request.POST.get('credito')
     cpf = request.POST.get('cpf', '99999999999')
 
-    # data = {
-    #     "cpf_comprador": "12356712345",
-    #     "valor_compra":"10.20",
-    #     "cnpj_site":"12345678992735",
-    #     "banco_gerador_boleto":"Itau",
-    #     "data_vencimento_boleto":"04/10/2018",
-    #     "endereco_fisico_site":"Rua Sindo",
-    #     "data_emissao_pedido": "25/06/2018"
-    # }
     date = (now+timedelta(days=10)).strftime("%d/%m/%Y")
 
     data = {
@@ -1019,18 +1045,6 @@ def pagamento_boleto(request):
         "endereco_fisico_site":"Rua Sindo",
         "data_emissao_pedido": now.strftime("%d/%m/%Y")
     }
-        # data = {
-        #     "cpf_comprador": "12356712345",
-        #     "valor_compra": valor_compra,
-        #     "cnpj_site": cnpj,
-        #     "data_emissao_pedido": now.strftime("%d/%m/%Y"),
-        #     "numero_cartao": str(forms_cartao['numero_cartao'].data),
-        #     "nome_cartao": str(forms_cartao['nome_cartao'].data),
-        #     "cvv_cartao": str(forms_cartao['cvv'].data),
-        #     "data_vencimento_cartao": data_vencimento,
-        #     "credito": str(credito),
-        #     "num_parcelas": str(forms_cartao['num_parcelas'].data),
-        # }
 
     data = json.dumps(data)
 
@@ -1058,7 +1072,10 @@ def pagamento_boleto(request):
 
     except Exception as e:
 
-        return JsonResponse({'error': e.code})
+        context = {
+            "message": "Erro na API de Pagamento"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 #Consulta um pagamento
 def consulta_pagamento(request):
@@ -1094,7 +1111,10 @@ def consulta_pagamento(request):
 
     except Exception as e:
 
-        return JsonResponse({'error': e.code})
+        context = {
+            "message": "Erro na API de Pagamento"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 # Chama a página de pagamento
 def pagamento(request):
@@ -1195,7 +1215,10 @@ def meus_pedidos (request):
             serializade_data = urllib2.urlopen(request2).read()
             resposta = json.loads(serializade_data)
         except Exception as e:
-            return HttpResponse ("Pk de um pedido não encontrado no módulo de pagamento")
+            context = {
+                "message": "Erro na API de Pagamento"
+            }
+            return render (request=request, context=context, template_name="backend/tela_erro.html")
 
         dados_pedido['dados_pagamento'] = resposta
 
@@ -1221,7 +1244,10 @@ def meus_pedidos (request):
                 serializade_data = urllib2.urlopen(request2).read()
                 dados_produto = json.loads(serializade_data)
             except Exception as e:
-                return JsonResponse({'error': e.code})
+                context = {
+                    "message": "Erro na API de Produtos"
+                }
+                return render (request=request, context=context, template_name="backend/tela_erro.html")
 
             new_dados = {
                 'name': dados_produto['name'],
@@ -1239,16 +1265,6 @@ def meus_pedidos (request):
     pedidos = list(reversed(pedidos))
 
     return pedidos
-
-    # context = {
-    #     'pedidos': pedidos
-    # }
-
-    # return render (
-    #     request=request,
-    #     template_name='backend/meus_pedidos.html',
-    #     context=context
-    # )
 
 # Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
 def meu_carrinho(request):
@@ -1283,18 +1299,19 @@ def meu_carrinho(request):
             dados_produto = json.loads(serializade_data)
             dados_produto['quantidade_carrinho'] = produto_no_carrinho.quantidade
             produtos.append(dados_produto)
-            produto_no_carrinho.valor_unitario = dados_produto['value']
+            if dados_produto['onSale']:
+                produto_no_carrinho.valor_unitario = dados_produto['promotionalValue']
+            else:
+                produto_no_carrinho.valor_unitario = dados_produto['value']
             produto_no_carrinho.save()
         except Exception as e:
-            return JsonResponse({'error': e.code})
+            context = {
+                "message": "Erro na API de Produtos"
+            }
+            return render (request=request, context=context, template_name="backend/tela_erro.html")
 
-    # valor_frete = get_valor_frete()
-    #
-    # usuario.carrinho.total_frete = valor_frete['valor']
-    # usuario.carrinho.save()
     context = {
         'produtos': produtos,
-        # 'valor_frete': valor_frete
     }
 
     return render (
@@ -1355,7 +1372,10 @@ def adciona_carrinho(request):
         serializade_data = urllib2.urlopen(request2).read()
         dados_produto = json.loads(serializade_data)
     except Exception as e:
-        return JsonResponse({'error': e.code})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     dados_produto['quantityInStock'] -= 1
 
@@ -1376,7 +1396,10 @@ def adciona_carrinho(request):
         serializade_data = urllib2.urlopen(request2).read()
         resposta = json.loads(serializade_data)
     except Exception as e:
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     return meu_carrinho(request)
 
@@ -1411,7 +1434,10 @@ def remove_carrinho(request):
                 serializade_data = urllib2.urlopen(request2).read()
                 dados_produto = json.loads(serializade_data)
             except Exception as e:
-                return JsonResponse({'error': e.code})
+                context = {
+                    "message": "Erro na API de Produtos"
+                }
+                return render (request=request, context=context, template_name="backend/tela_erro.html")
 
             dados_produto['quantityInStock'] += produto_no_carrinho.quantidade
 
@@ -1432,7 +1458,10 @@ def remove_carrinho(request):
                 serializade_data = urllib2.urlopen(request2).read()
                 resposta = json.loads(serializade_data)
             except Exception as e:
-                return JsonResponse({'error': e})
+                context = {
+                    "message": "Erro na API de Produtos"
+                }
+                return render (request=request, context=context, template_name="backend/tela_erro.html")
 
             produto_no_carrinho.delete()
 
@@ -1475,7 +1504,10 @@ def altera_quantidade (request):
                 serializade_data = urllib2.urlopen(request2).read()
                 dados_produto = json.loads(serializade_data)
             except Exception as e:
-                return JsonResponse({'error': e.code})
+                context = {
+                    "message": "Erro na API de Produtos"
+                }
+                return render (request=request, context=context, template_name="backend/tela_erro.html")
 
             dados_produto['quantityInStock'] -= dif
 
@@ -1496,7 +1528,10 @@ def altera_quantidade (request):
                 serializade_data = urllib2.urlopen(request2).read()
                 resposta = json.loads(serializade_data)
             except Exception as e:
-                return JsonResponse({'error': e})
+                context = {
+                    "message": "Erro na API de Produtos"
+                }
+                return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     resposta = {
         "sucesso": 1
@@ -1551,8 +1586,10 @@ def get_valor_frete(request):
         return JsonResponse(resposta)
 
     except Exception as e:
-
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Logistica"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 
 '''---------------------------------------------------------------------------------------------------------'''
@@ -1563,7 +1600,6 @@ def get_valor_frete(request):
 def get_score(cpf):
 
     #Pega o cpf do cliente passado no momento do pagamento
-    #cpf = request.POST.get('cpf')
     if not cpf:
         cpf=str("20314520369")
     # URL para acesso da api de credito
@@ -1586,7 +1622,10 @@ def get_score(cpf):
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Crédito"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''-----------------------------------------------PAGINA ADM------------------------------------------------'''
@@ -1672,7 +1711,10 @@ def altera_produto(request):
         serializade_data = urllib2.urlopen(request2).read()
         dados_produto = json.loads(serializade_data)
     except Exception as e:
-        return JsonResponse({'error': e.code})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     context = {
         "produto": dados_produto,
@@ -1703,7 +1745,10 @@ def altera_dados_produto(request):
         serializade_data = urllib2.urlopen(request2).read()
         dados_produto = json.loads(serializade_data)
     except Exception as e:
-        return JsonResponse({'error': e.code})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
 
     dados_produto['name'] = request.POST.get("name")
@@ -1741,37 +1786,10 @@ def altera_dados_produto(request):
         resposta = json.loads(serializade_data)
 
     except Exception as e:
-
-        return JsonResponse({'error': e})
-
-
-    # url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + str(id_produto) + "/images"
-    #
-    # imagens = {
-    #     "imageUrls": [request.POST.get("images")]
-    # }
-    #
-    # data = json.dumps(imagens)
-    # request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    #
-    # basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
-    # request2.add_header("Authorization", "Basic %s" % basic_auth)
-    #
-    # #Envia a requsicao ao modulo
-    # try:
-    #
-    #     acesso_api = Acesso_API()
-    #     acesso_api.API = "produtos"
-    #     acesso_api.data_acesso = timezone.now()
-    #     acesso_api.descricao = "Altera Imagem Produto"
-    #     acesso_api.save()
-    #
-    #     serializade_data = urllib2.urlopen(request2).read()
-    #     resposta = json.loads(serializade_data)
-    #
-    # except Exception as e:
-    #
-    #     return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     return mostra_todos_produtos(request)
 
@@ -1813,7 +1831,10 @@ def cadastra_produto_api(request):
         serializade_data = urllib2.urlopen(request2).read()
         dados_produto = json.loads(serializade_data)
     except Exception as e:
-        return JsonResponse({'error': e.code})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + str(dados_produto['id']) + "/images"
 
@@ -1841,6 +1862,9 @@ def cadastra_produto_api(request):
 
     except Exception as e:
 
-        return JsonResponse({'error': e})
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     return mostra_todos_produtos(request)
