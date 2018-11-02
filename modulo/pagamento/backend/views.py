@@ -998,15 +998,6 @@ def pagamento_boleto(request):
     credito = request.POST.get('credito')
     cpf = request.POST.get('cpf', '99999999999')
 
-    # data = {
-    #     "cpf_comprador": "12356712345",
-    #     "valor_compra":"10.20",
-    #     "cnpj_site":"12345678992735",
-    #     "banco_gerador_boleto":"Itau",
-    #     "data_vencimento_boleto":"04/10/2018",
-    #     "endereco_fisico_site":"Rua Sindo",
-    #     "data_emissao_pedido": "25/06/2018"
-    # }
     date = (now+timedelta(days=10)).strftime("%d/%m/%Y")
 
     data = {
@@ -1018,18 +1009,6 @@ def pagamento_boleto(request):
         "endereco_fisico_site":"Rua Sindo",
         "data_emissao_pedido": now.strftime("%d/%m/%Y")
     }
-        # data = {
-        #     "cpf_comprador": "12356712345",
-        #     "valor_compra": valor_compra,
-        #     "cnpj_site": cnpj,
-        #     "data_emissao_pedido": now.strftime("%d/%m/%Y"),
-        #     "numero_cartao": str(forms_cartao['numero_cartao'].data),
-        #     "nome_cartao": str(forms_cartao['nome_cartao'].data),
-        #     "cvv_cartao": str(forms_cartao['cvv'].data),
-        #     "data_vencimento_cartao": data_vencimento,
-        #     "credito": str(credito),
-        #     "num_parcelas": str(forms_cartao['num_parcelas'].data),
-        # }
 
     data = json.dumps(data)
 
@@ -1239,16 +1218,6 @@ def meus_pedidos (request):
 
     return pedidos
 
-    # context = {
-    #     'pedidos': pedidos
-    # }
-
-    # return render (
-    #     request=request,
-    #     template_name='backend/meus_pedidos.html',
-    #     context=context
-    # )
-
 # Acessa a pagina do meu carrinho, mostrando um resumo de todos produtos contidos nele
 def meu_carrinho(request):
     try:
@@ -1287,13 +1256,8 @@ def meu_carrinho(request):
         except Exception as e:
             return JsonResponse({'error': e.code})
 
-    # valor_frete = get_valor_frete()
-    #
-    # usuario.carrinho.total_frete = valor_frete['valor']
-    # usuario.carrinho.save()
     context = {
         'produtos': produtos,
-        # 'valor_frete': valor_frete
     }
 
     return render (
@@ -1562,7 +1526,6 @@ def get_valor_frete(request):
 def get_score(cpf):
 
     #Pega o cpf do cliente passado no momento do pagamento
-    #cpf = request.POST.get('cpf')
     if not cpf:
         cpf=str("20314520369")
     # URL para acesso da api de credito
@@ -1742,35 +1705,6 @@ def altera_dados_produto(request):
     except Exception as e:
 
         return JsonResponse({'error': e})
-
-
-    # url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + str(id_produto) + "/images"
-    #
-    # imagens = {
-    #     "imageUrls": [request.POST.get("images")]
-    # }
-    #
-    # data = json.dumps(imagens)
-    # request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
-    #
-    # basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
-    # request2.add_header("Authorization", "Basic %s" % basic_auth)
-    #
-    # #Envia a requsicao ao modulo
-    # try:
-    #
-    #     acesso_api = Acesso_API()
-    #     acesso_api.API = "produtos"
-    #     acesso_api.data_acesso = timezone.now()
-    #     acesso_api.descricao = "Altera Imagem Produto"
-    #     acesso_api.save()
-    #
-    #     serializade_data = urllib2.urlopen(request2).read()
-    #     resposta = json.loads(serializade_data)
-    #
-    # except Exception as e:
-    #
-    #     return JsonResponse({'error': e})
 
     return mostra_todos_produtos(request)
 
