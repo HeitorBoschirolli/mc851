@@ -83,7 +83,7 @@ margin: -50px 0px 0px -50px;
                   <input hidden value="slafj" class="lksdfj"> <br/>
                   <form action="/remove_carrinho/" method="POST">
                     <input hidden value="{{produto.id}}" name="id_produto" id="id_produto">
-                    <input hidden value="{{produto.quantityInStock}}" class="quantidade_estoque">
+                    <!-- <input hidden value="{{produto.quantityInStock}}" class="quantidade_estoque"> -->
                     <button type="submit" class="btn btn-danger">
                         Remover
                     </button>
@@ -92,8 +92,8 @@ margin: -50px 0px 0px -50px;
 
                 <td>
                   <form style="margin: 15px;" action="/meu_carrinho/">
-                    <h6>Quantidade({{produto.quantityInStock|add:produto.quantidade_carrinho}}):</h6>
-                    <input type="number" id="{{produto.id}}" name="quantity" class="unidades" min="0" max="100" step="1" value="{{produto.quantidade_carrinho}}"
+                    <h6>Quantidade(<input hidden value="{{produto.quantityInStock|add:produto.quantidade_carrinho}}" class="quantidade_estoque">{{produto.quantityInStock|add:produto.quantidade_carrinho}}</span>):</h6>
+                    <input type="number" id="{{produto.id}}" name="quantity" class="unidades" min="0" max="1000" step="1" value="{{produto.quantidade_carrinho}}"
                                                           onclick="atualiza_quantidade(this)">
                   </form>
 
@@ -109,7 +109,7 @@ margin: -50px 0px 0px -50px;
     </table>
  </div>
  <div class="container">
-     <div class="col-md-6" style="margin-left: 51.3%">
+     <div class="col-md-3" style="margin-left: 76.4%">
          <br>
          <input type="text"  maxlength="8" minlength="8" class="form-control" id="cep" name="cep" placeholder="CEP: 12345678">
          <br>
@@ -131,13 +131,13 @@ margin: -50px 0px 0px -50px;
 
 <div class="container">
 </br>
-  <form action="/pagamento/" method="POST">
+  <form action="/pagamento/" method="POST" id="form_pagamento">
     <input hidden value='' name="valor_total_form" id="valor_total_form">
-     <button type="submit" style="float:right" class="btn btn-warning">
+     <button type="button" onclick="efetuar_pagamento()" style="float:right" class="btn btn-warning">
          <span class="fa fa-shopping-cart"></span> Efetuar pagamento
      </button>
      <br/>
-  </form>
+    </form>
 </div>
 <div class="loader loading-gif" style="display: none" id="id_loader"></div>
 <div class="overlay" style="display: none"></div>
@@ -153,6 +153,18 @@ margin: -50px 0px 0px -50px;
 } );
   atualiza_valor();
   atualiza_valor_total();
+
+    // Função que verifica se o frete foi calculado antes ir para a página de pagamento
+    function efetuar_pagamento () {
+    valor_frete = parseFloat($('#valor_frete').html());
+    if ( valor_frete <= 0) {
+      alert("Antes de efetuar o pagamento, calcule o frete");
+    }
+    else {
+      $form =   $('#form_pagamento')
+      $form.submit();
+    }
+  }
 
   //Funcao que realiza uma requisicao na api de logistica e calcula o valor do frete
   function calcula_frete() {
