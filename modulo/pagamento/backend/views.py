@@ -975,7 +975,7 @@ def pagamento_cartao(request):
     cnpj = request.POST.get('cnpj')
 
     #URL para api de pagamento
-    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
+    url = 'http://mc851-pagamento.qieckpkezf.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
 
     if request.POST.get('num_parcelas_debito', 0):
         num_parcelas = request.POST.get('num_parcelas_debito')
@@ -1032,7 +1032,7 @@ def pagamento_boleto(request):
     # forms_pagamento = Pagamento(data=request.POST)
 
     #URL para api de pagamento
-    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
+    url = 'http://mc851-pagamento.qieckpkezf.sa-east-1.elasticbeanstalk.com/servico/pagamento_boleto'
 
     # Variaveis de testebackend/pagamento.html
     now = datetime.now().date()

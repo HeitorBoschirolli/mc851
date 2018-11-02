@@ -60,9 +60,6 @@ def corretude_banco (banco):
     # if type(banco) != str:
     #     return -1 # o tipo passado esta incorreto
 
-    if not banco.isalpha():
-        return -2 # contem caracteres que nao sao letras
-
     return 0
 
 def formata_banco (banco):
@@ -178,9 +175,6 @@ def corretude_cvv (cvv):
 
 def corretude_nome_impresso_cartao (nome_impresso_cartao):
     nome_impresso_cartao = str(nome_impresso_cartao)
-
-    if not nome_impresso_cartao.isalpha():
-        return -2 # contem caracteres que nao sao letras
 
     return 0
 
