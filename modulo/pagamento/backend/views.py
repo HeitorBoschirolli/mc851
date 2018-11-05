@@ -1151,7 +1151,7 @@ def consulta_pagamento(request):
     # forms_pagamento = Pagamento(data=request.POST)
 
     #URL para api de pagamento
-    url = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
+    url = 'http://mc851-pagamento.qieckpkezf.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
 
     # Variaveis de teste
     data = {
@@ -1258,7 +1258,7 @@ def meus_pedidos (request):
     pedidos = []
 
     url_produtos = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
-    url_pagamento = 'http://pagamento.4pmv2bgufu.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
+    url_pagamento = 'http://mc851-pagamento.qieckpkezf.sa-east-1.elasticbeanstalk.com/servico/busca_pedido'
 
     for pedido in usuario.pedidos_set.all():
         dados_pedido = {}
