@@ -106,14 +106,24 @@
 
                 <hr class="border-primary">
               {% endfor %}
+              <!-- Se pedido for válido -->
               {% if pedido.dados_pagamento.status_pedido == 1 %}
-                <p class="card-text"><strong>Status pagamento: </strong> Aprovado</p>
-              {% endif %}
-              {% if pedido.dados_pagamento.status_pedido == 2 %}
-                <p class="card-text"><strong>Status pagamento: </strong> Aguardando pagamento</p>
-              {% endif %}
-              {% if pedido.dados_pagamento.status_pedido == 3 %}
-                <p class="card-text"><strong>Status pagamento: </strong> Pagamento não efetuado</p>
+              <!-- Se for boleto -->
+                {% if pedido.dados_pagamento.num_boleto %}
+                  {% if pedido.dados_pagamento.status_boleto == 1 %}    
+                    <p class="card-text"><strong>Status pagamento: </strong> Aprovado</p>
+                  {% endif %}
+                  {% if pedido.dados_pagamento.status_boleto == 2 %}
+                    <p class="card-text"><strong>Status pagamento: </strong> Aguardando pagamento</p>
+                  {% endif %}
+                  {% if pedido.dados_pagamento.status_boleto == 3 %}
+                    <p class="card-text"><strong>Status pagamento: </strong> Pagamento não efetuado</p>
+                  {% endif %}
+                {% endif %}
+                <!-- Se for cartão -->
+                {% if pedido.dados_pagamento.num_cartao %}
+                  <p class="card-text"><strong>Status pagamento: </strong> Aprovado</p>
+                {% endif %}
               {% endif %}
               {% if pedido.dados_pagamento.num_parcelas != None %}
                 <p class="card-text"><strong>Valor Frete: </strong>{{pedido.dados_pagamento.num_parcelas}}</p>
