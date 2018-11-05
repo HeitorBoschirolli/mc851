@@ -112,7 +112,7 @@
               {% if pedido.dados_pagamento.status_pedido == 2 %}
                 <p class="card-text"><strong>Status pagamento: </strong> Aguardando pagamento</p>
               {% endif %}
-              {% if pedido.dados_pagamento.status_pedido == 2 %}
+              {% if pedido.dados_pagamento.status_pedido == 3 %}
                 <p class="card-text"><strong>Status pagamento: </strong> Pagamento não efetuado</p>
               {% endif %}
               {% if pedido.dados_pagamento.num_parcelas != None %}
