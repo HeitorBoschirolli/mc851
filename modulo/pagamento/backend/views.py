@@ -588,7 +588,7 @@ def minha_conta(request):
     lista_pedidos = meus_pedidos(request)
 
     form_cliente = DadosCliente()
-
+    
     context = {
         "email": resposta_dados['email'],
         "nome": resposta_dados['nome'],
@@ -598,7 +598,7 @@ def minha_conta(request):
         "lista_pedidos": lista_pedidos,
         "form_cliente": form_cliente
     }
-
+    
     return render(
         request=request,
         template_name='backend/minha_conta.html',
@@ -1675,6 +1675,7 @@ def get_valor_frete(request):
 
         usuario.carrinho.cep = cep
         usuario.carrinho.numero_residencia = numero_residencia
+        usuario.carrinho.total_frete = resposta['sedexPrice']
         usuario.carrinho.complemento = complemento
         usuario.carrinho.save()
 

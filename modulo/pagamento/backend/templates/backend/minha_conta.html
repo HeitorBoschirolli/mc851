@@ -109,8 +109,9 @@
               <!-- Se pedido for válido -->
               {% if pedido.dados_pagamento.status_pedido == 1 %}
               <!-- Se for boleto -->
-                {% if pedido.dados_pagamento.num_boleto %}
-                  {% if pedido.dados_pagamento.status_boleto == 1 %}    
+                {% if pedido.dados_pagamento.num_boleto != None %}
+                  <p class="card-text"><strong>Forma de pagamento: </strong> Boleto</p>
+                  {% if pedido.dados_pagamento.status_boleto == 1 %}
                     <p class="card-text"><strong>Status pagamento: </strong> Aprovado</p>
                   {% endif %}
                   {% if pedido.dados_pagamento.status_boleto == 2 %}
@@ -122,18 +123,20 @@
                 {% endif %}
                 <!-- Se for cartão -->
                 {% if pedido.dados_pagamento.num_cartao %}
+                  {% if pedido.dados_pagamento.num_parcelas %}
+                    <p class="card-text"><strong>Forma pagamento: </strong>Cartão de crédito</p>
+                  {% endif %}
+                  {% if pedido.dados_pagamento.num_parcelas == None %}
+                    <p class="card-text"><strong>Forma pagamento: </strong>Cartão de débito</p>
+                  {% endif %}
                   <p class="card-text"><strong>Status pagamento: </strong> Aprovado</p>
                 {% endif %}
               {% endif %}
               {% if pedido.dados_pagamento.num_parcelas != None %}
-                <p class="card-text"><strong>Valor Frete: </strong>{{pedido.dados_pagamento.num_parcelas}}</p>
+                <p class="card-text"><strong>Número de Parcelas: </strong>{{pedido.dados_pagamento.num_parcelas}}</p>
               {% endif %}
               {% if pedido.dados_pagamento.num_boleto != None %}
-                <p class="card-text"><strong>Forma pagamento: </strong>Boleto</p>
                 <p class="card-text"><strong>Número boleto: </strong>{{pedido.dados_pagamento.num_boleto}}</p>
-              {% endif %}
-              {% if pedido.dados_pagamento.num_cartao != None %}
-                <p class="card-text"><strong>Forma pagamento: </strong>Cartao</p>
               {% endif %}
               <p class="card-text"><strong>Valor Frete: </strong>{{pedido.total_frete}}</p>
               <p class="card-text"><strong>Valor carrinho: </strong>{{pedido.total_carrinho}}</p>
