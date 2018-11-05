@@ -1,30 +1,33 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-<title>Produtos</title>
+<title>Produto Selecionado</title>
 {% endblock %}
 
 {% block content %}
 {% load staticfiles %}
 <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <div style="height:260px;" class="container">
-          <img style="max-width: 100%; max-height: 100%;" class="card-img-top" src="http://www.eletrolarshow2013.com.br/wp-content/uploads/2014/11/Eletrodomesticos-Banner.jpg" alt="Imagem de eletrodomésticos" />
-        </div>
-      </div>
 <div class="container">
 <table id="tabela_produtos" class="" style="width:100%">
       <tbody>
-        {% for produto in produtos %}
           {% if produto.availableToSell %}
             <tr style="border-bottom: 1px solid black;">
                 <td >
-                  <a href="/produto_unico/{{produto.id}}"><img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src={{ produto.images.0.url }} alt="Imagem de eletrodomésticos" /></a>
+                  <img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src={{ produto.images.0.url }} alt="Imagem de eletrodomésticos" />
                 </td>
                 <td>
+                  <br>
                   <h4>{{ produto.name|safe }}</h4>
                   <br>
                   {{ produto.description|safe }}
+                  <br><br>
+                  <b>Categoria:</b> {{ produto.category|safe }}
+                  <br><br>
+                  <b>Tipo:</b> {{ produto.type|safe }}
+                  <br><br>
+                  <b>Fabricante:</b> {{ produto.manufacturer|safe }}
+                  <br><br>
+                  <b>Peso:</b> {{ produto.weight|safe }} Kg
                   <br><br>
                   {% if produto.onSale %}
                   <small style="text-decoration: line-through;">R${{ produto.value|safe }}</small></br>
@@ -50,18 +53,7 @@
                 </td>
             </tr>
             {% endif %}
-          {% endfor%}
       </tbody>
   </table>
  </div>
-{% endblock %}
-
-{% block scripts %}
-
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('#tabela_produtos').DataTable();
-} );
-</script>
-
 {% endblock %}

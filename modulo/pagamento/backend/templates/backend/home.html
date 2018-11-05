@@ -41,7 +41,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="card h-100" style="background-size: cover;">
-            <div style="background-image: url({{ produtos.0.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div>
+            <a href="/produto_unico/{{produtos.0.id}}"><div style="background-image: url({{ produtos.0.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div></a>
             <div class="card-body">
               <h5 class="card-title">{{ produtos.0.description }}</h5>
               {% if produtos.0.onSale %}
@@ -69,7 +69,7 @@
         </div>
         <div class="col-md-4">
           <div class="card h-100">
-            <div style="background-image: url({{ produtos.1.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div>
+            <a href="/produto_unico/{{produtos.1.id}}"><div style="background-image: url({{ produtos.1.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div></a>
             <div class="card-body">
               <h5 class="card-title">{{ produtos.1.description }}</h5>
               {% if produtos.1.onSale %}
@@ -97,7 +97,7 @@
         </div>
         <div class="col-md-4">
           <div class="card h-100">
-            <div style="background-image: url({{ produtos.2.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div>
+            <a href="/produto_unico/{{produtos.2.id}}"><div style="background-image: url({{ produtos.2.images.0.url }}); background-position: center center; background-size: cover; position: relative; overflow: hidden; padding-bottom: 100%" ></div></a>
             <div class="card-body">
               <h5 class="card-title">{{ produtos.2.description }} </h5>
 

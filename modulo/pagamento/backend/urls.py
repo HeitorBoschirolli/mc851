@@ -93,6 +93,8 @@ urlpatterns = [
     url(r'^dados_produto', views.render_att_produtos, name='dados_produto'),
     #Link para atualizacao de dados do produto
     url(r'^att_dados_produto', views.att_produto, name='att_dados_produto'),
+    #Mostra Todos dados de um único produto
+    url(r'^produto_unico/(?P<id_produto>[a-zA-Z0-9-]+)/', views.produto_unico, name='produto_unico'),
 
 
     # ---------------------------------------------------------------------------------------------------------#

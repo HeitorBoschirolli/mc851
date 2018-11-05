@@ -66,7 +66,7 @@ margin: -50px 0px 0px -50px;
             {% for produto in produtos %}
             <tr style="border-bottom: 1px solid black;" class="produto">
                 <td>
-                  <img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src={{ produto.images.0.url }} alt="Imagem de eletrodomésticos" />
+                  <a href="/produto_unico/{{produto.id}}"><img style="height:300px; width:auto; margin: 20px;" class="card-img-top" src={{ produto.images.0.url }} alt="Imagem de eletrodomésticos" /></a>
                 </td>
                 <td>
                   <h4>{{produto.name|safe}}</h4>
@@ -164,7 +164,7 @@ margin: -50px 0px 0px -50px;
       $form =   $('#form_pagamento')
       $form.submit();
     }
-    
+
     $form.submit();
   }
 

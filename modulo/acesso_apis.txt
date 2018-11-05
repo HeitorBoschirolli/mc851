@@ -1,0 +1,131 @@
+Ver funcao cadastra endereco
+
+acesso_api = Acesso_API()
+acesso_api.API = "endereco"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Buscando Endereco Dado CEP"
+acesso_api.save()
+
+-------------------------------------------------------------------------
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Cadastro de Cliente"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Confirmando Cadastro"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Excluindo Cliente"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Realizando Login"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Realizando Logout"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Cadastrando Endereco do Usuario"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Recupera Dados do Usuario"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Recupera Enderecos do Usuario"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "clientes"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Atualiza Dados do Usuario"
+acesso_api.save()
+
+------------------------------------------------------------------------
+
+acesso_api = Acesso_API()
+acesso_api.API = "produtos"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Buscando Todos Produtos"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "produtos"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Atualizando Produto"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "produtos"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Obtendo Dados do Produto"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "produtos"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Altera Imagem Produto"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "produtos"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Cadastrando Produto"
+acesso_api.save()
+
+------------------------------------------------------------------------
+
+acesso_api = Acesso_API()
+acesso_api.API = "pagamento"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Compra por Cartao"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "pagamento"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Compra por Boleto"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "pagamento"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Busca Dados do Pagamento"
+acesso_api.save()
+
+------------------------------------------------------------------------
+
+acesso_api = Acesso_API()
+acesso_api.API = "logistica"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Calculo do Valor do Frete"
+acesso_api.save()
+
+------------------------------------------------------------------------
+
+acesso_api = Acesso_API()
+acesso_api.API = "credito"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Obtem Score do Cliente"
+acesso_api.save()

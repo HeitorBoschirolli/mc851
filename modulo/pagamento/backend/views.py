@@ -490,8 +490,39 @@ def resultado_login(request):
         )
 
 def logout(request):
-    request.session['usuario'] = ''
-    request.session['admin'] = False
+
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = 'http://ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/logout/' + str(usuario.cpf)
+
+    data = {"tokenSessao": usuario.sessionToken}
+
+    data = json.dumps(data)
+
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+
+    try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "clientes"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Realizando Logout"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+
+        request.session['usuario'] = ''
+        request.session['admin'] = False
+
+    except Exception as e:
+        context = {
+            "message": "Erro na API de Clientes"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     return home(request)
 
@@ -557,7 +588,7 @@ def minha_conta(request):
     lista_pedidos = meus_pedidos(request)
 
     form_cliente = DadosCliente()
-    
+
     context = {
         "email": resposta_dados['email'],
         "nome": resposta_dados['nome'],
@@ -956,6 +987,42 @@ def att_produto(request):
             "message": "Erro na API de Produtos"
         }
         return render (request=request, context=context, template_name="backend/tela_erro.html")
+
+
+def produto_unico (request, id_produto):
+
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/' + str(id_produto)
+
+    request2 = urllib2.Request(url=url)
+
+    # Adiciona ao request o login de autorizacao
+    basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+    request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+    #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+    try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "produtos"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Obtendo Dados do Produto"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        dados_produto = json.loads(serializade_data)
+    except Exception as e:
+        context = {
+            "message": "Erro na API de Produtos"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
+
+    context = {
+        "produto": dados_produto,
+    }
+
+    return render (request=request, context=context, template_name="backend/produto_unico.html")
+
+
 
 '''---------------------------------------------------------------------------------------------------------'''
 '''--------------------------------------------API DE PAGAMENTO---------------------------------------------'''
