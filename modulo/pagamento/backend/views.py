@@ -1647,6 +1647,7 @@ def get_valor_frete(request):
 
         usuario.carrinho.cep = cep
         usuario.carrinho.numero_residencia = numero_residencia
+        usuario.carrinho.total_frete = resposta['sedexPrice']
         usuario.carrinho.complemento = complemento
         usuario.carrinho.save()
 
