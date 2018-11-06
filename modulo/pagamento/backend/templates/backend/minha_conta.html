@@ -123,11 +123,7 @@
                 {% endif %}
                 <!-- Se for cartão -->
                 {% if pedido.dados_pagamento.num_cartao %}
-                  {% if pedido.dados_pagamento.credito %}
-                    <p class="card-text"><strong>Forma de pagamento: </strong>Cartão de crédito</p>
-                  {% else %}
-                    <p class="card-text"><strong>Forma de pagamento: </strong>Cartão de débito</p>
-                  {% endif %}
+                  <p class="card-text"><strong>Forma de pagamento: </strong>Cartão</p>
                   <p class="card-text"><strong>Status do pagamento: </strong> Aprovado</p>
                 {% endif %}
               {% endif %}
