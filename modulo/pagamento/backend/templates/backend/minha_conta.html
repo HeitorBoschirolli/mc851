@@ -144,7 +144,10 @@
             </div>
           </div>
           <br>
-        {% endfor %}
+
+          <p class="card-text"><strong>Código de rastreio: </strong>{{pedido.query.code}}</p>
+          <p class="card-text"><strong>Status da entrega: </strong>{{pedido.query.status}}</p>
+          {% endfor %}
       </div>
 
     </div>
