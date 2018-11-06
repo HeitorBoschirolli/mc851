@@ -1098,7 +1098,9 @@ def pagamento_cartao(request):
 
         if resposta['pagamento'] == 1:
             vincula_pagamento_pedido(request, resposta['pk_pedido'])
-            vincula_id_logistica (request, True)
+            retorno = vincula_id_logistica (request, True)
+            if (retorno != None):
+                return retorno
             transforma_carrinho_em_pedido(request)
             return render(request, 'backend/sucesso_pagamento_cartao.html')
         else:
@@ -1157,7 +1159,9 @@ def pagamento_boleto(request):
         resposta = json.loads(serializade_data)
         if resposta['status']:
             vincula_pagamento_pedido(request, resposta['pk_pedido'])
-            vincula_id_logistica (request, False)
+            retorno = vincula_id_logistica (request, False)
+            if (retorno != None):
+                return retorno
             transforma_carrinho_em_pedido(request)
             context = {
                 'numero_boleto': resposta['num_boleto']
@@ -1361,7 +1365,7 @@ def meus_pedidos (request):
                 "message": "Erro na API de Pagamento"
             }
             return render (request=request, context=context, template_name="backend/tela_erro.html")
-
+            
         dados_pedido['dados_pagamento'] = resposta
 
         url = "http://shielded-caverns-17296.herokuapp.com:80/search"

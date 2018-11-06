@@ -112,35 +112,34 @@
                 {% if pedido.dados_pagamento.num_boleto != None %}
                   <p class="card-text"><strong>Forma de pagamento: </strong> Boleto</p>
                   {% if pedido.dados_pagamento.status_boleto == 1 %}
-                    <p class="card-text"><strong>Status pagamento: </strong> Aprovado</p>
+                    <p class="card-text"><strong>Status do pagamento: </strong> Aprovado</p>
                   {% endif %}
                   {% if pedido.dados_pagamento.status_boleto == 2 %}
-                    <p class="card-text"><strong>Status pagamento: </strong> Aguardando pagamento</p>
+                    <p class="card-text"><strong>Status do pagamento: </strong> Aguardando pagamento</p>
                   {% endif %}
                   {% if pedido.dados_pagamento.status_boleto == 3 %}
-                    <p class="card-text"><strong>Status pagamento: </strong> Pagamento não efetuado</p>
+                    <p class="card-text"><strong>Status do pagamento: </strong> Pagamento não efetuado</p>
                   {% endif %}
                 {% endif %}
                 <!-- Se for cartão -->
                 {% if pedido.dados_pagamento.num_cartao %}
-                  {% if pedido.dados_pagamento.num_parcelas %}
-                    <p class="card-text"><strong>Forma pagamento: </strong>Cartão de crédito</p>
+                  {% if pedido.dados_pagamento.credito %}
+                    <p class="card-text"><strong>Forma de pagamento: </strong>Cartão de crédito</p>
+                  {% else %}
+                    <p class="card-text"><strong>Forma de pagamento: </strong>Cartão de débito</p>
                   {% endif %}
-                  {% if pedido.dados_pagamento.num_parcelas == None %}
-                    <p class="card-text"><strong>Forma pagamento: </strong>Cartão de débito</p>
-                  {% endif %}
-                  <p class="card-text"><strong>Status pagamento: </strong> Aprovado</p>
+                  <p class="card-text"><strong>Status do pagamento: </strong> Aprovado</p>
                 {% endif %}
               {% endif %}
               {% if pedido.dados_pagamento.num_parcelas != None %}
                 <p class="card-text"><strong>Número de Parcelas: </strong>{{pedido.dados_pagamento.num_parcelas}}</p>
               {% endif %}
               {% if pedido.dados_pagamento.num_boleto != None %}
-                <p class="card-text"><strong>Número boleto: </strong>{{pedido.dados_pagamento.num_boleto}}</p>
+                <p class="card-text"><strong>Número do boleto: </strong>{{pedido.dados_pagamento.num_boleto}}</p>
               {% endif %}
-              <p class="card-text"><strong>Valor Frete: </strong>{{pedido.total_frete}}</p>
-              <p class="card-text"><strong>Valor carrinho: </strong>{{pedido.total_carrinho}}</p>
-              
+              <p class="card-text"><strong>Valor do Frete: </strong>{{pedido.total_frete}}</p>
+              <p class="card-text"><strong>Valor do carrinho: </strong>{{pedido.total_carrinho}}</p>
+
               <p class="card-text"><strong>Código de rastreio: </strong>{{pedido.dados_logistica.query.code}}</p>
               <p class="card-text"><strong>Status da entrega: </strong>{{pedido.dados_logistica.query.status}}</p>
             </div>
