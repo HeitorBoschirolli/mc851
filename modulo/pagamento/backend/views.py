@@ -588,7 +588,7 @@ def minha_conta(request):
     lista_pedidos = meus_pedidos(request)
 
     form_cliente = DadosCliente()
-    
+
     context = {
         "email": resposta_dados['email'],
         "nome": resposta_dados['nome'],
@@ -598,7 +598,7 @@ def minha_conta(request):
         "lista_pedidos": lista_pedidos,
         "form_cliente": form_cliente
     }
-    
+
     return render(
         request=request,
         template_name='backend/minha_conta.html',
@@ -1080,7 +1080,6 @@ def pagamento_cartao(request):
         "credito": str(credito),
         "num_parcelas": str(num_parcelas),
     }
-    print(data)
 
     data = json.dumps(data)
 
