@@ -140,13 +140,13 @@
               {% endif %}
               <p class="card-text"><strong>Valor Frete: </strong>{{pedido.total_frete}}</p>
               <p class="card-text"><strong>Valor carrinho: </strong>{{pedido.total_carrinho}}</p>
-
+              
+              <p class="card-text"><strong>Código de rastreio: </strong>{{pedido.dados_logistica.query.code}}</p>
+              <p class="card-text"><strong>Status da entrega: </strong>{{pedido.dados_logistica.query.status}}</p>
             </div>
           </div>
           <br>
 
-          <p class="card-text"><strong>Código de rastreio: </strong>{{pedido.query.code}}</p>
-          <p class="card-text"><strong>Status da entrega: </strong>{{pedido.query.status}}</p>
           {% endfor %}
       </div>
 
