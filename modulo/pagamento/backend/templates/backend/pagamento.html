@@ -69,7 +69,7 @@
                 <p>Insira as informações do seu cartão:</p>
             </div>
         </div>
-        <form action="/pagamento_cartao/" method="POST" autocomplete="off">
+        <form action="/pagamento_cartao/" method="POST" id="form_credito" autocomplete="off">
             <div class="row">
                 <div class="col-md-12">
                     <div class="input-group">
@@ -112,7 +112,7 @@
 
                         <div style="margin: 5px; display:inline-block;">
                           <br/>
-                          <button type="submit" style="width:100px; height:40px; " class="btn  btn-sm btn-warning">
+                          <button type="button" onclick="pagamento_cartao('form_credito')" style="width:100px; height:40px; " class="btn  btn-sm btn-warning">
                               <i class="fa fa-credit-card"></i> Pagar</button>
                         </div>
                     </div>
@@ -144,7 +144,7 @@
                   <p>Insira as informações do seu cartão:</p>
               </div>
           </div>
-          <form action="/pagamento_cartao/" method="POST" autocomplete="off">
+          <form action="/pagamento_cartao/" method="POST" id="form_debito" autocomplete="off">
               <div class="row">
                   <div class="col-md-12">
                       <div class="input-group">
@@ -183,7 +183,7 @@
 
                           <div style="margin: 5px; display:inline-block;">
                             <br/>
-                            <button type="submit" style="width:100px; height:40px; " class="btn  btn-sm btn-warning">
+                            <button type="button" onclick="pagamento_cartao('form_debito')" style="width:100px; height:40px; " class="btn  btn-sm btn-warning">
                                 <i class="fa fa-credit-card"></i> Pagar</button>
                           </div>
                       </div>
@@ -260,8 +260,8 @@ $( document ).ready(function() {
 })
 
 
-  function pagamento_cartao() {
-    $form = $('#form_cartao');
+  function pagamento_cartao(id) {
+    $form = $('#'+id+'');
 
     $form.append('<input hidden name="cnpj" value="12345678992735" />');
     $form.append('<input hidden name="pk_pagamento" value="{{pagamento.pk}}" />');

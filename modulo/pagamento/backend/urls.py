@@ -102,10 +102,10 @@ urlpatterns = [
     # ---------------------------------------------------------------------------------------------------------#
 
     # URL para cadastrar um pagamento por cartão
-    url(r'^pagamento_cartao', views.pagamento_cartao, name='pagamento_cartao'),
+    url(r'^pagamento_cartao/$', views.pagamento_cartao, name='pagamento_cartao'),
 
     # URL para cadastrar um pagamento por boleto
-    url(r'^pagamento_boleto', views.pagamento_boleto, name='pagamento_boleto'),
+    url(r'^pagamento_boleto/$', views.pagamento_boleto, name='pagamento_boleto'),
 
     # URL para consulta de um pagamento por PK
     url(r'^consulta_pagamento', views.consulta_pagamento, name='consulta_pagamento'),

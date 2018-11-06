@@ -122,6 +122,18 @@ acesso_api.data_acesso = timezone.now()
 acesso_api.descricao = "Calculo do Valor do Frete"
 acesso_api.save()
 
+acesso_api = Acesso_API()
+acesso_api.API = "logistica"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Criando Rastreio"
+acesso_api.save()
+
+acesso_api = Acesso_API()
+acesso_api.API = "logistica"
+acesso_api.data_acesso = timezone.now()
+acesso_api.descricao = "Buscando Rastreio"
+acesso_api.save()
+
 ------------------------------------------------------------------------
 
 acesso_api = Acesso_API()
