@@ -588,7 +588,7 @@ def minha_conta(request):
     lista_pedidos = meus_pedidos(request)
 
     form_cliente = DadosCliente()
-
+    
     context = {
         "email": resposta_dados['email'],
         "nome": resposta_dados['nome'],
@@ -598,7 +598,7 @@ def minha_conta(request):
         "lista_pedidos": lista_pedidos,
         "form_cliente": form_cliente
     }
-
+    
     return render(
         request=request,
         template_name='backend/minha_conta.html',
@@ -1040,17 +1040,45 @@ def pagamento_cartao(request):
     #URL para api de pagamento
     url = 'http://mc851-pagamento.qieckpkezf.sa-east-1.elasticbeanstalk.com/servico/pagamento_cartao'
 
+
+    valor_compra = request.POST.get('valor_total')
+    credito = request.POST.get('credito', 0)
+    num_parcelas_credito = request.POST.get('num_parcelas')
+    cnpj = request.POST.get('cnpj')
+
+    now = datetime.now().date()
+
+    if credito == '1':
+        num_parcelas = num_parcelas_credito
+    else:
+        num_parcelas = 1
+
+    # import pdb;pdb.set_trace()
+    #     data = {
+    #     "cpf_comprador": "12356712345",
+    #     "valor_compra": "10.20",
+    #     "cnpj_site": "12345678992735",
+    #     "data_emissao_pedido": "2/10/2018",
+    #     "numero_cartao": str(forms_cartao['numero_cartao'].data),
+    #     "nome_cartao": str(forms_cartao['nome_cartao'].data),
+    #     "cvv_cartao": str(forms_cartao['cvv'].data),
+    #     "data_vencimento_cartao": "2/10/2025",
+    #     "credito": "1",
+    #     "num_parcelas": "2"
+    # }
+    now = datetime.now().date()
+
     data = {
-        "cpf_comprador": "12356712345",
-        "valor_compra": "10.20",
-        "cnpj_site": "12345678992735",
-        "data_emissao_pedido": "2/10/2018",
+        "cpf_comprador": str(forms_cartao['cpf'].data),
+        "valor_compra": str(valor_compra),
+        "cnpj_site": str(cnpj),
+        "data_emissao_pedido": now.strftime("%d/%m/%Y"),
         "numero_cartao": str(forms_cartao['numero_cartao'].data),
         "nome_cartao": str(forms_cartao['nome_cartao'].data),
         "cvv_cartao": str(forms_cartao['cvv'].data),
-        "data_vencimento_cartao": "2/10/2025",
-        "credito": "1",
-        "num_parcelas": "2"
+        "data_vencimento_cartao": "1/" + str(forms_cartao['data_vencimento_cartao'].data),
+        "credito": str(credito),
+        "num_parcelas": str(num_parcelas),
     }
     print(data)
 

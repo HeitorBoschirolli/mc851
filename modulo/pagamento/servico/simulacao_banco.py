@@ -15,13 +15,13 @@ def simula_pagamento_cartao(numero_cartao):
         return -1 # compra negada
 
 
-def simula_pagamento_boleto(request, numero_boleto):
+def simula_pagamento_boleto(request, numero_boleto, status):
     try:
         boleto = models.Boleto.objects.filter(num_boleto=numero_boleto).first()
-        boleto.status = 1
+        boleto.status_boleto = status
         boleto.save()
-        mensagem = "Boleto " + numero_boleto +  " pago com sucesso"
+        mensagem = "Boleto " + numero_boleto +  " atualizado"
 
         return HttpResponse(mensagem)
     except:
-        return HttpResponse("ERROOOOOUUUUU")
+        return HttpResponse("Número de boleto e/ou status errado")
