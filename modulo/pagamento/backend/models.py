@@ -26,7 +26,7 @@ class Carrinho(models.Model):
     numero_residencia = models.CharField(max_length=100, null=True)
     complemento = models.CharField(max_length=100, null=True)
     id_pagamento = models.IntegerField(default=-1)
-    id_logistica = models.IntegerField(default=-1)
+    id_logistica = models.CharField(max_length=500, null=True)
 
     def __str__ (self):
         return "carrinho: " + str(self.pk)

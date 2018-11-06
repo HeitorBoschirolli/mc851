@@ -1071,6 +1071,7 @@ def pagamento_cartao(request):
 
         if resposta['pagamento'] == 1:
             vincula_pagamento_pedido(request, resposta['pk_pedido'])
+            vincula_id_logistica (request, True)
             transforma_carrinho_em_pedido(request)
             return render(request, 'backend/sucesso_pagamento_cartao.html')
         else:
@@ -1129,6 +1130,7 @@ def pagamento_boleto(request):
         resposta = json.loads(serializade_data)
         if resposta['status']:
             vincula_pagamento_pedido(request, resposta['pk_pedido'])
+            vincula_id_logistica (request, False)
             transforma_carrinho_em_pedido(request)
             context = {
                 'numero_boleto': resposta['num_boleto']
@@ -1248,6 +1250,52 @@ def transforma_carrinho_em_pedido(request):
     usuario.carrinho = novo_carrinho
     usuario.save()
 
+def vincula_id_logistica (request, cartao):
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    url = "http://shielded-caverns-17296.herokuapp.com:80/cr_api"
+
+    if cartao:
+        data = {
+            "crudtype": "Create",
+        	"status": "Pedido Postado",
+        	"date": "10102018",
+        	"local": "Campinas"
+        }
+    else:
+        data = {
+            "crudtype": "Create",
+        	"status": "Aguardando Pagamento do Boleto",
+        	"date": "10102018",
+        	"local": "Campinas"
+        }
+
+    data = json.dumps(data)
+    request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+    try:
+
+        acesso_api = Acesso_API()
+        acesso_api.API = "logistica"
+        acesso_api.data_acesso = timezone.now()
+        acesso_api.descricao = "Criando Rastreio"
+        acesso_api.save()
+
+        serializade_data = urllib2.urlopen(request2).read()
+        resposta = json.loads(serializade_data)
+        usuario.carrinho.id_logistica = str(resposta['query']['code'])
+        usuario.carrinho.save()
+
+        return None
+    except Exception as e:
+        context = {
+            "message": "Erro na API de Logística"
+        }
+        return render (request=request, context=context, template_name="backend/tela_erro.html")
+
+
 #Retorna para o front todos os pedidos de um cliente
 def meus_pedidos (request):
     try:
@@ -1288,6 +1336,32 @@ def meus_pedidos (request):
             return render (request=request, context=context, template_name="backend/tela_erro.html")
 
         dados_pedido['dados_pagamento'] = resposta
+
+        url = "http://shielded-caverns-17296.herokuapp.com:80/search"
+
+        data = {
+            "codigo": pedido.carrinho.id_logistica
+        }
+
+        data = json.dumps(data)
+        request2 = urllib2.Request(url=url, data=data, headers={'Content-Type': 'application/json'})
+        try:
+
+            acesso_api = Acesso_API()
+            acesso_api.API = "logistica"
+            acesso_api.data_acesso = timezone.now()
+            acesso_api.descricao = "Buscando Rastreio"
+            acesso_api.save()
+
+            serializade_data = urllib2.urlopen(request2).read()
+            resposta = json.loads(serializade_data)
+        except Exception as e:
+            context = {
+                "message": "Erro na API de Logística"
+            }
+            return render (request=request, context=context, template_name="backend/tela_erro.html")
+
+        dados_pedido['dados_logistica'] = resposta
 
         produtos=[]
         for produto_no_carrinho in pedido.carrinho.produtos_no_carrinho_set.all():
@@ -1758,7 +1832,6 @@ def mostra_todos_produtos(request):
 def altera_produto(request):
 
     id_produto = request.POST.get("id_produto")
-    print (id_produto)
 
     url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
     url = url + str(id_produto)
