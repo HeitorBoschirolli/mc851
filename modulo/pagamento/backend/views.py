@@ -2043,3 +2043,8 @@ def cadastra_produto_api(request):
         return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     return mostra_todos_produtos(request)
+
+def sac (request):
+    context = {}
+
+    return render (request=request, context=context, template_name="backend/sac.html")
