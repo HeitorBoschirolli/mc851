@@ -1344,6 +1344,8 @@ def meus_pedidos (request):
         dados_pedido['codigo_pedido'] = pedido.carrinho.id_pagamento
         dados_pedido['total_carrinho'] = (pedido.carrinho.total_carrinho)
         dados_pedido['total_frete'] = (pedido.carrinho.total_frete)
+        dados_pedido['total_compra'] = float(pedido.carrinho.total_carrinho) + float(pedido.carrinho.total_frete)
+        dados_pedido['tempo_entrega'] = (pedido.carrinho.tempo_entrega)
 
         data = {
             "pk_pagamento": str(pedido.carrinho.id_pagamento)
@@ -2041,3 +2043,8 @@ def cadastra_produto_api(request):
         return render (request=request, context=context, template_name="backend/tela_erro.html")
 
     return mostra_todos_produtos(request)
+
+def sac (request):
+    context = {}
+
+    return render (request=request, context=context, template_name="backend/sac.html")

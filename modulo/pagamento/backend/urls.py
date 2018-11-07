@@ -38,6 +38,8 @@ urlpatterns = [
     url(r'^cadastrar_produto', views.cadastrar_produto, name='cadastrar_produto'),
     # URL para cadastrar o produto na api de fato
     url(r'^cadastra_produto_api', views.cadastra_produto_api, name='cadastra_produto_api'),
+    # URL para mostrar o SAC do site
+    url(r'^sac', views.sac, name='sac'),
 
     #---------------------------------------------------------------------------------------------------------#
     #---------------------------------------------API DE CLIENTES---------------------------------------------#
