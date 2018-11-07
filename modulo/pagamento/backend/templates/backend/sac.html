@@ -4,9 +4,74 @@
 <title>SAC</title>
 {% endblock %}
 
+{% block style %}
+<style>
+
+.loading-gif {
+position: absolute;
+top: 50%;
+left: 50%;
+margin: -50px 0px 0px -50px;
+}
+
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  z-index:1002;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.overlay {
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color:#fff;
+    opacity:0.8;
+    z-index:1001;
+}
+</style>
+
+{% endblock %}
+
 {% block content %}
 {% load staticfiles %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+        <h1>SAC </h1>
+    </div>
+</div>
 
-<p> Voce esta no sac</p>
+<div class="container-fluid col-md-6">
+    <p><strong>Horário de atendimento:</strong> 09:00 às 19:00 de segunda à sexta-feira, horário de Brasília (exceto feriados).</p>
+    <p><strong>Endereço:</strong> Rua Carlos Gomes, 1321 - 9º Andar Centro - Limeira (SP) - CEP: 13480-010</p>
+    <p><strong>Central SAC:</strong> (19) 2114-4444</p>
+    <p><strong>E-mail:</strong> mc851nani@gmail.com</p>
+    <p><strong>Sobre os Métodos de Pagamento:</strong></p>
+        <div class="container-fluid col-md-11">
+            <ul>
+                <li> Caso seu score seja <strong>inferior a 400, apenas débito e boleto</strong> estão disponíveis como forma de pagamento </li>
+                <li> Caso seu score seja <strong>superior a 401, crédito até 6 parcelas, débito e boleto</strong> estão disponíveis como forma de pagamento </li>
+            </ul>
+        </div>
+</div>
 
 {% endblock %}
