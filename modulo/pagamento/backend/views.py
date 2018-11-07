@@ -1101,6 +1101,8 @@ def pagamento_cartao(request):
             retorno = vincula_id_logistica (request, True)
             if (retorno != None):
                 return retorno
+            dados_email = get_dados_email(request)
+            print(dados_email)
             transforma_carrinho_em_pedido(request)
             return render(request, 'backend/sucesso_pagamento_cartao.html')
         else:
@@ -1162,6 +1164,8 @@ def pagamento_boleto(request):
             retorno = vincula_id_logistica (request, False)
             if (retorno != None):
                 return retorno
+            dados_email = get_dados_email(request)
+            print(dados_email)
             transforma_carrinho_em_pedido(request)
             context = {
                 'numero_boleto': resposta['num_boleto']
@@ -1263,12 +1267,6 @@ def transforma_carrinho_em_pedido(request):
         usuario = Usuario.objects.get(email=request.session['usuario'])
     except:
         return dados_cliente(request)
-
-    total = 0
-    for produto_no_carrinho_obj in usuario.carrinho.produtos_no_carrinho_set.all():
-        total += produto_no_carrinho_obj.quantidade * produto_no_carrinho_obj.valor_unitario
-    usuario.carrinho.total_carrinho = total
-    usuario.carrinho.save()
 
     pedido = Pedidos()
     pedido.usuario = usuario
@@ -2048,3 +2046,66 @@ def sac (request):
     context = {}
 
     return render (request=request, context=context, template_name="backend/sac.html")
+
+def get_dados_email(request):
+    try:
+        usuario = Usuario.objects.get(email=request.session['usuario'])
+    except:
+        return dados_cliente(request)
+
+    total = 0
+    for produto_no_carrinho_obj in usuario.carrinho.produtos_no_carrinho_set.all():
+        total += produto_no_carrinho_obj.quantidade * produto_no_carrinho_obj.valor_unitario
+    usuario.carrinho.total_carrinho = total
+    usuario.carrinho.save()
+
+    dados = {
+        "total_carrinho": usuario.carrinho.total_carrinho,
+        "total_frete": usuario.carrinho.total_frete,
+        "total_compra": float(usuario.carrinho.total_carrinho) + float(usuario.carrinho.total_frete),
+        "cep_entrega": usuario.carrinho.cep,
+        "tempo_entrega": usuario.carrinho.tempo_entrega,
+        "numero_residencia": usuario.carrinho.numero_residencia,
+        "complemento": usuario.carrinho.complemento,
+    }
+
+    produtos = []
+
+    url = 'http://ec2-18-218-218-216.us-east-2.compute.amazonaws.com:8080/api/products/'
+
+    for produto_no_carrinho in usuario.carrinho.produtos_no_carrinho_set.all():
+        url_pedido_atual = url + str(produto_no_carrinho.produto.id_produto)
+
+        request2 = urllib2.Request(url=url_pedido_atual)
+
+        # Adiciona ao request o login de autorizacao
+        basic_auth = base64.b64encode('%s:%s' % ('pagamento', 'LjKDBeqw'))
+        request2.add_header("Authorization", "Basic %s" % basic_auth)
+
+        #Realiza uma requisicao ao modulo de produtos para obter os dados do produto
+        try:
+
+            acesso_api = Acesso_API()
+            acesso_api.API = "produtos"
+            acesso_api.data_acesso = timezone.now()
+            acesso_api.descricao = "Obtendo Dados do Produto"
+            acesso_api.save()
+
+            serializade_data = urllib2.urlopen(request2).read()
+            dados_produto = json.loads(serializade_data)
+        except Exception as e:
+            context = {
+                "message": "Erro na API de Produtos"
+            }
+            return render (request=request, context=context, template_name="backend/tela_erro.html")
+
+        produto = {
+            "nome": dados_produto['name'],
+            "quantidade": produto_no_carrinho.quantidade,
+            "valor": produto_no_carrinho.valor_unitario
+        }
+        produtos.append(produto)
+
+    dados['produtos'] = produtos
+
+    return dados
