@@ -108,9 +108,11 @@
               {% endfor %}
               <!-- Se pedido for válido -->
               {% if pedido.dados_pagamento.status_pedido == 1 %}
+                <p class="card-text"><strong>Data Emissão do Pedido: </strong>{{pedido.dados_pagamento.data_emissao_pedido}}</p>
               <!-- Se for boleto -->
                 {% if pedido.dados_pagamento.num_boleto != None %}
                   <p class="card-text"><strong>Forma de pagamento: </strong> Boleto</p>
+                  <p class="card-text"><strong>Data de Vencimento do Boleto: </strong>{{pedido.dados_pagamento.data_vencimento_boleto}}</p>
                   {% if pedido.dados_pagamento.status_boleto == 1 %}
                     <p class="card-text"><strong>Status do pagamento: </strong> Aprovado</p>
                   {% endif %}
@@ -133,11 +135,15 @@
               {% if pedido.dados_pagamento.num_boleto != None %}
                 <p class="card-text"><strong>Número do boleto: </strong>{{pedido.dados_pagamento.num_boleto}}</p>
               {% endif %}
-              <p class="card-text"><strong>Valor do Frete: </strong>{{pedido.total_frete}}</p>
               <p class="card-text"><strong>Valor do carrinho: </strong>{{pedido.total_carrinho}}</p>
+              <p class="card-text"><strong>Valor do Frete: </strong>{{pedido.total_frete}}</p>
+              <p class="card-text"><strong>Valor Total da Compra: </strong>{{pedido.total_compra}}</p>
+
+              <hr class="border-primary">
 
               <p class="card-text"><strong>Código de rastreio: </strong>{{pedido.dados_logistica.query.code}}</p>
               <p class="card-text"><strong>Status da entrega: </strong>{{pedido.dados_logistica.query.status}}</p>
+              <p class="card-text"><strong>Entrega: </strong>{{pedido.tempo_entrega}} dias úteis após a <strong>confirmação</strong> do pagamento </p>
             </div>
           </div>
           <br>
