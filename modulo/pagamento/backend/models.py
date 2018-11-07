@@ -23,6 +23,7 @@ class Carrinho(models.Model):
     total_carrinho = models.FloatField(default=0)
     total_frete = models.FloatField(default=0)
     cep = models.CharField(max_length=100, null=True)
+    tempo_entrega = models.CharField(max_length=100, null=True)
     numero_residencia = models.CharField(max_length=100, null=True)
     complemento = models.CharField(max_length=100, null=True)
     id_pagamento = models.IntegerField(default=-1)

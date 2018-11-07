@@ -123,6 +123,7 @@ margin: -50px 0px 0px -50px;
      </div>
      <br>
      <p style="text-align: right;" >Valor Frete: R$<span id="valor_frete">0</span></p>
+     <p style="text-align: right;" >Tempo de Entrega: <span id="tempo_frete">0</span> dias</p>
  </div>
 <div class="container">
   <b style="text-align: right;" ><h3>Valor Total: R$<span id="valor_total_pedido">0</span></h3></b>
@@ -188,6 +189,7 @@ margin: -50px 0px 0px -50px;
         dataType: 'json',
         success: function (data) {
             $('#valor_frete').html(data["sedexPrice"]);
+            $('#tempo_frete').html(data["sedexTime"]);
             atualiza_valor_total();
             $('#id_loader').css('display', 'none');
             $(".overlay, .overlay-message").css('display', 'none');

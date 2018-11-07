@@ -1365,7 +1365,7 @@ def meus_pedidos (request):
                 "message": "Erro na API de Pagamento"
             }
             return render (request=request, context=context, template_name="backend/tela_erro.html")
-            
+
         dados_pedido['dados_pagamento'] = resposta
 
         url = "http://shielded-caverns-17296.herokuapp.com:80/search"
@@ -1753,6 +1753,7 @@ def get_valor_frete(request):
         usuario.carrinho.cep = cep
         usuario.carrinho.numero_residencia = numero_residencia
         usuario.carrinho.total_frete = resposta['sedexPrice']
+        usuario.carrinho.tempo_entrega = resposta['sedexTime']
         usuario.carrinho.complemento = complemento
         usuario.carrinho.save()
 
