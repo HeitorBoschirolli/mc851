@@ -13,6 +13,7 @@ import base64
 from model_forms import *
 import random
 import ast
+from SendEmail import *
 
 url_clientes = "ec2-18-231-28-232.sa-east-1.compute.amazonaws.com:3002/"
 
@@ -1102,7 +1103,16 @@ def pagamento_cartao(request):
             if (retorno != None):
                 return retorno
             dados_email = get_dados_email(request)
-            print(dados_email)
+
+            try:
+                send_email(dados=dados_email)
+            except Exception as e:
+
+                context = {
+                    "message": "Erro ao enviar Email"
+                }
+                return render(request=request, context=context, template_name="backend/tela_erro.html")
+
             transforma_carrinho_em_pedido(request)
             return render(request, 'backend/sucesso_pagamento_cartao.html')
         else:
@@ -1165,7 +1175,16 @@ def pagamento_boleto(request):
             if (retorno != None):
                 return retorno
             dados_email = get_dados_email(request)
-            print(dados_email)
+
+            try:
+                send_email(dados=dados_email)
+            except Exception as e:
+
+                context = {
+                    "message": "Erro ao enviar Email"
+                }
+                return render(request=request, context=context, template_name="backend/tela_erro.html")
+
             transforma_carrinho_em_pedido(request)
             context = {
                 'numero_boleto': resposta['num_boleto']
