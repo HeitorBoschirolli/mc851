@@ -1105,7 +1105,7 @@ def pagamento_cartao(request):
             dados_email = get_dados_email(request)
 
             try:
-                send_email(dados=dados_email)
+                send_email(dados=dados_email, to_addr=request.session['usuario'].encode('utf-8'))
             except Exception as e:
 
                 context = {
@@ -1177,7 +1177,7 @@ def pagamento_boleto(request):
             dados_email = get_dados_email(request)
 
             try:
-                send_email(dados=dados_email)
+                send_email(dados=dados_email, to_addr=request.session['usuario'].encode('utf-8'))
             except Exception as e:
 
                 context = {

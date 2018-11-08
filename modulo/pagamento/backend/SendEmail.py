@@ -3,13 +3,10 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def send_email(dados):
-
-    import pdb
-    pdb.set_trace()
+def send_email(dados, to_addr):
 
     fromaddr = "mc851nani@gmail.com"
-    toaddr = "mc851nani@gmail.com"
+    toaddr = to_addr
     msg = MIMEMultipart()
     msg['From'] = fromaddr
     msg['To'] = toaddr
